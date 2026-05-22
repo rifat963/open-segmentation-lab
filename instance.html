@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instance Segmentation Tutorial | Open Segmentation Lab</title>
+  <meta name="description" content="Learn instance segmentation, Mask R-CNN, YOLACT, YOLO segmentation models, SAM-assisted annotation, Mask AP, and IoU.">
+  <meta property="og:title" content="Instance Segmentation Tutorial">
+  <meta property="og:description" content="A free academic tutorial on object instance masks, model families, and evaluation.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://example.com/instance.html">
+  <meta property="og:site_name" content="Open Segmentation Lab">
+  <link rel="canonical" href="https://example.com/instance.html">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="semantic.html">Semantic</a></li>
+        <li><a href="instance.html">Instance</a></li>
+        <li><a href="panoptic.html">Panoptic</a></li>
+        <li><a href="ssl-segmentation.html">SSL Segmentation</a></li>
+        <li><a href="datasets.html">Datasets</a></li>
+        <li><a href="metrics.html">Metrics</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="papers.html">Papers</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Tutorial</p>
+        <h1>Instance Segmentation</h1>
+        <p>Instance segmentation detects individual objects and predicts a separate mask for each object. It is useful when counting, tracking, measuring, or manipulating individual objects matters.</p>
+      </div>
+    </section>
+
+    <div class="section">
+      <div class="container page-grid">
+        <article class="content-panel">
+          <section id="definition">
+            <h2>Definition</h2>
+            <p>Instance segmentation combines localization, classification, and pixel-level mask prediction. The model output is usually a set of masks, class labels, confidence scores, and sometimes bounding boxes.</p>
+            <div class="callout definition"><strong>Definition:</strong> If an image contains five leaves of the same class, instance segmentation should produce five masks, not one merged leaf region.</div>
+            <figure class="visual-card">
+              <img src="images/instance-mask.svg" alt="Instance segmentation masks with separate object ids">
+              <figcaption>Each object receives a separate mask and identity.</figcaption>
+            </figure>
+          </section>
+
+          <section id="detection">
+            <h2>Difference from Object Detection</h2>
+            <p>Object detection predicts bounding boxes. Instance segmentation predicts the visible object shape inside or around each box. This distinction matters when objects overlap or when area measurement is required.</p>
+            <div class="formula-box">Detection output: box + class + score<br>Instance output: box + class + score + object mask</div>
+          </section>
+
+          <section id="semantic-difference">
+            <h2>Difference from Semantic Segmentation</h2>
+            <p>Semantic segmentation merges all pixels of a class into one category map. Instance segmentation separates object identities, so two neighboring objects of the same class remain distinct.</p>
+            <div class="callout intuition"><strong>Intuition:</strong> Semantic segmentation says "these pixels are cars." Instance segmentation says "these pixels are car 1, those pixels are car 2."</div>
+          </section>
+
+          <section id="models">
+            <h2>Important Model Families</h2>
+            <h3>Mask R-CNN</h3>
+            <p>Mask R-CNN extends Faster R-CNN by adding a mask prediction branch to each region of interest. It is accurate and widely used as a teaching baseline because its components are easy to study: backbone, feature pyramid, proposal network, classifier, box regressor, and mask head.</p>
+            <h3>YOLACT</h3>
+            <p>YOLACT separates instance segmentation into prototype mask generation and per-instance mask coefficients. This design made real-time instance segmentation more practical.</p>
+            <h3>YOLO Segmentation Models</h3>
+            <p>Modern YOLO-style segmentation systems combine fast detection heads with mask prediction branches. They are common in applied projects where speed and deployment simplicity matter.</p>
+            <h3>SAM-assisted Annotation Workflows</h3>
+            <p>The Segment Anything Model can accelerate annotation by producing candidate masks from points, boxes, or prompts. In an academic workflow, students should still audit masks because promptable masks are not automatically task-specific labels.</p>
+          </section>
+
+          <section id="metrics">
+            <h2>Metrics: Mask AP and IoU</h2>
+            <p><strong>IoU</strong> compares a predicted mask with a ground-truth mask. <strong>Mask AP</strong> averages precision over confidence thresholds and IoU thresholds, rewarding models that produce accurate masks with reliable rankings.</p>
+            <div class="formula-box">Mask IoU = area(predicted mask intersection ground-truth mask) / area(predicted mask union ground-truth mask)</div>
+            <div class="callout pitfall"><strong>Pitfall:</strong> A model can have strong box detection but weak mask quality. Always inspect mask metrics and visual outputs, not only detection scores.</div>
+          </section>
+
+          <section id="tutorials">
+            <h2>Tutorial Cards</h2>
+            <div class="grid two">
+              <article class="tutorial-card"><h3>Mask R-CNN Explained</h3><p>Trace the pipeline from proposals to RoIAlign and class-specific mask prediction.</p></article>
+              <article class="tutorial-card"><h3>YOLO Segmentation Pipeline</h3><p>Study how fast object detection can be extended with per-instance mask outputs.</p></article>
+              <article class="tutorial-card"><h3>SAM for Pseudo Mask Generation</h3><p>Use promptable masks as annotation candidates, then filter and refine them for a target dataset.</p></article>
+              <article class="tutorial-card"><h3>Instance Mask Evaluation</h3><p>Practice matching predictions to ground truth and interpreting AP at multiple IoU thresholds.</p></article>
+            </div>
+          </section>
+        </article>
+
+        <aside class="sidebar" aria-label="Instance segmentation sidebar">
+          <div class="sidebar-card">
+            <h2>On this page</h2>
+            <ul class="toc">
+              <li><a href="#definition">Definition</a></li>
+              <li><a href="#detection">Detection difference</a></li>
+              <li><a href="#semantic-difference">Semantic difference</a></li>
+              <li><a href="#models">Models</a></li>
+              <li><a href="#metrics">Metrics</a></li>
+            </ul>
+          </div>
+          <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+          <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h2>Open Segmentation Lab</h2>
+          <p>Free academic tutorials for image segmentation, datasets, metrics, and research reading.</p>
+        </div>
+        <div>
+          <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+          <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+        </div>
+      </div>
+      <p class="footer-note">Educational content is free for students and researchers. Ad spaces are limited and clearly labeled.</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 380" role="img" aria-labelledby="panoptic-title panoptic-desc">
+  <title id="panoptic-title">Panoptic segmentation map</title>
+  <desc id="panoptic-desc">A unified map combines stuff regions and thing instances.</desc>
+  <rect width="640" height="380" fill="#ffffff"/>
+  <rect x="38" y="38" width="564" height="304" rx="16" fill="#edf4fa" stroke="#d9e2ec" stroke-width="2"/>
+  <path d="M38 62h564v102H38z" fill="#dbeafe"/>
+  <path d="M38 164h564v178H38z" fill="#d9f1ed"/>
+  <path d="M38 286c92-38 174-45 246-20 58 20 120 20 186 0 55-17 99-10 132 20v56H38z" fill="#123a63" opacity=".20"/>
+  <rect x="112" y="170" width="92" height="118" rx="14" fill="#f9c66d" opacity=".9" stroke="#8a5a12" stroke-width="3"/>
+  <rect x="412" y="154" width="104" height="134" rx="14" fill="#9dc3ff" opacity=".9" stroke="#123a63" stroke-width="3"/>
+  <text x="58" y="88" fill="#123a63" font-family="Arial, sans-serif" font-size="18" font-weight="700">stuff: sky</text>
+  <text x="58" y="226" fill="#123a63" font-family="Arial, sans-serif" font-size="18" font-weight="700">stuff: ground</text>
+  <text x="120" y="314" fill="#8a5a12" font-family="Arial, sans-serif" font-size="16" font-weight="700">thing id 1</text>
+  <text x="420" y="314" fill="#123a63" font-family="Arial, sans-serif" font-size="16" font-weight="700">thing id 2</text>
+</svg>

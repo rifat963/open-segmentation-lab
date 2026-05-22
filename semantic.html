@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semantic Segmentation Tutorial | Open Segmentation Lab</title>
+  <meta name="description" content="Learn semantic segmentation, pixel-wise classification, FCN, U-Net, DeepLab, SegFormer, Mask2Former, and common metrics such as mIoU and Dice.">
+  <meta property="og:title" content="Semantic Segmentation Tutorial">
+  <meta property="og:description" content="A free academic tutorial on semantic segmentation models, applications, and evaluation metrics.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://example.com/semantic.html">
+  <meta property="og:site_name" content="Open Segmentation Lab">
+  <link rel="canonical" href="https://example.com/semantic.html">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="semantic.html">Semantic</a></li>
+        <li><a href="instance.html">Instance</a></li>
+        <li><a href="panoptic.html">Panoptic</a></li>
+        <li><a href="ssl-segmentation.html">SSL Segmentation</a></li>
+        <li><a href="datasets.html">Datasets</a></li>
+        <li><a href="metrics.html">Metrics</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="papers.html">Papers</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Tutorial</p>
+        <h1>Semantic Segmentation</h1>
+        <p>Semantic segmentation assigns a category label to every pixel. It is the foundation for many dense prediction tasks in medical imaging, remote sensing, autonomous navigation, and agricultural analysis.</p>
+      </div>
+    </section>
+
+    <div class="section">
+      <div class="container page-grid">
+        <article class="content-panel">
+          <section id="definition">
+            <h2>Definition</h2>
+            <p>Semantic segmentation is pixel-wise classification. Given an input image <code>I</code>, the model predicts a class map <code>Y</code> with the same spatial resolution, or a lower-resolution map that is upsampled back to image size.</p>
+            <div class="callout definition"><strong>Definition:</strong> In semantic segmentation, two pixels with the same class label are treated the same even if they belong to different physical objects.</div>
+            <figure class="visual-card">
+              <img src="images/semantic-mask.svg" alt="Semantic segmentation mask with shared class colors">
+              <figcaption>Semantic masks describe categories, not individual object identities.</figcaption>
+            </figure>
+          </section>
+
+          <section id="pixel-wise">
+            <h2>Pixel-wise Classification</h2>
+            <p>A common network outputs a tensor of shape <code>H x W x C</code>, where <code>C</code> is the number of classes. Each pixel receives class scores, and the final prediction is usually the class with the highest score.</p>
+            <pre><code>for each pixel p:
+    scores = model(image)[p]
+    predicted_class[p] = argmax(scores)</code></pre>
+            <div class="callout intuition"><strong>Intuition:</strong> Image classification asks "what is in the image?" Semantic segmentation asks "where is each class in the image?"</div>
+          </section>
+
+          <section id="example">
+            <h2>Input-output Example</h2>
+            <p>For a street scene, the input may contain road, sky, pedestrians, signs, and cars. The output is a map where all road pixels share one label, all sky pixels share another label, and all car pixels share the car label regardless of the number of cars.</p>
+            <div class="formula-box">Input image -> encoder features -> decoder upsampling -> per-pixel class probabilities -> semantic mask</div>
+          </section>
+
+          <section id="applications">
+            <h2>Applications</h2>
+            <div class="grid two">
+              <div class="card"><h3>Medical Imaging</h3><p>Segment organs, tumors, lesions, cells, or tissue regions for measurement and clinical research.</p></div>
+              <div class="card"><h3>Agriculture</h3><p>Separate crop, weed, soil, leaf disease, and canopy regions for precision farming.</p></div>
+              <div class="card"><h3>Autonomous Driving</h3><p>Estimate road layout, lane regions, sidewalks, vegetation, and other scene classes.</p></div>
+              <div class="card"><h3>Remote Sensing</h3><p>Map buildings, water, forest, roads, and land-cover classes from aerial or satellite images.</p></div>
+            </div>
+          </section>
+
+          <section id="models">
+            <h2>Classical Models</h2>
+            <p><strong>FCN</strong> replaced fully connected classification layers with convolutional layers, enabling dense outputs. <strong>U-Net</strong> uses skip connections between encoder and decoder stages, which is especially useful when precise boundaries matter. <strong>DeepLab</strong> introduced atrous convolution and spatial pyramid pooling to capture multiscale context without aggressively reducing resolution.</p>
+            <div class="callout exam"><strong>Exam note:</strong> U-Net is often used when data is limited and boundary localization is important. DeepLab is often discussed for multiscale context and strong natural-image benchmarks.</div>
+          </section>
+
+          <section id="transformers">
+            <h2>Transformer-based Models</h2>
+            <p><strong>SegFormer</strong> combines hierarchical transformer encoders with a lightweight decoder. <strong>Mask2Former</strong> frames segmentation as mask classification and uses masked attention to support semantic, instance, and panoptic tasks in one architecture family.</p>
+            <div class="callout pitfall"><strong>Pitfall:</strong> Transformer models may perform well but often require careful pretraining, memory planning, and data augmentation.</div>
+          </section>
+
+          <section id="metrics">
+            <h2>Metrics</h2>
+            <p><strong>Pixel accuracy</strong> measures the fraction of correctly classified pixels. <strong>Mean IoU</strong> averages intersection-over-union across classes. <strong>Dice score</strong> emphasizes overlap and is popular in medical segmentation.</p>
+            <div class="formula-box">IoU(class c) = TP_c / (TP_c + FP_c + FN_c)</div>
+            <div class="formula-box">Dice(class c) = 2TP_c / (2TP_c + FP_c + FN_c)</div>
+          </section>
+
+          <section id="tutorials">
+            <h2>Tutorial Cards</h2>
+            <div class="grid two">
+              <article class="tutorial-card"><h3>U-Net from Scratch</h3><p>Build an encoder-decoder model with skip connections and learn why feature alignment matters.</p></article>
+              <article class="tutorial-card"><h3>DeepLabV3 Explained</h3><p>Understand atrous convolution, output stride, and atrous spatial pyramid pooling.</p></article>
+              <article class="tutorial-card"><h3>Semantic Segmentation Metrics</h3><p>Practice pixel accuracy, mIoU, Dice, and confusion-matrix interpretation.</p></article>
+              <article class="tutorial-card"><h3>Medical and Agricultural Segmentation</h3><p>Compare domain-specific challenges such as small objects, imbalance, and annotation noise.</p></article>
+            </div>
+          </section>
+        </article>
+
+        <aside class="sidebar" aria-label="Semantic segmentation sidebar">
+          <div class="sidebar-card">
+            <h2>On this page</h2>
+            <ul class="toc">
+              <li><a href="#definition">Definition</a></li>
+              <li><a href="#pixel-wise">Pixel-wise classification</a></li>
+              <li><a href="#applications">Applications</a></li>
+              <li><a href="#models">Classical models</a></li>
+              <li><a href="#transformers">Transformers</a></li>
+              <li><a href="#metrics">Metrics</a></li>
+            </ul>
+          </div>
+          <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+          <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h2>Open Segmentation Lab</h2>
+          <p>Free academic tutorials for image segmentation, datasets, metrics, and research reading.</p>
+        </div>
+        <div>
+          <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+          <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+        </div>
+      </div>
+      <p class="footer-note">Educational content is free for students and researchers. Ad spaces are limited and clearly labeled.</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

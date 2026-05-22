@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Segmentation Datasets | Open Segmentation Lab</title>
+  <meta name="description" content="Compare common segmentation datasets including Cityscapes, COCO, ADE20K, Pascal VOC, medical imaging datasets, and agricultural disease segmentation datasets.">
+  <meta property="og:title" content="Segmentation Datasets">
+  <meta property="og:description" content="Academic notes for choosing datasets for semantic, instance, panoptic, medical, and agricultural segmentation.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://example.com/datasets.html">
+  <meta property="og:site_name" content="Open Segmentation Lab">
+  <link rel="canonical" href="https://example.com/datasets.html">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="semantic.html">Semantic</a></li>
+        <li><a href="instance.html">Instance</a></li>
+        <li><a href="panoptic.html">Panoptic</a></li>
+        <li><a href="ssl-segmentation.html">SSL Segmentation</a></li>
+        <li><a href="datasets.html">Datasets</a></li>
+        <li><a href="metrics.html">Metrics</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="papers.html">Papers</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Reference</p>
+        <h1>Segmentation Datasets</h1>
+        <p>Dataset choice affects label format, model architecture, evaluation metric, and project scope. These cards summarize common options for student projects and literature review.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="grid auto">
+          <article class="dataset-card">
+            <h2>Cityscapes</h2>
+            <p>Urban street-scene dataset for road understanding and autonomous driving research.</p>
+            <div class="dataset-meta">
+              <div><strong>Task type:</strong> Semantic and instance-aware urban scene segmentation.</div>
+              <div><strong>Annotation format:</strong> Fine pixel labels and polygon annotations for selected classes.</div>
+              <div><strong>Suitable models:</strong> DeepLab, HRNet, SegFormer, Mask2Former, panoptic models.</div>
+              <div><strong>Notes for students:</strong> Strong for studying class imbalance, thin structures, and urban "things vs stuff" labels.</div>
+            </div>
+          </article>
+
+          <article class="dataset-card">
+            <h2>COCO</h2>
+            <p>Large-scale natural image dataset with object detection, instance segmentation, captions, and panoptic annotations.</p>
+            <div class="dataset-meta">
+              <div><strong>Task type:</strong> Instance and panoptic segmentation.</div>
+              <div><strong>Annotation format:</strong> Polygons, compressed masks, categories, image metadata.</div>
+              <div><strong>Suitable models:</strong> Mask R-CNN, YOLACT, YOLO segmentation, DETR-style models, Mask2Former.</div>
+              <div><strong>Notes for students:</strong> Excellent for learning standard benchmarks, but training from scratch can be computationally expensive.</div>
+            </div>
+          </article>
+
+          <article class="dataset-card">
+            <h2>ADE20K</h2>
+            <p>Scene parsing dataset with a broad vocabulary of object and stuff categories.</p>
+            <div class="dataset-meta">
+              <div><strong>Task type:</strong> Semantic segmentation and scene parsing.</div>
+              <div><strong>Annotation format:</strong> Pixel-level category masks.</div>
+              <div><strong>Suitable models:</strong> UperNet, SegFormer, DeepLab variants, Mask2Former.</div>
+              <div><strong>Notes for students:</strong> Useful for studying many-class segmentation and indoor/outdoor scene diversity.</div>
+            </div>
+          </article>
+
+          <article class="dataset-card">
+            <h2>Pascal VOC</h2>
+            <p>Classic benchmark for object recognition and segmentation with a manageable number of classes.</p>
+            <div class="dataset-meta">
+              <div><strong>Task type:</strong> Semantic segmentation.</div>
+              <div><strong>Annotation format:</strong> Pixel masks for foreground object categories.</div>
+              <div><strong>Suitable models:</strong> FCN, U-Net-style baselines, DeepLab, lightweight student models.</div>
+              <div><strong>Notes for students:</strong> Good first benchmark because the class list is smaller and many tutorials use it.</div>
+            </div>
+          </article>
+
+          <article class="dataset-card">
+            <h2>Medical Imaging Datasets</h2>
+            <p>Includes organ, lesion, cell, vessel, tumor, and tissue segmentation datasets across modalities.</p>
+            <div class="dataset-meta">
+              <div><strong>Task type:</strong> Semantic, instance, or volumetric segmentation depending on the dataset.</div>
+              <div><strong>Annotation format:</strong> Binary masks, multiclass masks, 3D volumes, or contours.</div>
+              <div><strong>Suitable models:</strong> U-Net, nnU-Net, attention U-Net, transformer U-Net variants.</div>
+              <div><strong>Notes for students:</strong> Pay attention to patient-level splits, privacy, modality differences, and class imbalance.</div>
+            </div>
+          </article>
+
+          <article class="dataset-card">
+            <h2>Agricultural Disease Segmentation Datasets</h2>
+            <p>Datasets for segmenting diseased leaf regions, crops, weeds, fruits, canopy, and field objects.</p>
+            <div class="dataset-meta">
+              <div><strong>Task type:</strong> Semantic or instance segmentation for plant regions and disease symptoms.</div>
+              <div><strong>Annotation format:</strong> Pixel masks, polygons, or bounding boxes converted to weak masks.</div>
+              <div><strong>Suitable models:</strong> U-Net, DeepLabV3, SegFormer, YOLO segmentation, SAM-assisted annotation workflows.</div>
+              <div><strong>Notes for students:</strong> Watch for lighting variation, small lesions, background clutter, and dataset bias across crop species.</div>
+            </div>
+          </article>
+        </div>
+
+        <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+        <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h2>Open Segmentation Lab</h2>
+          <p>Free academic tutorials for image segmentation, datasets, metrics, and research reading.</p>
+        </div>
+        <div>
+          <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+          <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+        </div>
+      </div>
+      <p class="footer-note">Educational content is free for students and researchers. Ad spaces are limited and clearly labeled.</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

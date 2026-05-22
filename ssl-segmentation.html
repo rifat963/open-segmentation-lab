@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Self-Supervised Segmentation | Open Segmentation Lab</title>
+  <meta name="description" content="Learn self-supervised segmentation, annotation cost, contrastive learning, masked image modeling, DINO-style representations, and pseudo-mask training.">
+  <meta property="og:title" content="Self-Supervised Segmentation">
+  <meta property="og:description" content="A free academic tutorial on self-supervised learning for segmentation and pseudo-label workflows.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://example.com/ssl-segmentation.html">
+  <meta property="og:site_name" content="Open Segmentation Lab">
+  <link rel="canonical" href="https://example.com/ssl-segmentation.html">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="semantic.html">Semantic</a></li>
+        <li><a href="instance.html">Instance</a></li>
+        <li><a href="panoptic.html">Panoptic</a></li>
+        <li><a href="ssl-segmentation.html">SSL Segmentation</a></li>
+        <li><a href="datasets.html">Datasets</a></li>
+        <li><a href="metrics.html">Metrics</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="papers.html">Papers</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Tutorial</p>
+        <h1>Self-Supervised Segmentation</h1>
+        <p>Self-supervised segmentation uses unlabeled images, learned representations, and pseudo masks to reduce the dependence on expensive pixel-level annotation.</p>
+      </div>
+    </section>
+
+    <div class="section">
+      <div class="container page-grid">
+        <article class="content-panel">
+          <section id="annotation-cost">
+            <h2>Why Annotation Cost Matters</h2>
+            <p>Segmentation labels are expensive because annotators must trace object boundaries or region interiors. In medical and agricultural datasets, expert knowledge may also be required. Self-supervised learning helps by pretraining encoders on unlabeled data before the model sees dense labels.</p>
+            <div class="callout definition"><strong>Definition:</strong> Self-supervised learning creates training signals from the data itself, such as predicting missing patches or matching different augmented views of the same image.</div>
+          </section>
+
+          <section id="contrastive">
+            <h2>Contrastive Learning for Segmentation</h2>
+            <p>Contrastive methods learn representations by pulling related views together and pushing unrelated views apart. For segmentation, the challenge is to preserve local spatial detail while learning global invariances.</p>
+            <div class="formula-box">positive pair: augmented views of same image or region<br>negative pair: views from different images or regions</div>
+            <div class="callout intuition"><strong>Intuition:</strong> A good segmentation encoder should recognize that two augmented views contain the same object while still retaining boundary-sensitive features.</div>
+          </section>
+
+          <section id="mim">
+            <h2>Masked Image Modeling</h2>
+            <p>Masked image modeling hides patches and trains the model to reconstruct missing visual information. This encourages the encoder to learn spatial structure, texture, and context useful for dense prediction.</p>
+            <pre><code>image patches -> mask random patches -> encode visible patches
+decoder reconstructs masked content -> use encoder for segmentation</code></pre>
+          </section>
+
+          <section id="dino">
+            <h2>DINO-style Representation Learning</h2>
+            <p>DINO-style methods use teacher-student training to learn visual representations without labels. Attention maps from vision transformers can reveal object-like regions, making them useful for weak localization and pseudo-mask discovery.</p>
+            <div class="callout pitfall"><strong>Pitfall:</strong> Object-like attention is not the same as a verified segmentation label. Pseudo masks must be inspected, filtered, or refined before training a final model.</div>
+          </section>
+
+          <section id="sam">
+            <h2>SAM-assisted Pseudo-labeling</h2>
+            <p>Promptable foundation models can generate candidate masks from points, boxes, or automatic mask generation. These masks can bootstrap a dataset, but the class semantics still need task-specific mapping and quality control.</p>
+          </section>
+
+          <section id="pipeline">
+            <h2>Suggested Pipeline</h2>
+            <div class="grid auto learning-path">
+              <article class="card path-item"><h3>Pretrain Encoder</h3><p>Use unlabeled domain images with contrastive learning, masked image modeling, or teacher-student representation learning.</p></article>
+              <article class="card path-item"><h3>Generate Pseudo Masks</h3><p>Use clustering, attention maps, SAM prompts, or a weak teacher model to propose candidate masks.</p></article>
+              <article class="card path-item"><h3>Fine-tune Segmentation Head</h3><p>Train a decoder or mask head with available labels and filtered pseudo labels.</p></article>
+              <article class="card path-item"><h3>Evaluate Quality</h3><p>Measure IoU, Dice, AP, or PQ on a trusted validation set with human-reviewed labels.</p></article>
+            </div>
+          </section>
+
+          <section id="tutorials">
+            <h2>Tutorial Cards</h2>
+            <div class="grid two">
+              <article class="tutorial-card"><h3>SimCLR for Visual Representation Learning</h3><p>Learn how augmentation, positive pairs, and contrastive loss shape image encoders.</p></article>
+              <article class="tutorial-card"><h3>DINO for Dense Prediction</h3><p>Use self-distilled features and attention maps as dense representation signals.</p></article>
+              <article class="tutorial-card"><h3>Masked Autoencoders for Segmentation</h3><p>Study patch masking and transfer a pretrained encoder to segmentation tasks.</p></article>
+              <article class="tutorial-card"><h3>Pseudo Mask Training Pipeline</h3><p>Build a careful workflow for mask generation, filtering, fine-tuning, and validation.</p></article>
+            </div>
+          </section>
+        </article>
+
+        <aside class="sidebar" aria-label="Self-supervised segmentation sidebar">
+          <div class="sidebar-card">
+            <h2>On this page</h2>
+            <ul class="toc">
+              <li><a href="#annotation-cost">Annotation cost</a></li>
+              <li><a href="#contrastive">Contrastive learning</a></li>
+              <li><a href="#mim">Masked modeling</a></li>
+              <li><a href="#dino">DINO-style learning</a></li>
+              <li><a href="#pipeline">Pipeline</a></li>
+            </ul>
+          </div>
+          <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+          <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h2>Open Segmentation Lab</h2>
+          <p>Free academic tutorials for image segmentation, datasets, metrics, and research reading.</p>
+        </div>
+        <div>
+          <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+          <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+        </div>
+      </div>
+      <p class="footer-note">Educational content is free for students and researchers. Ad spaces are limited and clearly labeled.</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

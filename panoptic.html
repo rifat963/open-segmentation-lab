@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panoptic Segmentation Tutorial | Open Segmentation Lab</title>
+  <meta name="description" content="Learn panoptic segmentation, things versus stuff classes, relationships with semantic and instance segmentation, Panoptic Quality, and applications.">
+  <meta property="og:title" content="Panoptic Segmentation Tutorial">
+  <meta property="og:description" content="A free academic tutorial on unified scene segmentation and Panoptic Quality.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://example.com/panoptic.html">
+  <meta property="og:site_name" content="Open Segmentation Lab">
+  <link rel="canonical" href="https://example.com/panoptic.html">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="semantic.html">Semantic</a></li>
+        <li><a href="instance.html">Instance</a></li>
+        <li><a href="panoptic.html">Panoptic</a></li>
+        <li><a href="ssl-segmentation.html">SSL Segmentation</a></li>
+        <li><a href="datasets.html">Datasets</a></li>
+        <li><a href="metrics.html">Metrics</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="papers.html">Papers</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Tutorial</p>
+        <h1>Panoptic Segmentation</h1>
+        <p>Panoptic segmentation unifies semantic and instance segmentation. Every pixel receives a semantic class, and countable objects also receive instance identities.</p>
+      </div>
+    </section>
+
+    <div class="section">
+      <div class="container page-grid">
+        <article class="content-panel">
+          <section id="definition">
+            <h2>Definition</h2>
+            <p>A panoptic output is a complete scene map. It has no unlabeled pixels: background regions such as road or sky are labeled as stuff, while countable objects such as cars or people are labeled as things with instance ids.</p>
+            <div class="callout definition"><strong>Definition:</strong> Panoptic segmentation requires a non-overlapping assignment for every pixel in the image.</div>
+            <figure class="visual-card">
+              <img src="images/panoptic-mask.svg" alt="Panoptic segmentation map with stuff regions and thing instances">
+              <figcaption>Panoptic maps combine stuff classes and thing instances.</figcaption>
+            </figure>
+          </section>
+
+          <section id="things-stuff">
+            <h2>Things vs Stuff Classes</h2>
+            <p><strong>Things</strong> are countable objects, such as pedestrians, cars, chairs, fruits, or cells. <strong>Stuff</strong> refers to amorphous regions, such as road, sky, grass, water, tissue background, or soil.</p>
+            <div class="callout intuition"><strong>Intuition:</strong> If asking "how many?" makes sense, the category is often a thing. If the region is better described as material or background, it is often stuff.</div>
+          </section>
+
+          <section id="relationship">
+            <h2>Relationship with Semantic and Instance Segmentation</h2>
+            <p>Panoptic segmentation can be viewed as a constraint-aware combination of semantic segmentation and instance segmentation. It keeps the dense class assignment of semantic segmentation while preserving individual identities for thing classes.</p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Task</th>
+                    <th>Stuff classes</th>
+                    <th>Thing instances</th>
+                    <th>Complete pixel map</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Semantic</td><td>Yes</td><td>No</td><td>Yes</td></tr>
+                  <tr><td>Instance</td><td>No, usually foreground objects only</td><td>Yes</td><td>No</td></tr>
+                  <tr><td>Panoptic</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="pq">
+            <h2>Panoptic Quality</h2>
+            <p>Panoptic Quality evaluates both recognition and segmentation quality. It rewards correct matching of predicted and ground-truth segments and penalizes false positives and false negatives.</p>
+            <div class="formula-box">PQ = SQ x RQ</div>
+            <div class="formula-box">SQ = average IoU of matched segments<br>RQ = TP / (TP + 0.5 FP + 0.5 FN)</div>
+            <div class="callout exam"><strong>Exam note:</strong> PQ is not just IoU. It combines mask overlap with the model's ability to detect the correct set of segments.</div>
+          </section>
+
+          <section id="applications">
+            <h2>Applications</h2>
+            <div class="grid two">
+              <div class="card"><h3>Autonomous Driving</h3><p>Unify lane, road, sky, person, vehicle, and sign understanding in one scene representation.</p></div>
+              <div class="card"><h3>Robotics</h3><p>Support manipulation and navigation by separating objects while retaining background layout.</p></div>
+              <div class="card"><h3>Agriculture</h3><p>Distinguish crop rows, soil, weeds, fruits, leaves, and individual plants for field analytics.</p></div>
+              <div class="card"><h3>Medical Imaging</h3><p>Represent tissue regions and countable anatomical or cellular instances in one prediction.</p></div>
+            </div>
+          </section>
+
+          <section id="tutorials">
+            <h2>Tutorial Cards</h2>
+            <div class="grid two">
+              <article class="tutorial-card"><h3>Panoptic Segmentation Basics</h3><p>Learn the output format, class taxonomy, and non-overlap constraint.</p></article>
+              <article class="tutorial-card"><h3>Panoptic Quality Explained</h3><p>Work through SQ, RQ, and matched segment calculations.</p></article>
+              <article class="tutorial-card"><h3>Mask2Former Overview</h3><p>Study how mask classification can address multiple segmentation tasks.</p></article>
+              <article class="tutorial-card"><h3>Panoptic Dataset Preparation</h3><p>Convert class masks and instance annotations into panoptic labels.</p></article>
+            </div>
+          </section>
+        </article>
+
+        <aside class="sidebar" aria-label="Panoptic segmentation sidebar">
+          <div class="sidebar-card">
+            <h2>On this page</h2>
+            <ul class="toc">
+              <li><a href="#definition">Definition</a></li>
+              <li><a href="#things-stuff">Things vs stuff</a></li>
+              <li><a href="#relationship">Task relationship</a></li>
+              <li><a href="#pq">Panoptic Quality</a></li>
+              <li><a href="#applications">Applications</a></li>
+            </ul>
+          </div>
+          <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+          <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h2>Open Segmentation Lab</h2>
+          <p>Free academic tutorials for image segmentation, datasets, metrics, and research reading.</p>
+        </div>
+        <div>
+          <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+          <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+        </div>
+      </div>
+      <p class="footer-note">Educational content is free for students and researchers. Ad spaces are limited and clearly labeled.</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

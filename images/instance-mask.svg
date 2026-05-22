@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 380" role="img" aria-labelledby="instance-title instance-desc">
+  <title id="instance-title">Instance segmentation masks</title>
+  <desc id="instance-desc">Different object instances are separated with individual masks and ids.</desc>
+  <rect width="640" height="380" fill="#ffffff"/>
+  <rect x="38" y="38" width="564" height="304" rx="16" fill="#f8fafc" stroke="#d9e2ec" stroke-width="2"/>
+  <rect x="76" y="112" width="126" height="148" rx="16" fill="#f9c66d" opacity=".85" stroke="#8a5a12" stroke-width="3"/>
+  <rect x="236" y="120" width="126" height="140" rx="16" fill="#9dc3ff" opacity=".88" stroke="#123a63" stroke-width="3"/>
+  <rect x="396" y="106" width="126" height="154" rx="16" fill="#2f8f8a" opacity=".66" stroke="#0b5f5b" stroke-width="3"/>
+  <g font-family="Arial, sans-serif" font-size="17" fill="#123a63" font-weight="700">
+    <text x="92" y="92">mask 1</text>
+    <text x="252" y="100">mask 2</text>
+    <text x="412" y="86">mask 3</text>
+  </g>
+  <path d="M76 282h446" stroke="#d9e2ec" stroke-width="6" stroke-linecap="round"/>
+  <text x="58" y="320" fill="#617080" font-family="Arial, sans-serif" font-size="18">Same class can contain multiple separately evaluated objects.</text>
+</svg>

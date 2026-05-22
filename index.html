@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open Segmentation Lab | Free Image Segmentation Tutorials</title>
+  <meta name="description" content="Open Segmentation Lab is a free academic platform for learning semantic, instance, panoptic, and self-supervised image segmentation.">
+  <meta property="og:title" content="Open Segmentation Lab">
+  <meta property="og:description" content="A free academic platform for image segmentation tutorials, metrics, datasets, papers, and interactive calculators.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://example.com/">
+  <meta property="og:site_name" content="Open Segmentation Lab">
+  <link rel="canonical" href="https://example.com/">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="semantic.html">Semantic</a></li>
+        <li><a href="instance.html">Instance</a></li>
+        <li><a href="panoptic.html">Panoptic</a></li>
+        <li><a href="ssl-segmentation.html">SSL Segmentation</a></li>
+        <li><a href="datasets.html">Datasets</a></li>
+        <li><a href="metrics.html">Metrics</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="papers.html">Papers</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="container hero-content">
+        <p class="eyebrow">Free computer vision tutorials</p>
+        <h1>Open Segmentation Lab</h1>
+        <p>A free academic platform for learning semantic, instance, panoptic, and self-supervised image segmentation.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="semantic.html">Start Learning</a>
+          <a class="btn btn-secondary" href="metrics.html">Explore Metrics</a>
+          <a class="btn btn-secondary" href="playground.html">Open Playground</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>What is Image Segmentation?</h2>
+          <p>Image segmentation is the task of partitioning an image into meaningful pixel-level regions. Instead of predicting only an image label or drawing a bounding box, segmentation asks a model to describe where each visual concept occurs.</p>
+        </div>
+        <div class="grid two">
+          <div class="card">
+            <h3>Dense Prediction</h3>
+            <p>Segmentation models produce spatial outputs. A model may assign a class to every pixel, separate each object instance, or create a unified map of things and stuff.</p>
+            <div class="callout definition"><strong>Definition:</strong> A segmentation mask is an image-sized annotation where pixel values encode classes, instances, or both.</div>
+          </div>
+          <figure class="visual-card">
+            <img src="images/placeholder-segmentation.svg" alt="Stylized segmentation diagram showing images, masks, and region labels">
+            <figcaption>Segmentation turns visual scenes into structured pixel-level representations.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section compact">
+      <div class="container">
+        <div class="section-title">
+          <h2>Semantic vs Instance vs Panoptic Segmentation</h2>
+          <p>These tasks share the goal of pixel-level understanding, but they answer different questions.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Question Answered</th>
+                <th>Output</th>
+                <th>Typical Metrics</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Semantic segmentation</td>
+                <td>What class does each pixel belong to?</td>
+                <td>One class label per pixel</td>
+                <td>Pixel accuracy, mIoU, Dice</td>
+              </tr>
+              <tr>
+                <td>Instance segmentation</td>
+                <td>Which object instance does each foreground pixel belong to?</td>
+                <td>One mask per object instance</td>
+                <td>Mask AP, IoU</td>
+              </tr>
+              <tr>
+                <td>Panoptic segmentation</td>
+                <td>How can every pixel be assigned both a semantic class and instance identity when needed?</td>
+                <td>Unified scene map with class and instance ids</td>
+                <td>Panoptic Quality</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Recommended Learning Path</h2>
+          <p>Students can follow this order from fundamentals to modern research pipelines.</p>
+        </div>
+        <div class="grid auto learning-path">
+          <article class="card path-item">
+            <h3>Learn Pixel Metrics</h3>
+            <p>Start with IoU, Dice, pixel accuracy, and confusion matrices. These explain how segmentation quality is measured.</p>
+          </article>
+          <article class="card path-item">
+            <h3>Study Semantic Models</h3>
+            <p>Move from FCN and U-Net to DeepLab and transformer encoders. Focus on dense prediction and multiscale context.</p>
+          </article>
+          <article class="card path-item">
+            <h3>Add Object Instances</h3>
+            <p>Study Mask R-CNN, YOLO-style segmentation, and mask AP to understand detection plus mask prediction.</p>
+          </article>
+          <article class="card path-item">
+            <h3>Connect to Research</h3>
+            <p>Finish with panoptic segmentation, self-supervised representation learning, and foundation-model assisted annotation.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section compact">
+      <div class="container">
+        <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+        <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Core Topics</h2>
+          <p>Each topic page is written as a concise tutorial with definitions, intuition, formulas, and reading guidance.</p>
+        </div>
+        <div class="grid auto">
+          <article class="tutorial-card">
+            <h3>Semantic Segmentation</h3>
+            <p>Pixel-wise classification, encoder-decoder architectures, multiscale context, and semantic metrics.</p>
+            <a href="semantic.html">Open tutorial</a>
+          </article>
+          <article class="tutorial-card">
+            <h3>Instance Segmentation</h3>
+            <p>Object proposals, mask heads, real-time mask pipelines, and instance-level evaluation.</p>
+            <a href="instance.html">Open tutorial</a>
+          </article>
+          <article class="tutorial-card">
+            <h3>Panoptic Segmentation</h3>
+            <p>Unified scene understanding with things, stuff, and Panoptic Quality.</p>
+            <a href="panoptic.html">Open tutorial</a>
+          </article>
+          <article class="tutorial-card">
+            <h3>Self-Supervised Segmentation</h3>
+            <p>Representation learning, pseudo masks, and low-annotation segmentation workflows.</p>
+            <a href="ssl-segmentation.html">Open tutorial</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section compact">
+      <div class="container">
+        <div class="section-title">
+          <h2>Interactive Playground Preview</h2>
+          <p>The playground contains small browser-only tools for checking segmentation formulas and comparing output types.</p>
+        </div>
+        <div class="grid three">
+          <article class="card">
+            <h3>IoU Calculator</h3>
+            <p>Practice the relationship between intersection, union, and overlap quality.</p>
+          </article>
+          <article class="card">
+            <h3>Dice Calculator</h3>
+            <p>Explore why Dice is common in medical segmentation with imbalanced foreground regions.</p>
+          </article>
+          <article class="card">
+            <h3>Mask Overlay Demo</h3>
+            <p>Show and hide a semi-transparent mask to connect annotations with visual output.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Featured Papers</h2>
+          <p>Start with these papers to understand how the field developed from fully convolutional networks to foundation models.</p>
+        </div>
+        <div class="grid auto">
+          <article class="paper-card">
+            <p class="paper-meta">2015</p>
+            <h3>Fully Convolutional Networks for Semantic Segmentation</h3>
+            <p>Popularized end-to-end dense prediction with convolutional networks.</p>
+          </article>
+          <article class="paper-card">
+            <p class="paper-meta">2017</p>
+            <h3>Mask R-CNN</h3>
+            <p>Extended Faster R-CNN with a parallel mask branch for instance segmentation.</p>
+          </article>
+          <article class="paper-card">
+            <p class="paper-meta">2022</p>
+            <h3>Mask2Former</h3>
+            <p>Unified semantic, instance, and panoptic segmentation through masked attention.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section compact">
+      <div class="container">
+        <div class="section-title">
+          <h2>Why this platform is free</h2>
+          <p>Open Segmentation Lab is designed for university students, early researchers, and instructors who need accessible computer vision material without a paywall. Limited, clearly labeled ad placements may support hosting and maintenance, but the educational content remains free.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h2>Open Segmentation Lab</h2>
+          <p>Free academic tutorials for image segmentation, datasets, metrics, and research reading.</p>
+          <ul class="footer-links">
+            <li><a href="semantic.html">Semantic</a></li>
+            <li><a href="instance.html">Instance</a></li>
+            <li><a href="panoptic.html">Panoptic</a></li>
+            <li><a href="metrics.html">Metrics</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+          <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+        </div>
+      </div>
+      <p class="footer-note">Educational content is free for students and researchers. No popups, floating ads, autoplay ads, login, backend, or tracking database is required.</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

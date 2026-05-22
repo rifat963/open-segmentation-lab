@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Segmentation Playground | Open Segmentation Lab</title>
+  <meta name="description" content="Use free client-side tools for calculating IoU, Dice score, comparing segmentation types, and visualizing a mask overlay.">
+  <meta property="og:title" content="Segmentation Playground">
+  <meta property="og:description" content="Interactive vanilla JavaScript calculators and visual demos for image segmentation students.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://example.com/playground.html">
+  <meta property="og:site_name" content="Open Segmentation Lab">
+  <link rel="canonical" href="https://example.com/playground.html">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="semantic.html">Semantic</a></li>
+        <li><a href="instance.html">Instance</a></li>
+        <li><a href="panoptic.html">Panoptic</a></li>
+        <li><a href="ssl-segmentation.html">SSL Segmentation</a></li>
+        <li><a href="datasets.html">Datasets</a></li>
+        <li><a href="metrics.html">Metrics</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="papers.html">Papers</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Interactive tools</p>
+        <h1>Segmentation Playground</h1>
+        <p>These tools run entirely in the browser with vanilla JavaScript. They are intended for classroom exercises and quick metric checks.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="tool-grid">
+          <article class="tool-card">
+            <h2>IoU Calculator</h2>
+            <p class="formula-box">IoU = Intersection / Union</p>
+            <label for="iou-intersection">Intersection</label>
+            <input id="iou-intersection" type="number" min="0" step="any" placeholder="Example: 45">
+            <label for="iou-union">Union</label>
+            <input id="iou-union" type="number" min="0" step="any" placeholder="Example: 90">
+            <button class="btn btn-outline" id="calculate-iou" type="button">Calculate IoU</button>
+            <div class="result" id="iou-result" aria-live="polite">IoU value will appear here.</div>
+          </article>
+
+          <article class="tool-card">
+            <h2>Dice Score Calculator</h2>
+            <p class="formula-box">Dice = 2 &times; overlap / (predicted area + ground-truth area)</p>
+            <label for="dice-overlap">Overlap area</label>
+            <input id="dice-overlap" type="number" min="0" step="any" placeholder="Example: 40">
+            <label for="dice-predicted">Predicted mask area</label>
+            <input id="dice-predicted" type="number" min="0" step="any" placeholder="Example: 70">
+            <label for="dice-ground-truth">Ground truth mask area</label>
+            <input id="dice-ground-truth" type="number" min="0" step="any" placeholder="Example: 65">
+            <button class="btn btn-outline" id="calculate-dice" type="button">Calculate Dice</button>
+            <div class="result" id="dice-result" aria-live="polite">Dice score will appear here.</div>
+          </article>
+
+          <article class="tool-card">
+            <h2>Segmentation Type Selector</h2>
+            <label for="segmentation-selector">Choose a segmentation type</label>
+            <select id="segmentation-selector">
+              <option value="semantic">Semantic segmentation</option>
+              <option value="instance">Instance segmentation</option>
+              <option value="panoptic">Panoptic segmentation</option>
+            </select>
+            <div class="selector-output" id="segmentation-selector-output" aria-live="polite"></div>
+          </article>
+
+          <article class="tool-card">
+            <h2>Mask Overlay Demo</h2>
+            <div class="mask-demo">
+              <div class="mask-canvas" id="mask-canvas" aria-label="Image area with optional segmentation mask overlay">
+                <div class="mask-layer" aria-hidden="true"></div>
+              </div>
+              <div class="button-row">
+                <button class="btn btn-outline" id="show-mask" type="button">Show mask</button>
+                <button class="btn btn-outline" id="hide-mask" type="button">Hide mask</button>
+                <button class="btn btn-outline" id="toggle-boundary" type="button">Toggle boundary</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h2>Open Segmentation Lab</h2>
+          <p>Free academic tutorials for image segmentation, datasets, metrics, and research reading.</p>
+        </div>
+        <div>
+          <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+          <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+        </div>
+      </div>
+      <p class="footer-note">No ads are placed inside calculators, formulas, code blocks, or interactive tools.</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

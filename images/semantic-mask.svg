@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 380" role="img" aria-labelledby="semantic-title semantic-desc">
+  <title id="semantic-title">Semantic segmentation mask</title>
+  <desc id="semantic-desc">Every pixel receives a class color without separating object instances.</desc>
+  <rect width="640" height="380" fill="#ffffff"/>
+  <rect x="38" y="38" width="564" height="304" rx="16" fill="#edf4fa" stroke="#d9e2ec" stroke-width="2"/>
+  <path d="M38 238c80-42 153-51 219-28 54 19 112 20 174 3 70-20 127-10 171 28v101H38z" fill="#2f8f8a" opacity=".55"/>
+  <rect x="88" y="112" width="110" height="150" rx="13" fill="#f9c66d" opacity=".88"/>
+  <rect x="434" y="102" width="92" height="160" rx="12" fill="#f9c66d" opacity=".88"/>
+  <circle cx="307" cy="152" r="60" fill="#9dc3ff" opacity=".95"/>
+  <text x="58" y="74" fill="#123a63" font-family="Arial, sans-serif" font-size="20" font-weight="700">Class map</text>
+  <g font-family="Arial, sans-serif" font-size="15" fill="#26313d">
+    <text x="96" y="294">person</text>
+    <text x="280" y="230">vehicle</text>
+    <text x="448" y="294">person</text>
+    <text x="282" y="316">road/field</text>
+  </g>
+</svg>

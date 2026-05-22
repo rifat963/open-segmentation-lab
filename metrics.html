@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Segmentation Metrics | Open Segmentation Lab</title>
+  <meta name="description" content="Learn IoU, Dice score, pixel accuracy, mean IoU, Mask AP, and Panoptic Quality for image segmentation evaluation.">
+  <meta property="og:title" content="Segmentation Metrics">
+  <meta property="og:description" content="Free academic notes on core segmentation evaluation metrics and their limitations.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://example.com/metrics.html">
+  <meta property="og:site_name" content="Open Segmentation Lab">
+  <link rel="canonical" href="https://example.com/metrics.html">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="semantic.html">Semantic</a></li>
+        <li><a href="instance.html">Instance</a></li>
+        <li><a href="panoptic.html">Panoptic</a></li>
+        <li><a href="ssl-segmentation.html">SSL Segmentation</a></li>
+        <li><a href="datasets.html">Datasets</a></li>
+        <li><a href="metrics.html">Metrics</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="papers.html">Papers</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Reference</p>
+        <h1>Segmentation Metrics</h1>
+        <p>Segmentation metrics compare predicted masks with ground-truth masks. A good evaluation report should include the metric definition, the task it supports, and its limitation.</p>
+      </div>
+    </section>
+
+    <div class="section">
+      <div class="container page-grid">
+        <article class="content-panel">
+          <section id="iou">
+            <h2>IoU Formula</h2>
+            <p>Intersection over Union measures how much a predicted mask overlaps with the ground-truth mask relative to their combined area.</p>
+            <div class="formula-box">IoU = Intersection / Union = TP / (TP + FP + FN)</div>
+          </section>
+
+          <section id="dice">
+            <h2>Dice Score Formula</h2>
+            <p>Dice score doubles the overlap and divides it by the total predicted and ground-truth area. It is common when foreground regions are small.</p>
+            <div class="formula-box">Dice = 2 &times; overlap / (predicted area + ground-truth area)</div>
+          </section>
+
+          <section id="pixel-accuracy">
+            <h2>Pixel Accuracy</h2>
+            <p>Pixel accuracy measures the fraction of correctly classified pixels. It is easy to understand but can be misleading when the background dominates the image.</p>
+            <div class="formula-box">Pixel Accuracy = correctly classified pixels / total pixels</div>
+          </section>
+
+          <section id="miou">
+            <h2>Mean IoU</h2>
+            <p>Mean IoU computes IoU for each class and averages across classes. It is more robust than raw pixel accuracy for multiclass semantic segmentation.</p>
+            <div class="formula-box">mIoU = (1 / C) sum over classes IoU_c</div>
+          </section>
+
+          <section id="mask-ap">
+            <h2>Mask AP</h2>
+            <p>Mask Average Precision evaluates instance segmentation by ranking predicted masks by confidence and checking whether they match ground-truth instances at different IoU thresholds.</p>
+            <div class="callout pitfall"><strong>Pitfall:</strong> Mask AP depends on confidence ranking as well as mask overlap, so calibration and duplicate predictions can affect the score.</div>
+          </section>
+
+          <section id="pq">
+            <h2>Panoptic Quality</h2>
+            <p>Panoptic Quality combines segmentation quality and recognition quality. It is used when the output must cover both stuff regions and thing instances.</p>
+            <div class="formula-box">PQ = SQ &times; RQ</div>
+          </section>
+
+          <section id="comparison">
+            <h2>Metric Comparison</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Metric</th>
+                    <th>Used for</th>
+                    <th>Strength</th>
+                    <th>Limitation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>IoU</td><td>Semantic and instance masks</td><td>Penalizes false positives and false negatives</td><td>Can be harsh for tiny objects or boundary uncertainty</td></tr>
+                  <tr><td>Dice Score</td><td>Medical and binary segmentation</td><td>Helpful for imbalanced foreground regions</td><td>Less intuitive for multi-instance evaluation</td></tr>
+                  <tr><td>Pixel Accuracy</td><td>Semantic segmentation</td><td>Simple and easy to explain</td><td>Inflated by large background classes</td></tr>
+                  <tr><td>Mean IoU</td><td>Multiclass semantic segmentation</td><td>Balances class-wise performance</td><td>Rare classes can create unstable estimates</td></tr>
+                  <tr><td>Mask AP</td><td>Instance segmentation</td><td>Evaluates ranking and mask quality together</td><td>More complex to compute and explain</td></tr>
+                  <tr><td>Panoptic Quality</td><td>Panoptic segmentation</td><td>Combines recognition and overlap quality</td><td>Requires careful segment matching and panoptic labels</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </article>
+
+        <aside class="sidebar" aria-label="Metrics sidebar">
+          <div class="sidebar-card">
+            <h2>On this page</h2>
+            <ul class="toc">
+              <li><a href="#iou">IoU</a></li>
+              <li><a href="#dice">Dice</a></li>
+              <li><a href="#pixel-accuracy">Pixel accuracy</a></li>
+              <li><a href="#miou">Mean IoU</a></li>
+              <li><a href="#mask-ap">Mask AP</a></li>
+              <li><a href="#pq">Panoptic Quality</a></li>
+            </ul>
+          </div>
+          <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+          <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h2>Open Segmentation Lab</h2>
+          <p>Free academic tutorials for image segmentation, datasets, metrics, and research reading.</p>
+        </div>
+        <div>
+          <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+          <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+        </div>
+      </div>
+      <p class="footer-note">Educational content is free for students and researchers. Ad spaces are limited and clearly labeled.</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

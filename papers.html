@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Segmentation Papers | Open Segmentation Lab</title>
+  <meta name="description" content="Browse foundational, transformer-based, self-supervised, and foundation model papers for image segmentation students.">
+  <meta property="og:title" content="Segmentation Papers">
+  <meta property="og:description" content="Grouped reading list for semantic, instance, panoptic, and self-supervised segmentation.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://example.com/papers.html">
+  <meta property="og:site_name" content="Open Segmentation Lab">
+  <link rel="canonical" href="https://example.com/papers.html">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="semantic.html">Semantic</a></li>
+        <li><a href="instance.html">Instance</a></li>
+        <li><a href="panoptic.html">Panoptic</a></li>
+        <li><a href="ssl-segmentation.html">SSL Segmentation</a></li>
+        <li><a href="datasets.html">Datasets</a></li>
+        <li><a href="metrics.html">Metrics</a></li>
+        <li><a href="playground.html">Playground</a></li>
+        <li><a href="papers.html">Papers</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Reading list</p>
+        <h1>Segmentation Papers</h1>
+        <p>This reading list is organized for students moving from classical segmentation architectures to transformer models, self-supervised learning, and promptable foundation models.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="paper-group">
+          <div class="section-title">
+            <h2>Foundational Segmentation Papers</h2>
+          </div>
+          <div class="grid auto">
+            <article class="paper-card"><p class="paper-meta">2015</p><h3>Fully Convolutional Networks for Semantic Segmentation</h3><p>Introduced end-to-end convolutional dense prediction for semantic segmentation.</p><a href="#">Read paper</a></article>
+            <article class="paper-card"><p class="paper-meta">2015</p><h3>U-Net: Convolutional Networks for Biomedical Image Segmentation</h3><p>Established an encoder-decoder architecture with skip connections for precise biomedical segmentation.</p><a href="#">Read paper</a></article>
+            <article class="paper-card"><p class="paper-meta">2017</p><h3>Mask R-CNN</h3><p>Added a mask branch to Faster R-CNN and became a central baseline for instance segmentation.</p><a href="#">Read paper</a></article>
+            <article class="paper-card"><p class="paper-meta">2018</p><h3>Panoptic Segmentation</h3><p>Formalized the task that combines semantic segmentation for stuff and instance segmentation for things.</p><a href="#">Read paper</a></article>
+          </div>
+        </div>
+
+        <div class="paper-group">
+          <div class="section-title">
+            <h2>Transformer-based Segmentation Papers</h2>
+          </div>
+          <div class="grid auto">
+            <article class="paper-card"><p class="paper-meta">2021</p><h3>SegFormer</h3><p>Combined hierarchical transformer encoders with a lightweight all-MLP decoder for semantic segmentation.</p><a href="#">Read paper</a></article>
+            <article class="paper-card"><p class="paper-meta">2021</p><h3>Swin Transformer</h3><p>Introduced shifted-window attention that became influential for dense prediction backbones.</p><a href="#">Read paper</a></article>
+            <article class="paper-card"><p class="paper-meta">2022</p><h3>Mask2Former</h3><p>Unified semantic, instance, and panoptic segmentation using masked attention and mask classification.</p><a href="#">Read paper</a></article>
+          </div>
+        </div>
+
+        <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+        <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+
+        <div class="paper-group">
+          <div class="section-title">
+            <h2>Self-supervised Segmentation Papers</h2>
+          </div>
+          <div class="grid auto">
+            <article class="paper-card"><p class="paper-meta">2020</p><h3>SimCLR</h3><p>Popularized a simple contrastive learning framework for visual representation learning.</p><a href="#">Read paper</a></article>
+            <article class="paper-card"><p class="paper-meta">2021</p><h3>DINO</h3><p>Showed that self-distilled vision transformers can learn meaningful object-centric representations.</p><a href="#">Read paper</a></article>
+            <article class="paper-card"><p class="paper-meta">2022</p><h3>Masked Autoencoders Are Scalable Vision Learners</h3><p>Demonstrated masked image modeling as an efficient pretraining approach for vision transformers.</p><a href="#">Read paper</a></article>
+          </div>
+        </div>
+
+        <div class="paper-group">
+          <div class="section-title">
+            <h2>Segment Anything and Foundation Model Papers</h2>
+          </div>
+          <div class="grid auto">
+            <article class="paper-card"><p class="paper-meta">2023</p><h3>Segment Anything</h3><p>Introduced a promptable segmentation foundation model and a large-scale mask dataset.</p><a href="#">Read paper</a></article>
+            <article class="paper-card"><p class="paper-meta">2023</p><h3>Fast Segment Anything</h3><p>Explored faster promptable segmentation variants for practical use.</p><a href="#">Read paper</a></article>
+            <article class="paper-card"><p class="paper-meta">2024</p><h3>Segment Anything Model 2</h3><p>Extended promptable segmentation ideas toward video and broader segmentation workflows.</p><a href="#">Read paper</a></article>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h2>Open Segmentation Lab</h2>
+          <p>Free academic tutorials for image segmentation, datasets, metrics, and research reading.</p>
+        </div>
+        <div>
+          <div class="ad-slot" role="complementary" aria-label="Advertisement placeholder">Advertisement</div>
+          <!-- Future Google AdSense unit can be placed here after approval. Do not encourage clicks. -->
+        </div>
+      </div>
+      <p class="footer-note">Paper links are placeholders for classroom-friendly reading lists and can be replaced with official publisher or arXiv URLs.</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>
