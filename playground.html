@@ -124,7 +124,10 @@
         <div class="tool-grid">
           <article class="tool-card">
             <h2>IoU Calculator</h2>
-            <p class="formula-box">IoU = Intersection / Union</p>
+            <div class="formula-box math-panel" style="margin-bottom:14px;" aria-label="IoU formula">
+              <span class="math-label">Intersection over Union</span>
+              <span class="math-line">IoU = |<em>P</em>&thinsp;&cap;&thinsp;<em>G</em>| / |<em>P</em>&thinsp;&cup;&thinsp;<em>G</em>|</span>
+            </div>
             <label for="iou-intersection">Intersection</label>
             <input id="iou-intersection" type="number" min="0" step="any" placeholder="Example: 45">
             <label for="iou-union">Union</label>
@@ -135,7 +138,10 @@
 
           <article class="tool-card">
             <h2>Dice Score Calculator</h2>
-            <p class="formula-box">Dice = 2 &times; overlap / (predicted area + ground-truth area)</p>
+            <div class="formula-box math-panel" style="margin-bottom:14px;" aria-label="Dice score formula">
+              <span class="math-label">Dice / F1 Score</span>
+              <span class="math-line">Dice = 2|<em>P</em>&thinsp;&cap;&thinsp;<em>G</em>| / (|<em>P</em>| + |<em>G</em>|)</span>
+            </div>
             <label for="dice-overlap">Overlap area</label>
             <input id="dice-overlap" type="number" min="0" step="any" placeholder="Example: 40">
             <label for="dice-predicted">Predicted mask area</label>

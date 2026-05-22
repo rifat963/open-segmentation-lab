@@ -54,9 +54,9 @@
             <p>Semantic segmentation is the computer vision task of assigning a semantic class label to every pixel in an image. If an image has height <code>H</code>, width <code>W</code>, and <code>C</code> target classes, a segmentation model usually predicts a score tensor with shape <code>C x H x W</code>. The final class map is obtained by choosing the highest-scoring class at each pixel.</p>
             <div class="formula-box math-panel" aria-label="Semantic segmentation prediction formula">
               <span class="math-label">Logit tensor</span>
-              <span class="math-line">Z = f<sub>&theta;</sub>(X), &nbsp; Z &isin; R<sup>C &times; H &times; W</sup></span>
+              <span class="math-line"><em>Z</em> = <em>f</em><sub>&theta;</sub>(<em>X</em>),&ensp;<em>Z</em> &isin; &#8477;<sup><em>C</em> &times; <em>H</em> &times; <em>W</em></sup></span>
               <span class="math-label">Pixel prediction</span>
-              <span class="math-line">y&#770;<sub>i,j</sub> = argmax<sub>c</sub> Z<sub>c,i,j</sub></span>
+              <span class="math-line">&#375;<sub><em>i</em>,<em>j</em></sub> = argmax<sub><em>c</em></sub>&ensp;<em>Z</em><sub><em>c</em>,<em>i</em>,<em>j</em></sub></span>
             </div>
             <div class="callout definition"><strong>Definition:</strong> Semantic segmentation treats all pixels of the same class as the same category. Two cars, two crop leaves, or two tumor regions share one class label unless the task is changed to instance segmentation.</div>
           </section>
@@ -69,8 +69,8 @@
               <figcaption>Dense prediction keeps the spatial grid alive: features are encoded, decoded back to image resolution, and classified into a label for each pixel.</figcaption>
             </figure>
             <div class="formula-box math-panel" aria-label="Pixel-wise cross entropy formula">
-              <span class="math-label">Pixel-wise cross entropy</span>
-              <span class="math-line">L = -1/(H W) &Sigma;<sub>i</sub> &Sigma;<sub>j</sub> log softmax(Z<sub>:,i,j</sub>)<sub>y<sub>i,j</sub></sub></span>
+              <span class="math-label">Pixel-wise cross entropy loss</span>
+              <span class="math-line"><em>L</em> = &minus;(1/<em>HW</em>)&ensp;&Sigma;<sub><em>i</em></sub>&thinsp;&Sigma;<sub><em>j</em></sub>&ensp;log&thinsp;softmax(<em>Z</em><sub>:,<em>i</em>,<em>j</em></sub>)<sub><em>y</em><sub><em>i</em>,<em>j</em></sub></sub></span>
             </div>
             <div class="grid two">
               <div class="card"><h3>Encoder</h3><p>Extracts low-level edges, textures, high-level parts, and global context using CNN or transformer layers.</p></div>
@@ -98,251 +98,590 @@
 
           <section id="tutorials">
             <h2>PyTorch Tutorial Lab</h2>
-            <p>Use these tabs as compact starter templates. The code is commented so students can identify the role of each library, model block, training step, and inference step.</p>
+            <p>This step-by-step lab walks through a complete semantic segmentation pipeline. Use the step buttons to progress from data loading through to evaluation, or jump to any step directly.</p>
 
-            <div class="code-tabs" data-code-tabs>
-              <div class="code-tab-list" role="tablist" aria-label="Semantic segmentation PyTorch code tabs">
-                <button class="code-tab active" id="tab-basic" type="button" role="tab" aria-selected="true" aria-controls="panel-basic" data-tab-target="panel-basic">Basic</button>
-                <button class="code-tab" id="tab-unet" type="button" role="tab" aria-selected="false" aria-controls="panel-unet" data-tab-target="panel-unet">U-Net</button>
-                <button class="code-tab" id="tab-deeplab" type="button" role="tab" aria-selected="false" aria-controls="panel-deeplab" data-tab-target="panel-deeplab">DeepLabV3</button>
-                <button class="code-tab" id="tab-segformer" type="button" role="tab" aria-selected="false" aria-controls="panel-segformer" data-tab-target="panel-segformer">SegFormer</button>
-                <button class="code-tab" id="tab-mask2former" type="button" role="tab" aria-selected="false" aria-controls="panel-mask2former" data-tab-target="panel-mask2former">Mask2Former</button>
-                <button class="code-tab" id="tab-training" type="button" role="tab" aria-selected="false" aria-controls="panel-training" data-tab-target="panel-training">Training + Inference</button>
+            <div class="tutorial-wizard" id="seg-wizard" role="region" aria-label="Semantic segmentation tutorial wizard">
+              <div class="wizard-header" role="tablist" aria-label="Tutorial steps">
+                <button class="wizard-step-btn active" type="button" role="tab" aria-selected="true" aria-controls="wizard-panel-1" id="wizard-btn-1">
+                  <span class="step-num">1</span>
+                  <span class="step-info">
+                    <span class="step-title">Dataset &amp; Preprocessing</span>
+                    <span class="step-sub">Load, augment, normalize</span>
+                  </span>
+                </button>
+                <button class="wizard-step-btn" type="button" role="tab" aria-selected="false" aria-controls="wizard-panel-2" id="wizard-btn-2">
+                  <span class="step-num">2</span>
+                  <span class="step-info">
+                    <span class="step-title">Model Architecture</span>
+                    <span class="step-sub">U-Net, DeepLabV3, SegFormer, Mask2Former</span>
+                  </span>
+                </button>
+                <button class="wizard-step-btn" type="button" role="tab" aria-selected="false" aria-controls="wizard-panel-3" id="wizard-btn-3">
+                  <span class="step-num">3</span>
+                  <span class="step-info">
+                    <span class="step-title">Training Loop</span>
+                    <span class="step-sub">Loss, optimizer, scheduler</span>
+                  </span>
+                </button>
+                <button class="wizard-step-btn" type="button" role="tab" aria-selected="false" aria-controls="wizard-panel-4" id="wizard-btn-4">
+                  <span class="step-num">4</span>
+                  <span class="step-info">
+                    <span class="step-title">Evaluation &amp; Testing</span>
+                    <span class="step-sub">mIoU, Dice, pixel accuracy</span>
+                  </span>
+                </button>
               </div>
 
-              <article class="tutorial-card code-tutorial code-panel active" id="panel-basic" role="tabpanel" aria-labelledby="tab-basic">
-                <h3>Basic Dataset and Metric Utilities</h3>
-                <p><strong>Libraries used:</strong> PyTorch for tensors and datasets. This tab prepares class-index masks and computes mIoU from logits.</p>
-                <pre aria-label="Basic PyTorch dataset and metric code"><code>import torch
-from torch.utils.data import Dataset
+              <div class="wizard-body">
 
-class SegmentationDataset(Dataset):
-    # images: list/tensor of RGB images with shape 3 x H x W
-    # masks: list/tensor of class-index masks with shape H x W
-    def __init__(self, images, masks, image_transform=None):
-        self.images = images
-        self.masks = masks
-        self.image_transform = image_transform
+                <!-- Step 1 -->
+                <div class="wizard-panel active" id="wizard-panel-1" role="tabpanel" aria-labelledby="wizard-btn-1">
+                  <h3>Step 1 &mdash; Dataset Loading &amp; Preprocessing</h3>
+                  <p>A semantic segmentation dataset needs two items per sample: an RGB image and a mask where every pixel stores an integer class id. This step builds a <code>Dataset</code>, applies augmentation safely, and wraps everything in a <code>DataLoader</code>.</p>
+                  <div class="code-note">
+                    <em class="code-note-icon">&#9432;</em>
+                    <span><strong>Key constraint:</strong> When resizing or flipping masks, always use <code>InterpolationMode.NEAREST</code> — not bilinear. Bilinear interpolation would blend adjacent class ids and corrupt labels.</span>
+                  </div>
+                  <pre><code>import os
+from pathlib import Path
+from PIL import Image
+import numpy as np
+import torch
+from torch.utils.data import Dataset, DataLoader
+from torchvision.transforms import v2 as T
+from torchvision.transforms.v2 import InterpolationMode
+
+
+class SemanticSegDataset(Dataset):
+    """
+    Expects folder layout:
+        root/images/  *.png  (RGB)
+        root/masks/   *.png  (grayscale class-index, same filename)
+    """
+    def __init__(self, root, split="train", image_size=(512, 512)):
+        self.image_dir  = Path(root) / "images"
+        self.mask_dir   = Path(root) / "masks"
+        self.paths      = sorted(self.image_dir.glob("*.png"))
+        self.image_size = image_size
+
+        # ImageNet mean and std — use when loading pretrained backbones.
+        mean = [0.485, 0.456, 0.406]
+        std  = [0.229, 0.224, 0.225]
+
+        if split == "train":
+            self.img_tf = T.Compose([
+                T.Resize(image_size, interpolation=InterpolationMode.BILINEAR),
+                T.RandomHorizontalFlip(p=0.5),
+                T.RandomVerticalFlip(p=0.3),
+                T.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.2),
+                T.ToImage(),
+                T.ToDtype(torch.float32, scale=True),
+                T.Normalize(mean=mean, std=std),
+            ])
+            # Masks only need geometric transforms — no color jitter, no normalization.
+            self.mask_tf = T.Compose([
+                T.Resize(image_size, interpolation=InterpolationMode.NEAREST),
+                T.RandomHorizontalFlip(p=0.5),
+                T.RandomVerticalFlip(p=0.3),
+            ])
+        else:
+            self.img_tf = T.Compose([
+                T.Resize(image_size, interpolation=InterpolationMode.BILINEAR),
+                T.ToImage(),
+                T.ToDtype(torch.float32, scale=True),
+                T.Normalize(mean=mean, std=std),
+            ])
+            self.mask_tf = T.Compose([
+                T.Resize(image_size, interpolation=InterpolationMode.NEAREST),
+            ])
 
     def __len__(self):
-        return len(self.images)
+        return len(self.paths)
 
-    def __getitem__(self, index):
-        image = self.images[index].float()
-        mask = self.masks[index].long()
+    def __getitem__(self, idx):
+        img_path  = self.paths[idx]
+        mask_path = self.mask_dir / img_path.name
+        image = Image.open(img_path).convert("RGB")
+        mask  = Image.open(mask_path)          # single-channel, class ids
 
-        if self.image_transform:
-            image = self.image_transform(image)
+        seed = torch.randint(0, 2**31, (1,)).item()
+        torch.manual_seed(seed)
+        image = self.img_tf(image)
+        torch.manual_seed(seed)                # same seed keeps augmentations in sync
+        mask  = self.mask_tf(mask)
 
-        return image, mask
+        mask = torch.as_tensor(np.array(mask), dtype=torch.long)
+        return image, mask                     # (3, H, W), (H, W)
 
-def mean_iou(logits, masks, num_classes):
-    # logits: N x C x H x W, masks: N x H x W
-    predictions = torch.argmax(logits, dim=1)
-    scores = []
 
-    for cls in range(num_classes):
-        pred_cls = predictions == cls
-        mask_cls = masks == cls
-        intersection = torch.logical_and(pred_cls, mask_cls).sum()
-        union = torch.logical_or(pred_cls, mask_cls).sum()
+train_ds = SemanticSegDataset("data/", split="train")
+val_ds   = SemanticSegDataset("data/", split="val")
 
-        if union > 0:
-            scores.append(intersection.float() / union.float())
+train_loader = DataLoader(train_ds, batch_size=8, shuffle=True,
+                          num_workers=4, pin_memory=True)
+val_loader   = DataLoader(val_ds,   batch_size=8, shuffle=False,
+                          num_workers=4, pin_memory=True)
 
-    return torch.stack(scores).mean()</code></pre>
-                <p><strong>Explanation:</strong> Semantic segmentation masks must store class ids, not RGB colors. <code>nn.CrossEntropyLoss</code> expects logits with shape <code>N x C x H x W</code> and masks with shape <code>N x H x W</code>.</p>
-              </article>
+# Sanity check
+images, masks = next(iter(train_loader))
+print("Image batch:", images.shape, images.dtype)  # (8, 3, 512, 512) float32
+print("Mask  batch:", masks.shape,  masks.dtype)   # (8, 512, 512)    int64</code></pre>
+                  <ul class="code-checklist">
+                    <li>Image pixels are normalized to the ImageNet distribution when using pretrained backbones.</li>
+                    <li>Masks store integer class ids — never normalized float values.</li>
+                    <li>Geometric augmentations (flip, crop) use the same random seed for image and mask to stay in sync.</li>
+                    <li><code>pin_memory=True</code> speeds up CPU-to-GPU transfer on most systems.</li>
+                  </ul>
+                  <div class="wizard-nav">
+                    <button class="btn btn-outline wizard-prev" type="button" disabled>Previous</button>
+                    <span class="wizard-nav-info">Step 1 of 4</span>
+                    <button class="btn btn-primary wizard-next" type="button">Next: Model Architecture</button>
+                  </div>
+                </div>
 
-              <article class="tutorial-card code-tutorial code-panel" id="panel-unet" role="tabpanel" aria-labelledby="tab-unet" hidden>
-                <h3>U-Net Style Model</h3>
-                <p><strong>Libraries used:</strong> PyTorch <code>torch.nn</code> for convolution blocks, pooling, upsampling, and skip connections.</p>
-                <pre aria-label="Commented PyTorch U-Net code"><code>import torch
+                <!-- Step 2 -->
+                <div class="wizard-panel" id="wizard-panel-2" role="tabpanel" aria-labelledby="wizard-btn-2" hidden>
+                  <h3>Step 2 &mdash; Model Architecture</h3>
+                  <p>Choose an architecture based on dataset size, available GPU memory, and whether pretrained weights are accessible. Each model below highlights the critical setup details students most often get wrong.</p>
+
+                  <div class="model-tabs-grid" id="seg-models" role="region" aria-label="Model selector">
+                    <div class="model-tab-list" role="tablist" aria-label="Architecture options">
+                      <button class="model-tab-btn active" type="button" role="tab" aria-selected="true" aria-controls="model-panel-unet" id="model-btn-unet">U-Net</button>
+                      <button class="model-tab-btn" type="button" role="tab" aria-selected="false" aria-controls="model-panel-deeplab" id="model-btn-deeplab">DeepLabV3</button>
+                      <button class="model-tab-btn" type="button" role="tab" aria-selected="false" aria-controls="model-panel-segformer" id="model-btn-segformer">SegFormer</button>
+                      <button class="model-tab-btn" type="button" role="tab" aria-selected="false" aria-controls="model-panel-m2f" id="model-btn-m2f">Mask2Former</button>
+                      <button class="model-tab-btn" type="button" role="tab" aria-selected="false" aria-controls="model-panel-compare" id="model-btn-compare">Compare All</button>
+                    </div>
+
+                    <!-- U-Net panel -->
+                    <div class="model-panel active" id="model-panel-unet" role="tabpanel" aria-labelledby="model-btn-unet">
+                      <span class="model-badge cnn">CNN</span><span class="model-badge from-scratch">Train from scratch</span>
+                      <h4>U-Net &mdash; Encoder-Decoder with Skip Connections</h4>
+                      <p>U-Net is ideal when labeled data is limited and boundary precision matters. Skip connections transfer encoder feature maps directly to the decoder, helping it recover fine-grained spatial detail lost during pooling.</p>
+                      <pre><code>import torch
 import torch.nn as nn
 
 
 class DoubleConv(nn.Module):
-    # Two convolution layers are used in many U-Net implementations.
-    def __init__(self, in_channels, out_channels):
+    def __init__(self, in_ch, out_ch):
         super().__init__()
         self.block = nn.Sequential(
-            nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
-            nn.BatchNorm2d(out_channels),
+            nn.Conv2d(in_ch, out_ch, 3, padding=1, bias=False),
+            nn.BatchNorm2d(out_ch),
             nn.ReLU(inplace=True),
-            nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1),
-            nn.BatchNorm2d(out_channels),
-            nn.ReLU(inplace=True)
+            nn.Conv2d(out_ch, out_ch, 3, padding=1, bias=False),
+            nn.BatchNorm2d(out_ch),
+            nn.ReLU(inplace=True),
         )
-
     def forward(self, x):
         return self.block(x)
 
 
-class MiniUNet(nn.Module):
-    def __init__(self, num_classes):
+class UNet(nn.Module):
+    def __init__(self, num_classes, base_ch=64):
         super().__init__()
-        self.enc1 = DoubleConv(3, 32)
-        self.enc2 = DoubleConv(32, 64)
+        # Encoder
+        self.enc1 = DoubleConv(3,           base_ch)
+        self.enc2 = DoubleConv(base_ch,     base_ch * 2)
+        self.enc3 = DoubleConv(base_ch * 2, base_ch * 4)
+        self.enc4 = DoubleConv(base_ch * 4, base_ch * 8)
         self.pool = nn.MaxPool2d(2)
-
-        self.bridge = DoubleConv(64, 128)
-
-        # ConvTranspose2d upsamples the low-resolution feature map.
-        self.up2 = nn.ConvTranspose2d(128, 64, kernel_size=2, stride=2)
-        self.dec2 = DoubleConv(128, 64)
-        self.up1 = nn.ConvTranspose2d(64, 32, kernel_size=2, stride=2)
-        self.dec1 = DoubleConv(64, 32)
-
-        # 1 x 1 convolution maps features to class logits.
-        self.classifier = nn.Conv2d(32, num_classes, kernel_size=1)
+        # Bottleneck
+        self.bottleneck = DoubleConv(base_ch * 8, base_ch * 16)
+        # Decoder — skip concat doubles channels before each DoubleConv
+        self.up4  = nn.ConvTranspose2d(base_ch * 16, base_ch * 8, 2, stride=2)
+        self.dec4 = DoubleConv(base_ch * 16, base_ch * 8)
+        self.up3  = nn.ConvTranspose2d(base_ch * 8,  base_ch * 4, 2, stride=2)
+        self.dec3 = DoubleConv(base_ch * 8,  base_ch * 4)
+        self.up2  = nn.ConvTranspose2d(base_ch * 4,  base_ch * 2, 2, stride=2)
+        self.dec2 = DoubleConv(base_ch * 4,  base_ch * 2)
+        self.up1  = nn.ConvTranspose2d(base_ch * 2,  base_ch,     2, stride=2)
+        self.dec1 = DoubleConv(base_ch * 2,  base_ch)
+        self.head = nn.Conv2d(base_ch, num_classes, 1)
 
     def forward(self, x):
-        skip1 = self.enc1(x)
-        skip2 = self.enc2(self.pool(skip1))
-        x = self.bridge(self.pool(skip2))
-
-        # Concatenate decoder features with encoder skip features.
-        x = self.up2(x)
-        x = torch.cat([x, skip2], dim=1)
-        x = self.dec2(x)
-
-        x = self.up1(x)
-        x = torch.cat([x, skip1], dim=1)
-        x = self.dec1(x)
-
-        return self.classifier(x)</code></pre>
-                <p><strong>Explanation:</strong> U-Net preserves boundary information through skip connections. The decoder uses encoder features to recover spatial detail lost during pooling.</p>
-              </article>
-
-              <article class="tutorial-card code-tutorial code-panel" id="panel-deeplab" role="tabpanel" aria-labelledby="tab-deeplab" hidden>
-                <h3>DeepLabV3 with Torchvision</h3>
-                <p><strong>Libraries used:</strong> PyTorch and Torchvision. Torchvision provides pretrained DeepLabV3 models with ResNet backbones.</p>
-                <pre aria-label="Commented Torchvision DeepLabV3 code"><code>import torch
-from torchvision.models.segmentation import deeplabv3_resnet50
+        s1 = self.enc1(x)
+        s2 = self.enc2(self.pool(s1))
+        s3 = self.enc3(self.pool(s2))
+        s4 = self.enc4(self.pool(s3))
+        x  = self.bottleneck(self.pool(s4))
+        x  = self.dec4(torch.cat([self.up4(x), s4], dim=1))
+        x  = self.dec3(torch.cat([self.up3(x), s3], dim=1))
+        x  = self.dec2(torch.cat([self.up2(x), s2], dim=1))
+        x  = self.dec1(torch.cat([self.up1(x), s1], dim=1))
+        return self.head(x)   # (N, num_classes, H, W)
 
 
-def build_deeplabv3(num_classes):
-    # weights=None avoids downloading pretrained weights.
-    # Use pretrained weights only when your environment permits downloads.
-    model = deeplabv3_resnet50(weights=None, num_classes=num_classes)
+# Shape test
+model = UNet(num_classes=4, base_ch=64)
+x = torch.randn(2, 3, 512, 512)
+print(model(x).shape)         # torch.Size([2, 4, 512, 512])</code></pre>
+                      <div class="code-note">
+                        <em class="code-note-icon">&#9432;</em>
+                        <span>Set <code>bias=False</code> before every <code>BatchNorm2d</code> — the norm layer's own bias makes the conv bias redundant and wastes parameters.</span>
+                      </div>
+                    </div>
+
+                    <!-- DeepLabV3 panel -->
+                    <div class="model-panel" id="model-panel-deeplab" role="tabpanel" aria-labelledby="model-btn-deeplab" hidden>
+                      <span class="model-badge cnn">CNN</span><span class="model-badge pretrained">Pretrained backbone</span>
+                      <h4>DeepLabV3 &mdash; Atrous Convolution and ASPP</h4>
+                      <p>DeepLabV3 uses an Atrous Spatial Pyramid Pooling (ASPP) module to capture multi-scale context without reducing spatial resolution. Torchvision supplies pretrained variants with ResNet backbones.</p>
+                      <pre><code>import torch
+from torchvision.models.segmentation import (
+    deeplabv3_resnet50,
+    DeepLabV3_ResNet50_Weights,
+)
+
+
+def build_deeplabv3(num_classes, pretrained=True):
+    weights = DeepLabV3_ResNet50_Weights.DEFAULT if pretrained else None
+    model   = deeplabv3_resnet50(weights=weights)
+
+    # Replace classifier head for the target number of classes.
+    in_channels = model.classifier[4].in_channels
+    model.classifier[4] = torch.nn.Conv2d(in_channels, num_classes, 1)
+
+    # Replace auxiliary head too if present.
+    if model.aux_classifier is not None:
+        in_aux = model.aux_classifier[4].in_channels
+        model.aux_classifier[4] = torch.nn.Conv2d(in_aux, num_classes, 1)
+
     return model
 
 
-model = build_deeplabv3(num_classes=4)
-images = torch.randn(2, 3, 256, 256)
-
-# Torchvision segmentation models return a dictionary.
+model   = build_deeplabv3(num_classes=4, pretrained=True)
+images  = torch.randn(2, 3, 512, 512)
 outputs = model(images)
-logits = outputs["out"]          # shape: N x C x H x W
-pred_masks = logits.argmax(dim=1)</code></pre>
-                <p><strong>Explanation:</strong> DeepLabV3 uses atrous convolution and multiscale context. In Torchvision, the main semantic logits are stored in <code>outputs["out"]</code>.</p>
-              </article>
 
-              <article class="tutorial-card code-tutorial code-panel" id="panel-segformer" role="tabpanel" aria-labelledby="tab-segformer" hidden>
-                <h3>SegFormer with Hugging Face Transformers</h3>
-                <p><strong>Libraries used:</strong> PyTorch and Hugging Face Transformers. SegFormer combines a hierarchical transformer encoder with a lightweight decoder.</p>
-                <pre aria-label="Commented SegFormer code"><code>import torch
+logits     = outputs["out"]       # (N, C, H, W) — main semantic output
+pred_masks = logits.argmax(dim=1)
+print(logits.shape)               # torch.Size([2, 4, 512, 512])</code></pre>
+                      <div class="code-note">
+                        <em class="code-note-icon">&#9432;</em>
+                        <span>Torchvision segmentation models return a dict. The <code>"out"</code> key holds main logits. The <code>"aux"</code> key holds auxiliary loss logits from a mid-network branch — useful to add an auxiliary loss during training.</span>
+                      </div>
+                    </div>
+
+                    <!-- SegFormer panel -->
+                    <div class="model-panel" id="model-panel-segformer" role="tabpanel" aria-labelledby="model-btn-segformer" hidden>
+                      <span class="model-badge transformer">Transformer</span><span class="model-badge pretrained">Pretrained backbone</span>
+                      <h4>SegFormer &mdash; Hierarchical Transformer Encoder</h4>
+                      <p>SegFormer uses a Mix Transformer encoder (MiT) with a lightweight all-MLP decoder. Six sizes are available (B0&ndash;B5). Larger variants produce stronger features but require more GPU memory.</p>
+                      <pre><code>import torch
 import torch.nn.functional as F
 from transformers import SegformerForSemanticSegmentation
 
 
-num_classes = 4
-model = SegformerForSemanticSegmentation.from_pretrained(
-    "nvidia/segformer-b0-finetuned-ade-512-512",
-    num_labels=num_classes,
-    ignore_mismatched_sizes=True
-)
+def build_segformer(num_classes, pretrained_name="nvidia/mit-b2"):
+    model = SegformerForSemanticSegmentation.from_pretrained(
+        pretrained_name,
+        num_labels=num_classes,
+        ignore_mismatched_sizes=True,  # replaces pretrained head
+    )
+    return model
+
+
+model = build_segformer(num_classes=4)
+model.eval()
 
 images = torch.randn(2, 3, 512, 512)
-outputs = model(pixel_values=images)
 
-# SegFormer logits may be lower resolution than the input image.
+with torch.no_grad():
+    outputs = model(pixel_values=images)
+
+# SegFormer outputs logits at 1/4 input resolution — upsample before argmax.
 logits = F.interpolate(
     outputs.logits,
-    size=images.shape[-2:],
+    size=images.shape[-2:],       # target: original H x W
     mode="bilinear",
-    align_corners=False
+    align_corners=False,
 )
-pred_masks = logits.argmax(dim=1)</code></pre>
-                <p><strong>Explanation:</strong> Transformer segmentation models often output lower-resolution logits. Upsampling makes predictions align with the original mask size for loss and evaluation.</p>
-              </article>
+pred_masks = logits.argmax(dim=1)
+print(pred_masks.shape)           # torch.Size([2, 512, 512])</code></pre>
+                      <div class="code-note">
+                        <em class="code-note-icon">&#9432;</em>
+                        <span>Always upsample SegFormer logits to the original image size before computing loss or argmax. The loss function requires matching spatial dimensions between logits and ground-truth masks.</span>
+                      </div>
+                    </div>
 
-              <article class="tutorial-card code-tutorial code-panel" id="panel-mask2former" role="tabpanel" aria-labelledby="tab-mask2former" hidden>
-                <h3>Mask2Former-style Inference</h3>
-                <p><strong>Libraries used:</strong> PyTorch and Hugging Face Transformers. Mask2Former predicts masks and class scores using a mask classification formulation.</p>
-                <pre aria-label="Commented Mask2Former code"><code>import torch
-from transformers import Mask2FormerForUniversalSegmentation
+                    <!-- Mask2Former panel -->
+                    <div class="model-panel" id="model-panel-m2f" role="tabpanel" aria-labelledby="model-btn-m2f" hidden>
+                      <span class="model-badge transformer">Transformer</span><span class="model-badge pretrained">Pretrained</span>
+                      <h4>Mask2Former &mdash; Universal Mask Classification</h4>
+                      <p>Mask2Former predicts a set of binary masks and class scores rather than a per-pixel label map. Post-processing by the image processor converts these query predictions into a semantic map. The same architecture supports semantic, instance, and panoptic tasks.</p>
+                      <pre><code>from PIL import Image
+import torch
+from transformers import (
+    Mask2FormerImageProcessor,
+    Mask2FormerForUniversalSegmentation,
+)
 
 
+processor = Mask2FormerImageProcessor.from_pretrained(
+    "facebook/mask2former-swin-small-ade-semantic"
+)
 model = Mask2FormerForUniversalSegmentation.from_pretrained(
-    "facebook/mask2former-swin-tiny-ade-semantic"
+    "facebook/mask2former-swin-small-ade-semantic"
 )
+model.eval()
 
-images = torch.randn(1, 3, 512, 512)
-outputs = model(pixel_values=images)
+image  = Image.open("image.jpg").convert("RGB")
+inputs = processor(images=image, return_tensors="pt")
 
-# Class scores for predicted masks.
-class_logits = outputs.class_queries_logits
+with torch.no_grad():
+    outputs = model(**inputs)
 
-# Soft mask logits for each predicted mask query.
-mask_logits = outputs.masks_queries_logits
+# Convert mask queries to a per-pixel semantic map.
+semantic_maps = processor.post_process_semantic_segmentation(
+    outputs,
+    target_sizes=[image.size[::-1]],  # (height, width)
+)
+seg_map = semantic_maps[0]   # integer tensor (H, W)
+print(seg_map.shape, seg_map.unique())</code></pre>
+                      <div class="code-note">
+                        <em class="code-note-icon">&#9432;</em>
+                        <span>Mask2Former requires the image processor for both preprocessing and postprocessing. Do not skip <code>post_process_semantic_segmentation</code> — the raw model output is a set of mask queries, not a label map.</span>
+                      </div>
+                    </div>
 
-# In production, use the matching image processor post-processing
-# utilities to convert query masks into a semantic map.
-print(class_logits.shape, mask_logits.shape)</code></pre>
-                <p><strong>Explanation:</strong> Mask2Former differs from ordinary per-pixel classifiers. It predicts a set of mask queries and class scores, then post-processing converts those predictions into semantic, instance, or panoptic outputs.</p>
-              </article>
+                    <!-- Compare panel -->
+                    <div class="model-panel" id="model-panel-compare" role="tabpanel" aria-labelledby="model-btn-compare" hidden>
+                      <h4>Architecture Comparison</h4>
+                      <p>Use this table to pick the right starting point for a given hardware or data constraint.</p>
+                      <div class="table-wrap">
+                        <table class="model-comparison-table">
+                          <thead>
+                            <tr>
+                              <th>Model</th>
+                              <th>Type</th>
+                              <th>Library</th>
+                              <th>GPU Memory</th>
+                              <th>Best for</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>U-Net (base_ch=64)</td>
+                              <td>CNN</td>
+                              <td>PyTorch only</td>
+                              <td>Low (~3 GB)</td>
+                              <td>Small labeled datasets, medical or agricultural tasks where boundary precision matters</td>
+                            </tr>
+                            <tr>
+                              <td>DeepLabV3-ResNet50</td>
+                              <td>CNN</td>
+                              <td>Torchvision</td>
+                              <td>Medium (~5 GB)</td>
+                              <td>Natural images when a pretrained ImageNet backbone is available</td>
+                            </tr>
+                            <tr>
+                              <td>SegFormer-B2</td>
+                              <td>Transformer</td>
+                              <td>HuggingFace</td>
+                              <td>Medium (~6 GB)</td>
+                              <td>Strong general-purpose baseline with transformer features</td>
+                            </tr>
+                            <tr>
+                              <td>Mask2Former-Swin-S</td>
+                              <td>Transformer</td>
+                              <td>HuggingFace</td>
+                              <td>High (~10 GB)</td>
+                              <td>Multi-task output (semantic + instance + panoptic) or SOTA benchmarks</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
 
-              <article class="tutorial-card code-tutorial code-panel" id="panel-training" role="tabpanel" aria-labelledby="tab-training" hidden>
-                <h3>Training and Inference Template</h3>
-                <p><strong>Libraries used:</strong> PyTorch for training, <code>torch.optim</code> for optimization, <code>nn.CrossEntropyLoss</code> for pixel-wise supervised learning, and <code>torch.no_grad</code> for inference.</p>
-                <pre aria-label="Commented PyTorch training and inference code"><code>import torch
+                  <div class="wizard-nav">
+                    <button class="btn btn-outline wizard-prev" type="button">Previous</button>
+                    <span class="wizard-nav-info">Step 2 of 4</span>
+                    <button class="btn btn-primary wizard-next" type="button">Next: Training Loop</button>
+                  </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="wizard-panel" id="wizard-panel-3" role="tabpanel" aria-labelledby="wizard-btn-3" hidden>
+                  <h3>Step 3 &mdash; Training Loop</h3>
+                  <p>This loop works with U-Net or DeepLabV3. If you use SegFormer, upsample logits to the mask size before passing them to the loss. The loop includes gradient clipping, polynomial learning rate scheduling, mIoU tracking, and checkpoint saving.</p>
+                  <div class="code-note">
+                    <em class="code-note-icon">&#9432;</em>
+                    <span><strong>ignore_index=255:</strong> Many datasets mark boundary or void pixels with label 255. Passing <code>ignore_index=255</code> to <code>CrossEntropyLoss</code> excludes those pixels from the loss computation entirely.</span>
+                  </div>
+                  <pre><code>import torch
 import torch.nn as nn
+from torch.optim import AdamW
+from torch.optim.lr_scheduler import PolynomialLR
 
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-num_classes = 4
+NUM_CLASSES = 4
+EPOCHS      = 50
+DEVICE      = "cuda" if torch.cuda.is_available() else "cpu"
 
-# Replace MiniUNet with DeepLabV3, SegFormer, or another model.
-model = MiniUNet(num_classes=num_classes).to(device)
-criterion = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+model     = UNet(num_classes=NUM_CLASSES).to(DEVICE)
+criterion = nn.CrossEntropyLoss(ignore_index=255)
+optimizer = AdamW(model.parameters(), lr=6e-4, weight_decay=1e-2)
+scheduler = PolynomialLR(optimizer, total_iters=EPOCHS, power=0.9)
 
 
-def train_one_epoch(model, train_loader):
+def mean_iou(logits, masks, num_classes, ignore_index=255):
+    """Compute mean IoU over classes present in this batch."""
+    preds = logits.argmax(dim=1)
+    ious  = []
+    for cls in range(num_classes):
+        valid = masks != ignore_index
+        p = (preds == cls) &amp; valid
+        g = (masks == cls) &amp; valid
+        inter = (p &amp; g).sum().float()
+        union = (p | g).sum().float()
+        if union &gt; 0:
+            ious.append(inter / union)
+    return torch.stack(ious).mean() if ious else torch.tensor(0.0)
+
+
+best_miou = 0.0
+
+for epoch in range(EPOCHS):
+    # --- Training phase ---
     model.train()
-    total_loss = 0.0
-
+    train_loss = 0.0
     for images, masks in train_loader:
-        images = images.to(device)
-        masks = masks.to(device)
-
+        images, masks = images.to(DEVICE), masks.to(DEVICE)
         logits = model(images)
-        loss = criterion(logits, masks)
-
+        loss   = criterion(logits, masks)
         optimizer.zero_grad()
         loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
         optimizer.step()
+        train_loss += loss.item()
+    scheduler.step()
 
-        total_loss += loss.item()
-
-    return total_loss / len(train_loader)
-
-
-@torch.no_grad()
-def predict_mask(model, image):
+    # --- Validation phase ---
     model.eval()
-    image = image.unsqueeze(0).to(device)    # 1 x 3 x H x W
-    logits = model(image)
-    prediction = logits.argmax(dim=1)        # 1 x H x W
-    return prediction.squeeze(0).cpu()</code></pre>
-                <div class="formula-box math-panel" aria-label="Cross entropy per pixel formula">
-                  <span class="math-label">Cross entropy per pixel</span>
-                  <span class="math-line">L<sub>i,j</sub> = -log p(y<sub>i,j</sub> | X, i, j)</span>
+    val_ious = []
+    with torch.no_grad():
+        for images, masks in val_loader:
+            images, masks = images.to(DEVICE), masks.to(DEVICE)
+            val_ious.append(mean_iou(model(images), masks, NUM_CLASSES))
+
+    miou = torch.stack(val_ious).mean().item()
+    lr   = scheduler.get_last_lr()[0]
+    print(f"Epoch {epoch+1:03d}/{EPOCHS} | loss {train_loss/len(train_loader):.4f} "
+          f"| mIoU {miou:.4f} | lr {lr:.2e}")
+
+    if miou &gt; best_miou:
+        best_miou = miou
+        torch.save({"epoch": epoch, "model": model.state_dict(),
+                    "miou": miou}, "best_model.pth")</code></pre>
+                  <ul class="code-checklist">
+                    <li>Pass raw logits directly to <code>CrossEntropyLoss</code> — do not apply softmax first.</li>
+                    <li>Set <code>ignore_index=255</code> to skip void and boundary pixels during loss computation.</li>
+                    <li>Gradient clipping (<code>clip_grad_norm_</code>) prevents exploding gradients, especially with transformer backbones.</li>
+                    <li><code>PolynomialLR</code> decays the learning rate smoothly — useful for segmentation tasks that benefit from a slow final learning rate.</li>
+                    <li>Save <code>model.state_dict()</code>, not the full model object, for portable checkpoints.</li>
+                  </ul>
+                  <div class="wizard-nav">
+                    <button class="btn btn-outline wizard-prev" type="button">Previous</button>
+                    <span class="wizard-nav-info">Step 3 of 4</span>
+                    <button class="btn btn-primary wizard-next" type="button">Next: Evaluation</button>
+                  </div>
                 </div>
-                <p><strong>Explanation:</strong> During training, use raw logits and class-index masks. During inference, use <code>argmax</code> to convert logits into a discrete semantic mask.</p>
-              </article>
-            </div>
+
+                <!-- Step 4 -->
+                <div class="wizard-panel" id="wizard-panel-4" role="tabpanel" aria-labelledby="wizard-btn-4" hidden>
+                  <h3>Step 4 &mdash; Evaluation &amp; Testing</h3>
+                  <p>After training, load the best checkpoint and evaluate on the held-out test set. The confusion matrix below computes per-class IoU, mIoU, Dice, and pixel accuracy in one pass without holding all predictions in memory at once.</p>
+                  <pre><code>import torch
+import numpy as np
+from PIL import Image
+from torchvision.transforms import v2 as T
+from torchvision.transforms.v2 import InterpolationMode
+
+
+DEVICE      = "cuda" if torch.cuda.is_available() else "cpu"
+NUM_CLASSES = 4
+
+checkpoint = torch.load("best_model.pth", map_location=DEVICE)
+model = UNet(num_classes=NUM_CLASSES).to(DEVICE)
+model.load_state_dict(checkpoint["model"])
+model.eval()
+print(f"Loaded checkpoint: epoch {checkpoint['epoch']}, mIoU {checkpoint['miou']:.4f}")
+
+
+def predict_mask(model, image_path, image_size=(512, 512)):
+    """Run inference on a single image and return the predicted class mask."""
+    mean, std = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
+    tf = T.Compose([
+        T.Resize(image_size, interpolation=InterpolationMode.BILINEAR),
+        T.ToImage(),
+        T.ToDtype(torch.float32, scale=True),
+        T.Normalize(mean=mean, std=std),
+    ])
+    image  = Image.open(image_path).convert("RGB")
+    tensor = tf(image).unsqueeze(0).to(DEVICE)   # (1, 3, H, W)
+    with torch.no_grad():
+        logits = model(tensor)
+    return logits.argmax(dim=1).squeeze(0).cpu()  # (H, W)
+
+
+# Full test-set evaluation using a confusion matrix
+conf_matrix = np.zeros((NUM_CLASSES, NUM_CLASSES), dtype=np.int64)
+
+with torch.no_grad():
+    for images, masks in val_loader:
+        images = images.to(DEVICE)
+        preds  = model(images).argmax(dim=1).cpu().numpy()
+        gt     = masks.numpy()
+        valid  = gt != 255
+        np.add.at(conf_matrix, (gt[valid], preds[valid]), 1)
+
+# Per-class IoU
+per_class_iou = []
+for cls in range(NUM_CLASSES):
+    tp    = conf_matrix[cls, cls]
+    fp    = conf_matrix[:, cls].sum() - tp
+    fn    = conf_matrix[cls, :].sum() - tp
+    denom = tp + fp + fn
+    per_class_iou.append(tp / denom if denom &gt; 0 else 0.0)
+
+miou           = np.mean(per_class_iou)
+pixel_accuracy = conf_matrix.diagonal().sum() / conf_matrix.sum()
+
+# Per-class Dice
+per_class_dice = []
+for cls in range(NUM_CLASSES):
+    tp    = conf_matrix[cls, cls]
+    denom = conf_matrix[cls, :].sum() + conf_matrix[:, cls].sum()
+    per_class_dice.append(2 * tp / denom if denom &gt; 0 else 0.0)
+mean_dice = np.mean(per_class_dice)
+
+print(f"mIoU:           {miou:.4f}")
+print(f"Mean Dice:      {mean_dice:.4f}")
+print(f"Pixel Accuracy: {pixel_accuracy:.4f}")
+print("\nPer-class IoU:")
+for cls, iou in enumerate(per_class_iou):
+    print(f"  Class {cls}: {iou:.4f}")</code></pre>
+                  <div class="code-note">
+                    <em class="code-note-icon">&#9432;</em>
+                    <span>The confusion matrix accumulates counts across all batches using <code>np.add.at</code>. This avoids holding all predictions in memory and is more numerically stable than averaging per-batch IoU scores when class counts vary across batches.</span>
+                  </div>
+                  <ul class="code-checklist">
+                    <li>Call <code>model.eval()</code> and wrap inference in <code>torch.no_grad()</code> to disable gradient tracking and dropout.</li>
+                    <li>Use the same preprocessing transform at inference as during training — same size, same normalization.</li>
+                    <li>Exclude <code>ignore_index=255</code> pixels from the confusion matrix before computing metrics.</li>
+                    <li>Per-class IoU is the primary metric for semantic segmentation benchmarks; mIoU is its mean across all classes.</li>
+                  </ul>
+                  <div class="wizard-nav">
+                    <button class="btn btn-outline wizard-prev" type="button">Previous</button>
+                    <span class="wizard-nav-info">Step 4 of 4</span>
+                    <button class="btn btn-primary wizard-next" type="button" disabled>Complete</button>
+                  </div>
+                </div>
+
+              </div><!-- /.wizard-body -->
+            </div><!-- /#seg-wizard -->
           </section>
 
           <section class="kaggle-resource" id="kaggle-notebook">
@@ -369,20 +708,93 @@ def predict_mask(model, image):
     <div class="container">
       <div class="footer-grid">
         <div>
-          <h2>Open Segmentation Lab</h2>
-          <p>Free academic tutorials for image segmentation, metrics, and research reading.</p>
+          <p class="footer-heading" style="font-size: 1.1rem; font-weight: 800; color:#fff; margin: 0 0 8px;">Open Segmentation Lab</p>
+          <p class="footer-tagline">Free academic tutorials for image segmentation, metrics, and research reading.</p>
           <address class="footer-contact">
             <strong>Mohammad Rifat Ahmmad Rashid</strong><br>
             Computer Vision Researcher | Associate Professor<br>
-            Department of Computer Science and Engineering<br>
+            Dept. of Computer Science and Engineering<br>
             East West University, Dhaka 1212, Bangladesh<br>
             <a href="mailto:rifat.rashid@ewubd.edu">rifat.rashid@ewubd.edu</a>
           </address>
+        </div>
+        <div style="padding-top: 6px;">
+          <p class="footer-heading">Topics</p>
+          <ul class="footer-nav-list">
+            <li><a href="semantic.html">Semantic Segmentation</a></li>
+            <li><a href="instance.html">Instance Segmentation</a></li>
+            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Segmentation</a></li>
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="datasets.html">Datasets</a></li>
+          </ul>
         </div>
       </div>
       <p class="footer-note">Educational content is free for students and researchers.</p>
     </div>
   </footer>
   <script src="js/main.js"></script>
+  <script>
+  (function () {
+    function initWizard(wizardId) {
+      var wizard = document.getElementById(wizardId);
+      if (!wizard) return;
+      var stepBtns = Array.from(wizard.querySelectorAll('.wizard-step-btn'));
+      var panels   = Array.from(wizard.querySelectorAll(':scope > .wizard-body > .wizard-panel'));
+      var current  = 0;
+
+      function show(idx) {
+        stepBtns.forEach(function (btn, i) {
+          btn.classList.toggle('active', i === idx);
+          btn.setAttribute('aria-selected', String(i === idx));
+          if (i < idx) btn.classList.add('completed');
+          else btn.classList.remove('completed');
+        });
+        panels.forEach(function (p, i) {
+          p.classList.toggle('active', i === idx);
+          p.hidden = i !== idx;
+        });
+        current = idx;
+      }
+
+      stepBtns.forEach(function (btn, i) {
+        btn.addEventListener('click', function () { show(i); });
+      });
+      wizard.querySelectorAll('.wizard-prev').forEach(function (btn) {
+        btn.addEventListener('click', function () { if (current > 0) show(current - 1); });
+      });
+      wizard.querySelectorAll('.wizard-next').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (current < stepBtns.length - 1) show(current + 1);
+        });
+      });
+      show(0);
+    }
+
+    function initModelTabs(groupId) {
+      var group = document.getElementById(groupId);
+      if (!group) return;
+      var btns   = Array.from(group.querySelectorAll('.model-tab-btn'));
+      var panels = Array.from(group.querySelectorAll('.model-panel'));
+
+      btns.forEach(function (btn, i) {
+        btn.addEventListener('click', function () {
+          btns.forEach(function (b, j) {
+            b.classList.toggle('active', j === i);
+            b.setAttribute('aria-selected', String(j === i));
+          });
+          panels.forEach(function (p, j) {
+            p.classList.toggle('active', j === i);
+            p.hidden = j !== i;
+          });
+        });
+      });
+    }
+
+    initWizard('seg-wizard');
+    initModelTabs('seg-models');
+  })();
+  </script>
 </body>
 </html>

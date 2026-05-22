@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Segmentation Papers | Open Segmentation Lab</title>
-  <meta name="description" content="Browse foundational, transformer-based, self-supervised, and foundation model papers for image segmentation students.">
+  <meta name="description" content="Browse foundational, transformer-based, self-supervised, and foundation model papers for image segmentation students — with summaries and what to focus on.">
   <meta property="og:title" content="Segmentation Papers">
-  <meta property="og:description" content="Grouped reading list for semantic, instance, panoptic, and self-supervised segmentation.">
+  <meta property="og:description" content="Grouped reading list for semantic, instance, panoptic, and self-supervised segmentation with reading guidance.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://example.com/papers.html">
   <meta property="og:site_name" content="Open Segmentation Lab">
@@ -37,7 +37,7 @@
       <div class="container">
         <p class="eyebrow">Reading list</p>
         <h1>Segmentation Papers</h1>
-        <p>This reading list is organized for students moving from classical segmentation architectures to transformer models, self-supervised learning, and promptable foundation models.</p>
+        <p>This reading list is organized for students moving from classical segmentation architectures toward transformer models, self-supervised learning, and promptable foundation models. Each entry includes a summary and what to focus on when reading.</p>
       </div>
     </section>
 
@@ -45,130 +45,196 @@
       <div class="container">
         <figure class="visual-card wide">
           <img src="images/model-evolution-timeline.webp.png" alt="Timeline of image segmentation model evolution from classical CNNs to foundation models">
-          <figcaption>A high-level timeline showing how segmentation models evolved from convolutional dense prediction toward transformers, self-supervised learning, and foundation models.</figcaption>
+          <figcaption>A high-level timeline showing how segmentation models evolved from fully convolutional networks toward transformers, masked autoencoders, and promptable foundation models.</figcaption>
         </figure>
 
+        <div class="callout intuition" style="margin-bottom: 36px;">
+          <strong>How to use this list:</strong> Start with the Foundational group. Papers marked <span class="reading-level foundational">Foundational</span> introduce core ideas that all later work builds on. Read the abstracts and key sections of every paper in the foundational group before moving to transformers or self-supervised methods.
+        </div>
+
+        <!-- Foundational papers -->
         <div class="paper-group">
           <div class="section-title">
             <h2>Foundational Segmentation Papers</h2>
+            <p>These papers introduced the architectural ideas, training recipes, and evaluation standards that define modern segmentation. Every segmentation student should be familiar with all four.</p>
           </div>
           <div class="grid auto">
-            <article class="paper-card">
-              <p class="paper-meta">2015</p>
+            <article class="paper-card paper-card-featured">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                <p class="paper-meta" style="margin:0;">2015</p>
+                <span class="reading-level foundational">Start here</span>
+              </div>
               <h3>Fully Convolutional Networks for Semantic Segmentation</h3>
-              <p>Introduced end-to-end dense prediction by converting classification CNNs into fully convolutional networks for pixel-wise labeling.</p>
-              <p class="paper-summary">Summary: This is the core paper for understanding why segmentation can be trained as a spatial prediction problem rather than patch-by-patch classification. Students should focus on upsampling, skip connections, and mean IoU evaluation.</p>
-              <a href="https://arxiv.org/abs/1411.4038" target="_blank" rel="noopener">Read paper</a>
+              <p>Introduced end-to-end dense prediction by converting classification CNNs into fully convolutional networks for pixel-wise labeling. Showed that any CNN can be repurposed as a dense predictor.</p>
+              <p class="paper-summary"><strong>What to focus on:</strong> The upsampling technique (transposed convolution / bilinear interpolation), skip connections from earlier layers, and mean IoU evaluation on PASCAL VOC. Understand why removing the fully connected layers enables arbitrary input size.</p>
+              <a href="https://arxiv.org/abs/1411.4038" target="_blank" rel="noopener">Read paper →</a>
             </article>
-            <article class="paper-card">
-              <p class="paper-meta">2015</p>
+
+            <article class="paper-card paper-card-featured">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                <p class="paper-meta" style="margin:0;">2015</p>
+                <span class="reading-level foundational">Start here</span>
+              </div>
               <h3>U-Net: Convolutional Networks for Biomedical Image Segmentation</h3>
-              <p>Established an encoder-decoder architecture with skip connections for precise biomedical segmentation from limited annotated data.</p>
-              <p class="paper-summary">Summary: U-Net is useful for learning how high-level context and fine boundary detail are combined. Its skip connections remain a standard design idea in medical, agricultural, and small-data segmentation.</p>
-              <a href="https://arxiv.org/abs/1505.04597" target="_blank" rel="noopener">Read paper</a>
+              <p>Established the encoder-decoder architecture with skip connections for precise biomedical segmentation from small annotated datasets. Foundational for medical, agricultural, and small-data segmentation.</p>
+              <p class="paper-summary"><strong>What to focus on:</strong> The symmetric encoder-decoder with concatenated skip connections, the use of data augmentation to train with few images, and why skip connections recover fine spatial detail lost during pooling. The U-Net design remains the dominant architecture in medical imaging.</p>
+              <a href="https://arxiv.org/abs/1505.04597" target="_blank" rel="noopener">Read paper →</a>
             </article>
-            <article class="paper-card">
-              <p class="paper-meta">2017</p>
+
+            <article class="paper-card paper-card-featured">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                <p class="paper-meta" style="margin:0;">2017</p>
+                <span class="reading-level foundational">Start here</span>
+              </div>
               <h3>Mask R-CNN</h3>
-              <p>Added a mask branch to Faster R-CNN, making instance segmentation a natural extension of object detection.</p>
-              <p class="paper-summary">Summary: The paper is important for understanding proposal-based instance segmentation. Pay attention to RoIAlign, the parallel mask head, and how box detection and mask prediction are evaluated differently.</p>
-              <a href="https://arxiv.org/abs/1703.06870" target="_blank" rel="noopener">Read paper</a>
+              <p>Extended Faster R-CNN with a parallel mask branch, introducing RoIAlign for precise spatial alignment. Made instance-level masks a natural extension of detection-based pipelines.</p>
+              <p class="paper-summary"><strong>What to focus on:</strong> RoIAlign vs. RoIPool (the alignment problem), the parallel mask head architecture, how box detection and mask prediction use different loss formulations, and the Mask AP evaluation methodology. Mask R-CNN is the baseline every instance segmentation paper is compared against.</p>
+              <a href="https://arxiv.org/abs/1703.06870" target="_blank" rel="noopener">Read paper →</a>
             </article>
+
             <article class="paper-card">
-              <p class="paper-meta">2019</p>
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                <p class="paper-meta" style="margin:0;">2019</p>
+                <span class="reading-level intermediate">Intermediate</span>
+              </div>
               <h3>Panoptic Segmentation</h3>
-              <p>Formalized a unified task that combines semantic segmentation for stuff regions with instance segmentation for countable things.</p>
-              <p class="paper-summary">Summary: This paper defines the panoptic task and Panoptic Quality. It is the right starting point for studying things versus stuff and understanding why semantic and instance outputs need reconciliation.</p>
-              <a href="https://arxiv.org/abs/1801.00868" target="_blank" rel="noopener">Read paper</a>
+              <p>Formalized a unified task that combines semantic segmentation for stuff regions with instance segmentation for countable things — and introduced the Panoptic Quality metric.</p>
+              <p class="paper-summary"><strong>What to focus on:</strong> The definition of things vs. stuff, the merging logic that resolves conflicts between semantic and instance predictions, and the Panoptic Quality formula (SQ × RQ). This is the right starting point for understanding why semantic and instance outputs need reconciliation.</p>
+              <a href="https://arxiv.org/abs/1801.00868" target="_blank" rel="noopener">Read paper →</a>
             </article>
           </div>
         </div>
 
+        <!-- Transformer papers -->
         <div class="paper-group">
           <div class="section-title">
-            <h2>Transformer-based Segmentation Papers</h2>
+            <h2>Transformer-Based Segmentation Papers</h2>
+            <p>These papers brought attention mechanisms and hierarchical vision transformers to segmentation, improving performance and enabling universal models that handle multiple tasks.</p>
           </div>
           <div class="grid auto">
             <article class="paper-card">
-              <p class="paper-meta">2021</p>
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                <p class="paper-meta" style="margin:0;">2021</p>
+                <span class="reading-level intermediate">Intermediate</span>
+              </div>
               <h3>SegFormer</h3>
-              <p>Combined hierarchical transformer encoders with a lightweight all-MLP decoder for semantic segmentation.</p>
-              <p class="paper-summary">Summary: SegFormer is a clean example of transformer-based semantic segmentation. It is useful for studying hierarchical features, simple decoders, and robustness across common segmentation benchmarks.</p>
-              <a href="https://arxiv.org/abs/2105.15203" target="_blank" rel="noopener">Read paper</a>
+              <p>Combined a hierarchical transformer encoder with a lightweight all-MLP decoder for efficient semantic segmentation. Achieves strong performance without complex decoder designs.</p>
+              <p class="paper-summary"><strong>What to focus on:</strong> The Mix Transformer (MiT) backbone and how it produces hierarchical features at multiple scales, the simple MLP decoder that replaces complex ASPP or FPN modules, and the robustness analysis across common corruptions. SegFormer is a clean example of why transformers simplify decoder design.</p>
+              <a href="https://arxiv.org/abs/2105.15203" target="_blank" rel="noopener">Read paper →</a>
             </article>
+
             <article class="paper-card">
-              <p class="paper-meta">2021</p>
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                <p class="paper-meta" style="margin:0;">2021</p>
+                <span class="reading-level intermediate">Intermediate</span>
+              </div>
               <h3>Swin Transformer</h3>
-              <p>Introduced shifted-window attention and hierarchical transformer features that transfer well to dense prediction tasks.</p>
-              <p class="paper-summary">Summary: Swin is not only a segmentation paper, but it is a major backbone paper. Students should note how local window attention and shifted windows reduce cost while preserving cross-window information.</p>
-              <a href="https://arxiv.org/abs/2103.14030" target="_blank" rel="noopener">Read paper</a>
+              <p>Introduced shifted-window self-attention with a hierarchical feature pyramid — making vision transformers practical as dense prediction backbones without quadratic attention cost.</p>
+              <p class="paper-summary"><strong>What to focus on:</strong> Local window attention vs. global attention (computational cost comparison), the shifted-window mechanism that allows cross-window information flow, and the hierarchical patch merging that creates multi-scale features. Swin is a backbone paper, not primarily a segmentation paper, but it underpins Mask2Former and many other modern models.</p>
+              <a href="https://arxiv.org/abs/2103.14030" target="_blank" rel="noopener">Read paper →</a>
             </article>
+
             <article class="paper-card">
-              <p class="paper-meta">2022</p>
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                <p class="paper-meta" style="margin:0;">2022</p>
+                <span class="reading-level intermediate">Intermediate</span>
+              </div>
               <h3>Mask2Former</h3>
-              <p>Unified semantic, instance, and panoptic segmentation using masked attention and mask classification.</p>
-              <p class="paper-summary">Summary: Mask2Former is central for modern universal segmentation. It reframes segmentation around predicted masks and localized attention, making one architecture family work across multiple segmentation tasks.</p>
-              <a href="https://arxiv.org/abs/2112.01527" target="_blank" rel="noopener">Read paper</a>
-            </article>
-          </div>
-        </div>
-        <div class="paper-group">
-          <div class="section-title">
-            <h2>Self-supervised Segmentation Papers</h2>
-          </div>
-          <div class="grid auto">
-            <article class="paper-card">
-              <p class="paper-meta">2020</p>
-              <h3>SimCLR</h3>
-              <p>Popularized a simple contrastive learning framework for visual representation learning.</p>
-              <p class="paper-summary">Summary: SimCLR is a useful entry point for contrastive pretraining. For segmentation students, it explains how augmentations and representation learning can improve encoders before dense labels are available.</p>
-              <a href="https://arxiv.org/abs/2002.05709" target="_blank" rel="noopener">Read paper</a>
-            </article>
-            <article class="paper-card">
-              <p class="paper-meta">2021</p>
-              <h3>DINO: Emerging Properties in Self-Supervised Vision Transformers</h3>
-              <p>Showed that self-distilled vision transformers can learn object-centric representations without labels.</p>
-              <p class="paper-summary">Summary: DINO is especially relevant to segmentation because self-supervised attention maps can reveal object-like regions. It helps students connect representation learning with pseudo-mask discovery.</p>
-              <a href="https://arxiv.org/abs/2104.14294" target="_blank" rel="noopener">Read paper</a>
-            </article>
-            <article class="paper-card">
-              <p class="paper-meta">2022</p>
-              <h3>Masked Autoencoders Are Scalable Vision Learners</h3>
-              <p>Demonstrated masked image modeling as an efficient pretraining approach for vision transformers.</p>
-              <p class="paper-summary">Summary: MAE trains encoders by reconstructing missing patches. It is important for segmentation because masked pretraining can produce strong visual features before task-specific mask labels are introduced.</p>
-              <a href="https://arxiv.org/abs/2111.06377" target="_blank" rel="noopener">Read paper</a>
+              <p>Unified semantic, instance, and panoptic segmentation using masked attention and a shared mask classification formulation. One architecture family achieves top results across all three tasks.</p>
+              <p class="paper-summary"><strong>What to focus on:</strong> The mask classification formulation that reframes segmentation as a set prediction problem, masked attention that constrains cross-attention to predicted mask regions, and how the same model handles all three segmentation tasks by changing only the label supervision. Mask2Former is the standard modern universal segmentation baseline.</p>
+              <a href="https://arxiv.org/abs/2112.01527" target="_blank" rel="noopener">Read paper →</a>
             </article>
           </div>
         </div>
 
+        <!-- Self-supervised papers -->
+        <div class="paper-group">
+          <div class="section-title">
+            <h2>Self-Supervised Learning Papers</h2>
+            <p>These papers show how to pretrain strong visual encoders without segmentation labels — useful for low-annotation domains like medical imaging and agricultural analysis.</p>
+          </div>
+          <div class="grid auto">
+            <article class="paper-card">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                <p class="paper-meta" style="margin:0;">2020</p>
+                <span class="reading-level intermediate">Intermediate</span>
+              </div>
+              <h3>SimCLR</h3>
+              <p>Popularized simple contrastive learning for visual representation learning using augmentation-based positive pairs and a projection head.</p>
+              <p class="paper-summary"><strong>What to focus on:</strong> The NT-Xent contrastive loss, the role of the projection head in improving downstream transfer, and the sensitivity to augmentation choice and batch size. SimCLR established that contrastive pretraining can significantly improve segmentation encoders when labeled data is scarce.</p>
+              <a href="https://arxiv.org/abs/2002.05709" target="_blank" rel="noopener">Read paper →</a>
+            </article>
+
+            <article class="paper-card">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                <p class="paper-meta" style="margin:0;">2021</p>
+                <span class="reading-level intermediate">Intermediate</span>
+              </div>
+              <h3>DINO: Emerging Properties in Self-Supervised Vision Transformers</h3>
+              <p>Showed that self-distilled ViTs learn object-centric representations and produce attention maps that closely follow object boundaries — without any segmentation supervision.</p>
+              <p class="paper-summary"><strong>What to focus on:</strong> The self-distillation training scheme (student and momentum teacher), the emergence of semantic object regions in the attention heads of the last layer, and how DINO features can be used directly for unsupervised segmentation and pseudo-mask generation. This paper is especially relevant for low-annotation segmentation workflows.</p>
+              <a href="https://arxiv.org/abs/2104.14294" target="_blank" rel="noopener">Read paper →</a>
+            </article>
+
+            <article class="paper-card">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                <p class="paper-meta" style="margin:0;">2022</p>
+                <span class="reading-level advanced">Advanced</span>
+              </div>
+              <h3>Masked Autoencoders Are Scalable Vision Learners (MAE)</h3>
+              <p>Demonstrated that masking 75% of image patches and reconstructing them is a highly efficient pretraining strategy for vision transformers at scale.</p>
+              <p class="paper-summary"><strong>What to focus on:</strong> The asymmetric encoder-decoder design that processes only visible patches, the very high masking ratio that forces global reconstruction, and transfer performance to segmentation (ADE20K) vs. classification. MAE pretraining produces rich spatial features that benefit dense prediction tasks.</p>
+              <a href="https://arxiv.org/abs/2111.06377" target="_blank" rel="noopener">Read paper →</a>
+            </article>
+          </div>
+        </div>
+
+        <!-- Foundation models -->
         <div class="paper-group">
           <div class="section-title">
             <h2>Segment Anything and Foundation Model Papers</h2>
+            <p>These papers introduce promptable, class-agnostic segmentation models trained at large scale. They are especially relevant for annotation workflows, zero-shot segmentation, and video understanding.</p>
           </div>
           <div class="grid auto">
             <article class="paper-card">
-              <p class="paper-meta">2023</p>
-              <h3>Segment Anything</h3>
-              <p>Introduced a promptable segmentation foundation model and a large-scale mask dataset.</p>
-              <p class="paper-summary">Summary: SAM is important for annotation workflows and promptable segmentation. Students should understand that it predicts masks from prompts but does not automatically assign task-specific semantic labels.</p>
-              <a href="https://arxiv.org/abs/2304.02643" target="_blank" rel="noopener">Read paper</a>
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                <p class="paper-meta" style="margin:0;">2023</p>
+                <span class="reading-level intermediate">Intermediate</span>
+              </div>
+              <h3>Segment Anything (SAM)</h3>
+              <p>Introduced a promptable segmentation foundation model trained on over 1 billion masks. Accepts point, box, or text prompts and returns masks without task-specific training.</p>
+              <p class="paper-summary"><strong>What to focus on:</strong> The promptable interface design, the SA-1B dataset construction pipeline, and — critically — that SAM predicts masks but does not assign semantic class labels. Students often confuse SAM-generated masks with labeled ground truth. SAM is a segmentation oracle, not a semantic classifier.</p>
+              <a href="https://arxiv.org/abs/2304.02643" target="_blank" rel="noopener">Read paper →</a>
             </article>
+
             <article class="paper-card">
-              <p class="paper-meta">2023</p>
-              <h3>Fast Segment Anything</h3>
-              <p>Proposed a faster CNN-based approach for segment-anything style workflows.</p>
-              <p class="paper-summary">Summary: FastSAM is useful for discussing the trade-off between foundation-model flexibility and practical speed. It frames promptable segmentation as all-instance segmentation followed by prompt-guided selection.</p>
-              <a href="https://arxiv.org/abs/2306.12156" target="_blank" rel="noopener">Read paper</a>
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                <p class="paper-meta" style="margin:0;">2023</p>
+                <span class="reading-level intermediate">Intermediate</span>
+              </div>
+              <h3>Fast Segment Anything (FastSAM)</h3>
+              <p>Proposed a faster CNN-based alternative to SAM that frames promptable segmentation as all-instance segmentation followed by prompt-guided selection.</p>
+              <p class="paper-summary"><strong>What to focus on:</strong> The speed-accuracy trade-off vs. SAM-ViT-H, how the YOLACT-style pipeline is adapted for all-instance generation, and the limitations of the simplified approach for complex scenes. FastSAM is useful for resource-constrained annotation workflows.</p>
+              <a href="https://arxiv.org/abs/2306.12156" target="_blank" rel="noopener">Read paper →</a>
             </article>
+
             <article class="paper-card">
-              <p class="paper-meta">2024</p>
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+                <p class="paper-meta" style="margin:0;">2024</p>
+                <span class="reading-level advanced">Advanced</span>
+              </div>
               <h3>SAM 2: Segment Anything in Images and Videos</h3>
-              <p>Extended promptable segmentation from images toward video with memory-based object tracking across frames.</p>
-              <p class="paper-summary">Summary: SAM 2 is relevant for students interested in video segmentation and interactive annotation. It shows how promptable image segmentation can be adapted to temporal mask propagation.</p>
-              <a href="https://arxiv.org/abs/2408.00714" target="_blank" rel="noopener">Read paper</a>
+              <p>Extended SAM from images to video using a streaming memory architecture that propagates prompted masks across frames — enabling interactive video object segmentation.</p>
+              <p class="paper-summary"><strong>What to focus on:</strong> The streaming memory bank that stores frame-level context, how prompts from a single frame are propagated forward and backward in time, and the SA-V dataset used for training. SAM 2 is the reference for understanding how promptable image segmentation scales to temporal sequences.</p>
+              <a href="https://arxiv.org/abs/2408.00714" target="_blank" rel="noopener">Read paper →</a>
             </article>
           </div>
         </div>
+
+        <div class="callout exam" style="margin-top: 36px;">
+          <strong>Exam and review tip:</strong> For each paper you read, be able to answer: (1) What problem does it solve that previous work could not? (2) What is the core architectural idea? (3) What metric does it report and on what benchmark? (4) What are the known limitations? These four questions cover most exam and research review questions about segmentation papers.
+        </div>
+
       </div>
     </section>
   </main>
@@ -177,15 +243,27 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <h2>Open Segmentation Lab</h2>
-          <p>Free academic tutorials for image segmentation, metrics, and research reading.</p>
+          <p class="footer-heading" style="font-size: 1.1rem; font-weight: 800; color:#fff; margin: 0 0 8px;">Open Segmentation Lab</p>
+          <p class="footer-tagline">Free academic tutorials for image segmentation, metrics, and research reading.</p>
           <address class="footer-contact">
             <strong>Mohammad Rifat Ahmmad Rashid</strong><br>
             Computer Vision Researcher | Associate Professor<br>
-            Department of Computer Science and Engineering<br>
+            Dept. of Computer Science and Engineering<br>
             East West University, Dhaka 1212, Bangladesh<br>
             <a href="mailto:rifat.rashid@ewubd.edu">rifat.rashid@ewubd.edu</a>
           </address>
+        </div>
+        <div style="padding-top: 6px;">
+          <p class="footer-heading">Topics</p>
+          <ul class="footer-nav-list">
+            <li><a href="semantic.html">Semantic Segmentation</a></li>
+            <li><a href="instance.html">Instance Segmentation</a></li>
+            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Segmentation</a></li>
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="datasets.html">Datasets</a></li>
+          </ul>
         </div>
       </div>
       <p class="footer-note">Paper links point to open academic sources where available.</p>

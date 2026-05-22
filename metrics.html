@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Segmentation Metrics | Open Segmentation Lab</title>
-  <meta name="description" content="Learn IoU, Dice score, pixel accuracy, mean IoU, Mask AP, and Panoptic Quality for image segmentation evaluation.">
+  <meta name="description" content="Learn IoU, Dice score, pixel accuracy, mean IoU, Mask AP, and Panoptic Quality for image segmentation evaluation — with worked examples and interactive calculators.">
   <meta property="og:title" content="Segmentation Metrics">
-  <meta property="og:description" content="Free academic notes on core segmentation evaluation metrics and their limitations.">
+  <meta property="og:description" content="Free academic notes on core segmentation evaluation metrics, worked examples, and interactive calculators.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://example.com/metrics.html">
   <meta property="og:site_name" content="Open Segmentation Lab">
@@ -37,89 +37,209 @@
       <div class="container">
         <p class="eyebrow">Reference</p>
         <h1>Segmentation Metrics</h1>
-        <p>Segmentation metrics compare predicted masks with ground-truth masks. A good evaluation report should include the metric definition, the task it supports, and its limitation.</p>
+        <p>Segmentation metrics compare predicted masks with ground-truth masks. A good evaluation report should include the metric definition, the task it supports, a worked example, and its known limitation. Use the interactive calculators in the sidebar to build intuition.</p>
       </div>
     </section>
 
     <div class="section">
       <div class="container page-grid">
         <article class="content-panel">
+
           <section id="iou">
-            <h2>IoU Formula</h2>
-            <p>Intersection over Union measures how much a predicted mask overlaps with the ground-truth mask relative to their combined area.</p>
+            <h2>IoU — Intersection over Union</h2>
+            <p>Intersection over Union measures how much a predicted mask overlaps with the ground-truth mask relative to their combined area. It penalizes both false positives (predicted but wrong) and false negatives (missed pixels).</p>
             <figure class="visual-card wide">
-              <img src="images/iou-dice-metrics.webp.png" alt="Diagram explaining IoU and Dice score overlap for segmentation masks">
-              <figcaption>IoU and Dice both measure mask overlap, but they weight the overlap differently and can behave differently on small foreground regions.</figcaption>
+              <img src="images/iou-dice-metrics.webp.png" alt="Diagram explaining IoU and Dice score showing intersection and union regions of two overlapping masks">
+              <figcaption>IoU divides the intersection area by the union area. Dice doubles the intersection and divides by the sum of both areas. They reward the same overlap but weight it differently.</figcaption>
             </figure>
-            <div class="formula-box">IoU = Intersection / Union = TP / (TP + FP + FN)</div>
+            <div class="formula-box math-panel" aria-label="IoU formula">
+              <span class="math-label">Intersection over Union</span>
+              <span class="math-line">IoU = |<em>P</em>&thinsp;&cap;&thinsp;<em>G</em>| / |<em>P</em>&thinsp;&cup;&thinsp;<em>G</em>| = TP / (TP + FP + FN)</span>
+            </div>
+            <div class="worked-example">
+              <h4>Worked Example</h4>
+              <p>A predicted mask covers <strong>80 pixels</strong>. The ground-truth mask covers <strong>100 pixels</strong>. They share an <strong>overlap of 60 pixels</strong>.</p>
+              <p>Union = 80 + 100 − 60 = 120 pixels</p>
+              <p><strong>IoU = 60 / 120 = 0.50</strong> — the model correctly captured half the true region relative to everything predicted or true.</p>
+            </div>
+            <div class="metric-tip">
+              <strong>When to use IoU:</strong> Use IoU for semantic and binary segmentation benchmarks. It is the standard per-class metric and the threshold used for matching in Mask AP. An IoU of 0.50 is a common "acceptable match" threshold; 0.75 is strict.
+            </div>
           </section>
 
           <section id="dice">
-            <h2>Dice Score Formula</h2>
-            <p>Dice score doubles the overlap and divides it by the total predicted and ground-truth area. It is common when foreground regions are small.</p>
-            <div class="formula-box">Dice = 2 &times; overlap / (predicted area + ground-truth area)</div>
+            <h2>Dice Score (F1 Score)</h2>
+            <p>Dice score doubles the intersection and divides by the sum of predicted and ground-truth areas. It is the harmonic mean of precision and recall at the pixel level. Dice is mathematically related to IoU: Dice = 2·IoU / (1 + IoU).</p>
+            <div class="formula-box math-panel" aria-label="Dice score formula">
+              <span class="math-label">Dice / F1 Score</span>
+              <span class="math-line">Dice = 2|<em>P</em>&thinsp;&cap;&thinsp;<em>G</em>| / (|<em>P</em>| + |<em>G</em>|) = 2&middot;TP / (2&middot;TP + FP + FN)</span>
+            </div>
+            <div class="worked-example">
+              <h4>Worked Example (same scenario as IoU)</h4>
+              <p>Predicted = <strong>80 pixels</strong>, Ground-truth = <strong>100 pixels</strong>, Overlap = <strong>60 pixels</strong>.</p>
+              <p>Dice = 2 × 60 / (80 + 100) = 120 / 180 ≈ <strong>0.667</strong></p>
+              <p>Dice is higher than IoU (0.50) because it double-weights the overlap. The two metrics rank models identically but report different absolute values.</p>
+            </div>
+            <div class="metric-tip">
+              <strong>When to use Dice:</strong> Prefer Dice when foreground regions are small relative to the image (medical segmentation, crack detection). Dice is less sensitive to the large correct-background area that inflates pixel accuracy.
+            </div>
           </section>
 
           <section id="pixel-accuracy">
             <h2>Pixel Accuracy</h2>
-            <p>Pixel accuracy measures the fraction of correctly classified pixels. It is easy to understand but can be misleading when the background dominates the image.</p>
-            <div class="formula-box">Pixel Accuracy = correctly classified pixels / total pixels</div>
+            <p>Pixel accuracy measures the fraction of correctly classified pixels across the entire image. It is the simplest metric and the easiest to explain, but it is often misleading when the background or a dominant class fills most of the image.</p>
+            <div class="formula-box math-panel" aria-label="Pixel accuracy formula">
+              <span class="math-label">Pixel Accuracy</span>
+              <span class="math-line">PA = (&Sigma;<sub><em>c</em></sub>&thinsp;TP<sub><em>c</em></sub>) / (<em>H</em>&thinsp;&times;&thinsp;<em>W</em>)</span>
+            </div>
+            <div class="worked-example">
+              <h4>Worked Example</h4>
+              <p>A 100×100 image has <strong>9 800 background pixels</strong> and <strong>200 foreground pixels</strong>. A model that predicts <em>everything</em> as background would achieve <strong>98% pixel accuracy</strong> while missing the entire object of interest.</p>
+              <p>This is why pixel accuracy alone is insufficient for imbalanced segmentation tasks.</p>
+            </div>
+            <div class="metric-tip">
+              <strong>When to use Pixel Accuracy:</strong> Acceptable as a supplementary metric when classes are roughly balanced. Always pair it with mIoU or Dice. Never use it as the sole metric for medical, agricultural, or crack detection tasks where the foreground is small.
+            </div>
           </section>
 
           <section id="miou">
-            <h2>Mean IoU</h2>
-            <p>Mean IoU computes IoU for each class and averages across classes. It is more robust than raw pixel accuracy for multiclass semantic segmentation.</p>
-            <div class="formula-box">mIoU = (1 / C) sum over classes IoU_c</div>
+            <h2>Mean IoU (mIoU)</h2>
+            <p>Mean IoU computes IoU for each semantic class separately, then averages across all classes. This prevents large background or dominant classes from masking poor performance on smaller categories.</p>
+            <div class="formula-box math-panel" aria-label="Mean IoU formula">
+              <span class="math-label">Mean IoU</span>
+              <span class="math-line">mIoU = (1/<em>C</em>)&ensp;&Sigma;<sub><em>c</em>=1</sub><sup><em>C</em></sup>&ensp;IoU<sub><em>c</em></sub></span>
+            </div>
+            <div class="worked-example">
+              <h4>Worked Example</h4>
+              <p>A 3-class semantic segmentation model reports: Road IoU = 0.92, Car IoU = 0.71, Pedestrian IoU = 0.48.</p>
+              <p><strong>mIoU = (0.92 + 0.71 + 0.48) / 3 = 0.703</strong></p>
+              <p>Pedestrians are rare but count equally. A model that ignores pedestrians entirely would score 0 for that class, dragging mIoU down even if road and car performance is excellent.</p>
+            </div>
+            <div class="metric-tip">
+              <strong>When to use mIoU:</strong> The standard primary metric for multi-class semantic segmentation benchmarks (Cityscapes, ADE20K, PASCAL VOC). Always report mIoU in segmentation papers alongside per-class IoU for rare categories.
+            </div>
           </section>
 
           <section id="mask-ap">
-            <h2>Mask AP</h2>
-            <p>Mask Average Precision evaluates instance segmentation by ranking predicted masks by confidence and checking whether they match ground-truth instances at different IoU thresholds.</p>
-            <div class="callout pitfall"><strong>Pitfall:</strong> Mask AP depends on confidence ranking as well as mask overlap, so calibration and duplicate predictions can affect the score.</div>
+            <h2>Mask AP — Mask Average Precision</h2>
+            <p>Mask Average Precision evaluates instance segmentation by ranking predicted masks by confidence score and checking whether each prediction matches a ground-truth instance at multiple IoU thresholds (0.50 to 0.95 in COCO evaluation). It combines detection quality and mask quality into a single number.</p>
+            <div class="formula-box math-panel" aria-label="Mask AP formula">
+              <span class="math-label">Mask Average Precision (COCO standard)</span>
+              <span class="math-line">AP = (1/<em>T</em>)&ensp;&Sigma;<sub><em>t</em></sub>&ensp;AP<sub>IoU=<em>t</em></sub>,&ensp;&ensp;<em>t</em> &isin; {0.50, 0.55, &hellip;, 0.95}</span>
+            </div>
+            <div class="worked-example">
+              <h4>Key thresholds</h4>
+              <p><strong>AP@0.50 (AP50):</strong> A predicted mask must overlap the ground-truth by at least 50% to count as a true positive. Lenient.</p>
+              <p><strong>AP@0.75 (AP75):</strong> Requires 75% overlap. Strict; rewards well-fitted masks.</p>
+              <p><strong>AP (COCO):</strong> Average of AP@0.50 to AP@0.95 in steps of 0.05. The standard COCO benchmark number.</p>
+            </div>
+            <div class="callout pitfall"><strong>Pitfall:</strong> Mask AP depends on confidence ranking as well as mask overlap. A model with good masks but poorly calibrated confidence scores will lose AP points. Always inspect visual masks and do not rely on AP alone to understand mask quality.</div>
+            <div class="metric-tip">
+              <strong>When to use Mask AP:</strong> The standard metric for instance segmentation benchmarks (COCO). Use it whenever objects must be individually detected and masked. Do not use it for semantic segmentation, where there is no instance identity.
+            </div>
           </section>
 
           <section id="pq">
-            <h2>Panoptic Quality</h2>
-            <p>Panoptic Quality combines segmentation quality and recognition quality. It is used when the output must cover both stuff regions and thing instances.</p>
-            <div class="formula-box">PQ = SQ &times; RQ</div>
+            <h2>Panoptic Quality (PQ)</h2>
+            <p>Panoptic Quality combines segmentation quality and recognition quality into a single metric. It is the standard evaluation for panoptic segmentation where every pixel must be assigned both a class label and, for countable objects, an instance identity.</p>
+            <div class="formula-box math-panel" aria-label="Panoptic Quality formula">
+              <span class="math-label">Panoptic Quality</span>
+              <span class="math-line">PQ = SQ &times; RQ</span>
+              <span class="math-label">Segmentation Quality</span>
+              <span class="math-line">SQ = (1/|TP|)&ensp;&Sigma;<sub>(<em>p</em>,<em>g</em>)&thinsp;&isin;&thinsp;TP</sub>&ensp;IoU(<em>p</em>,&thinsp;<em>g</em>)</span>
+              <span class="math-label">Recognition Quality</span>
+              <span class="math-line">RQ = TP / (TP + &frac12;&thinsp;FP + &frac12;&thinsp;FN)</span>
+            </div>
+            <div class="worked-example">
+              <h4>How PQ is computed</h4>
+              <p><strong>Step 1 — Match:</strong> A predicted segment is matched to a ground-truth segment if and only if their IoU exceeds 0.50. Only one prediction can match each ground truth.</p>
+              <p><strong>Step 2 — SQ (Segmentation Quality):</strong> Average IoU of all matched pairs. Rewards mask precision.</p>
+              <p><strong>Step 3 — RQ (Recognition Quality):</strong> F1 score over matched vs. unmatched segments. Rewards coverage.</p>
+              <p><strong>PQ = SQ × RQ.</strong> A model that matches well but misses instances scores high SQ but low RQ, giving a low PQ.</p>
+            </div>
+            <div class="metric-tip">
+              <strong>When to use PQ:</strong> Required for panoptic segmentation benchmarks (COCO-Panoptic, Cityscapes Panoptic). Also reported per stuff and per things separately (PQ<sup>St</sup> and PQ<sup>Th</sup>) to distinguish semantic and instance quality.
+            </div>
           </section>
 
           <section id="comparison">
-            <h2>Metric Comparison</h2>
+            <h2>Metric Comparison Summary</h2>
+            <p class="comparison-intro">Each metric suits a specific task and evaluation goal. Choosing the right metric is as important as choosing the right model.</p>
             <div class="table-wrap">
               <table>
                 <thead>
                   <tr>
                     <th>Metric</th>
-                    <th>Used for</th>
-                    <th>Strength</th>
-                    <th>Limitation</th>
+                    <th>Primary Task</th>
+                    <th>Key Strength</th>
+                    <th>Key Limitation</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr><td>IoU</td><td>Semantic and instance masks</td><td>Penalizes false positives and false negatives</td><td>Can be harsh for tiny objects or boundary uncertainty</td></tr>
-                  <tr><td>Dice Score</td><td>Medical and binary segmentation</td><td>Helpful for imbalanced foreground regions</td><td>Less intuitive for multi-instance evaluation</td></tr>
-                  <tr><td>Pixel Accuracy</td><td>Semantic segmentation</td><td>Simple and easy to explain</td><td>Inflated by large background classes</td></tr>
-                  <tr><td>Mean IoU</td><td>Multiclass semantic segmentation</td><td>Balances class-wise performance</td><td>Rare classes can create unstable estimates</td></tr>
-                  <tr><td>Mask AP</td><td>Instance segmentation</td><td>Evaluates ranking and mask quality together</td><td>More complex to compute and explain</td></tr>
-                  <tr><td>Panoptic Quality</td><td>Panoptic segmentation</td><td>Combines recognition and overlap quality</td><td>Requires careful segment matching and panoptic labels</td></tr>
+                  <tr>
+                    <td><strong>IoU</strong></td>
+                    <td>Semantic &amp; instance (per mask)</td>
+                    <td>Penalizes both FP and FN; the standard overlap ratio</td>
+                    <td>Harsh on tiny objects; sensitive to boundary uncertainty</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Dice Score</strong></td>
+                    <td>Medical &amp; binary segmentation</td>
+                    <td>Robust for small foreground regions; weighted overlap</td>
+                    <td>Less intuitive for multi-instance evaluation</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Pixel Accuracy</strong></td>
+                    <td>Semantic segmentation</td>
+                    <td>Simple, easy to explain, cheap to compute</td>
+                    <td>Inflated by large background; misleading for imbalanced data</td>
+                  </tr>
+                  <tr>
+                    <td><strong>mIoU</strong></td>
+                    <td>Multiclass semantic segmentation</td>
+                    <td>Balances class-wise performance; standard benchmark metric</td>
+                    <td>Rare classes with few pixels produce unstable per-class estimates</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Mask AP</strong></td>
+                    <td>Instance segmentation</td>
+                    <td>Evaluates detection ranking and mask quality together</td>
+                    <td>Complex to compute; affected by confidence calibration</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Panoptic Quality</strong></td>
+                    <td>Panoptic segmentation</td>
+                    <td>Unifies recognition and overlap quality in one number</td>
+                    <td>Requires careful segment matching and panoptic ground-truth labels</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </section>
+
         </article>
 
         <aside class="sidebar" aria-label="Metrics sidebar">
-          <div class="sidebar-card">
-            <h2>On this page</h2>
-            <ul class="toc">
-              <li><a href="#iou">IoU</a></li>
-              <li><a href="#dice">Dice</a></li>
-              <li><a href="#pixel-accuracy">Pixel accuracy</a></li>
-              <li><a href="#miou">Mean IoU</a></li>
-              <li><a href="#mask-ap">Mask AP</a></li>
-              <li><a href="#pq">Panoptic Quality</a></li>
-            </ul>
+          <div class="sidebar-card" style="margin-bottom: 18px;" id="iou-calculator">
+            <h3>IoU Calculator</h3>
+            <label for="iou-intersection">Intersection (pixels)</label>
+            <input type="number" id="iou-intersection" min="0" step="1" placeholder="e.g. 60">
+            <label for="iou-union" style="margin-top: 10px; display:block;">Union (pixels)</label>
+            <input type="number" id="iou-union" min="1" step="1" placeholder="e.g. 120">
+            <button class="btn btn-primary" type="button" id="iou-calc-btn" onclick="calcIoU()" style="margin-top:12px; width:100%; min-height:40px; padding: 8px 14px; border:none; cursor:pointer; border-radius:8px; font-weight:800; color:#fff; background:var(--color-accent);">Calculate IoU</button>
+            <div class="result" id="iou-result" aria-live="polite"></div>
+          </div>
+
+          <div class="sidebar-card" id="dice-calculator">
+            <h3>Dice Score Calculator</h3>
+            <label for="dice-overlap">Overlap (pixels)</label>
+            <input type="number" id="dice-overlap" min="0" step="1" placeholder="e.g. 60">
+            <label for="dice-pred" style="margin-top: 10px; display:block;">Predicted area (pixels)</label>
+            <input type="number" id="dice-pred" min="1" step="1" placeholder="e.g. 80">
+            <label for="dice-gt" style="margin-top: 10px; display:block;">Ground-truth area (pixels)</label>
+            <input type="number" id="dice-gt" min="1" step="1" placeholder="e.g. 100">
+            <button type="button" onclick="calcDice()" style="margin-top:12px; width:100%; min-height:40px; padding: 8px 14px; border:none; cursor:pointer; border-radius:8px; font-weight:800; color:#fff; background:var(--color-accent);">Calculate Dice</button>
+            <div class="result" id="dice-result" aria-live="polite"></div>
           </div>
         </aside>
       </div>
@@ -130,20 +250,61 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <h2>Open Segmentation Lab</h2>
-          <p>Free academic tutorials for image segmentation, metrics, and research reading.</p>
+          <p class="footer-heading" style="font-size: 1.1rem; font-weight: 800; color:#fff; margin: 0 0 8px;">Open Segmentation Lab</p>
+          <p class="footer-tagline">Free academic tutorials for image segmentation, metrics, and research reading.</p>
           <address class="footer-contact">
             <strong>Mohammad Rifat Ahmmad Rashid</strong><br>
             Computer Vision Researcher | Associate Professor<br>
-            Department of Computer Science and Engineering<br>
+            Dept. of Computer Science and Engineering<br>
             East West University, Dhaka 1212, Bangladesh<br>
             <a href="mailto:rifat.rashid@ewubd.edu">rifat.rashid@ewubd.edu</a>
           </address>
+        </div>
+        <div style="padding-top: 6px;">
+          <p class="footer-heading">Topics</p>
+          <ul class="footer-nav-list">
+            <li><a href="semantic.html">Semantic Segmentation</a></li>
+            <li><a href="instance.html">Instance Segmentation</a></li>
+            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Segmentation</a></li>
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="datasets.html">Datasets</a></li>
+          </ul>
         </div>
       </div>
       <p class="footer-note">Educational content is free for students and researchers.</p>
     </div>
   </footer>
   <script src="js/main.js"></script>
+  <script>
+    function readPositiveNumber(id) {
+      const v = parseFloat(document.getElementById(id).value);
+      return isNaN(v) || v < 0 ? null : v;
+    }
+    function setResult(id, msg, isError) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.className = isError ? 'result error' : 'result';
+    }
+    function calcIoU() {
+      const inter = readPositiveNumber('iou-intersection');
+      const union = readPositiveNumber('iou-union');
+      if (inter === null || union === null) return setResult('iou-result', 'Enter valid non-negative numbers.', true);
+      if (union === 0) return setResult('iou-result', 'Union must be greater than 0.', true);
+      if (inter > union) return setResult('iou-result', 'Intersection cannot exceed union.', true);
+      setResult('iou-result', 'IoU = ' + (inter / union).toFixed(4), false);
+    }
+    function calcDice() {
+      const overlap = readPositiveNumber('dice-overlap');
+      const pred = readPositiveNumber('dice-pred');
+      const gt = readPositiveNumber('dice-gt');
+      if (overlap === null || pred === null || gt === null) return setResult('dice-result', 'Enter valid non-negative numbers.', true);
+      const denom = pred + gt;
+      if (denom === 0) return setResult('dice-result', 'Predicted + ground-truth must be > 0.', true);
+      if (overlap > Math.min(pred, gt)) return setResult('dice-result', 'Overlap cannot exceed the smaller area.', true);
+      setResult('dice-result', 'Dice = ' + (2 * overlap / denom).toFixed(4), false);
+    }
+  </script>
 </body>
 </html>

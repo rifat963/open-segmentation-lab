@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Segmentation Datasets | Open Segmentation Lab</title>
   <meta name="description" content="Compare common segmentation datasets including Cityscapes, COCO, ADE20K, Pascal VOC, medical imaging datasets, and agricultural disease segmentation datasets.">
-  <meta name="robots" content="noindex, nofollow">
   <meta property="og:title" content="Segmentation Datasets">
-  <meta property="og:description" content="Academic notes for choosing datasets for semantic, instance, panoptic, medical, and agricultural segmentation.">
+  <meta property="og:description" content="Academic notes for choosing datasets for semantic, instance, panoptic, medical, and agricultural segmentation projects.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://example.com/datasets.html">
   <meta property="og:site_name" content="Open Segmentation Lab">
@@ -38,79 +37,197 @@
       <div class="container">
         <p class="eyebrow">Reference</p>
         <h1>Segmentation Datasets</h1>
-        <p>Dataset choice affects label format, model architecture, evaluation metric, and project scope. These cards summarize common options for student projects and literature review.</p>
+        <p>Dataset choice affects annotation format, model architecture, evaluation metric, and project scope. These cards summarize common options for student projects and literature review, with guidance on which tasks each dataset best supports.</p>
       </div>
     </section>
 
     <section class="section">
       <div class="container">
+
+        <!-- Quick comparison table -->
+        <div class="section-title">
+          <h2>Quick Comparison</h2>
+          <p>Use this table to select a starting point. Expand the dataset cards below for detailed notes.</p>
+        </div>
+        <div class="table-wrap" style="margin-bottom: 48px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Dataset</th>
+                <th>Primary Task</th>
+                <th>Scale</th>
+                <th>Domain</th>
+                <th>Best for Students</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Pascal VOC</strong></td>
+                <td>Semantic segmentation</td>
+                <td>~11 K images, 20 classes</td>
+                <td>Natural objects</td>
+                <td>First benchmark; small class list, many tutorials available</td>
+              </tr>
+              <tr>
+                <td><strong>Cityscapes</strong></td>
+                <td>Semantic + instance</td>
+                <td>5 K fine-annotated frames</td>
+                <td>Urban street scenes</td>
+                <td>Class imbalance, thin structures, autonomous driving context</td>
+              </tr>
+              <tr>
+                <td><strong>COCO</strong></td>
+                <td>Instance + panoptic</td>
+                <td>~330 K images, 80 classes</td>
+                <td>Natural images</td>
+                <td>Standard Mask AP benchmark; large scale for fine-tuning</td>
+              </tr>
+              <tr>
+                <td><strong>ADE20K</strong></td>
+                <td>Semantic (scene parsing)</td>
+                <td>~25 K images, 150 classes</td>
+                <td>Indoor + outdoor scenes</td>
+                <td>Many-class segmentation; scene diversity</td>
+              </tr>
+              <tr>
+                <td><strong>Medical datasets</strong></td>
+                <td>Semantic / volumetric</td>
+                <td>Varies (often small)</td>
+                <td>CT, MRI, pathology</td>
+                <td>U-Net baselines; patient-split discipline</td>
+              </tr>
+              <tr>
+                <td><strong>Agricultural datasets</strong></td>
+                <td>Semantic / instance</td>
+                <td>Varies (often small)</td>
+                <td>Crop, leaf, disease</td>
+                <td>SAM-assisted annotation; domain shift awareness</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Dataset cards -->
+        <div class="section-title">
+          <h2>Dataset Details</h2>
+        </div>
         <div class="grid auto">
           <article class="dataset-card">
             <h2>Cityscapes</h2>
-            <p>Urban street-scene dataset for road understanding and autonomous driving research.</p>
+            <p>Urban street-scene dataset recorded from a moving vehicle across 50 European cities. High-quality pixel annotations for 30 classes with 19 used in evaluation.</p>
             <div class="dataset-meta">
-              <div><strong>Task type:</strong> Semantic and instance-aware urban scene segmentation.</div>
-              <div><strong>Annotation format:</strong> Fine pixel labels and polygon annotations for selected classes.</div>
+              <div><strong>Task type:</strong> Semantic segmentation; instance-aware annotations available for 8 object classes.</div>
+              <div><strong>Annotation format:</strong> Fine pixel labels (5 000 images) and coarse labels (20 000 images). Polygon annotations for instance classes.</div>
               <div><strong>Suitable models:</strong> DeepLab, HRNet, SegFormer, Mask2Former, panoptic models.</div>
-              <div><strong>Notes for students:</strong> Strong for studying class imbalance, thin structures, and urban "things vs stuff" labels.</div>
+              <div><strong>Key challenge:</strong> Class imbalance between road/sky and rare pedestrian classes; thin structures like poles; varying lighting.</div>
+              <div><strong>Notes for students:</strong> Strong for studying class imbalance, boundary quality, and urban things-vs-stuff separation.</div>
+            </div>
+            <div class="badge-row">
+              <span class="badge">Semantic</span>
+              <span class="badge">Instance</span>
+              <span class="badge">Urban</span>
+              <span class="badge">Fine-grained labels</span>
             </div>
           </article>
 
           <article class="dataset-card">
             <h2>COCO</h2>
-            <p>Large-scale natural image dataset with object detection, instance segmentation, captions, and panoptic annotations.</p>
+            <p>Large-scale natural image dataset with detection, instance segmentation, captions, keypoints, and panoptic annotations. The de facto standard for instance segmentation benchmarks.</p>
             <div class="dataset-meta">
-              <div><strong>Task type:</strong> Instance and panoptic segmentation.</div>
-              <div><strong>Annotation format:</strong> Polygons, compressed masks, categories, image metadata.</div>
-              <div><strong>Suitable models:</strong> Mask R-CNN, YOLACT, YOLO segmentation, DETR-style models, Mask2Former.</div>
-              <div><strong>Notes for students:</strong> Excellent for learning standard benchmarks, but training from scratch can be computationally expensive.</div>
+              <div><strong>Task type:</strong> Object detection, instance segmentation, panoptic segmentation, and image captioning.</div>
+              <div><strong>Annotation format:</strong> Polygons and compressed RLE masks per instance. Panoptic annotations cover all pixels including stuff regions.</div>
+              <div><strong>Suitable models:</strong> Mask R-CNN, YOLACT, YOLO segmentation, DETR, Mask2Former.</div>
+              <div><strong>Key challenge:</strong> Scale, occlusion, small objects, and many-class diversity. Training from scratch is computationally expensive.</div>
+              <div><strong>Notes for students:</strong> Use COCO-pretrained weights and fine-tune on your domain. Study pycocotools for annotation handling and Mask AP computation.</div>
+            </div>
+            <div class="badge-row">
+              <span class="badge">Instance</span>
+              <span class="badge">Panoptic</span>
+              <span class="badge">Large scale</span>
+              <span class="badge">Benchmark standard</span>
             </div>
           </article>
 
           <article class="dataset-card">
             <h2>ADE20K</h2>
-            <p>Scene parsing dataset with a broad vocabulary of object and stuff categories.</p>
+            <p>Scene parsing dataset covering 150 semantic categories across indoor and outdoor environments. Used in SegFormer, Swin, and Mask2Former benchmarks.</p>
             <div class="dataset-meta">
-              <div><strong>Task type:</strong> Semantic segmentation and scene parsing.</div>
-              <div><strong>Annotation format:</strong> Pixel-level category masks.</div>
+              <div><strong>Task type:</strong> Semantic segmentation and scene parsing. Some annotations also support instance-level labels.</div>
+              <div><strong>Annotation format:</strong> Pixel-level category masks. Additional object instance masks and object part annotations.</div>
               <div><strong>Suitable models:</strong> UperNet, SegFormer, DeepLab variants, Mask2Former.</div>
-              <div><strong>Notes for students:</strong> Useful for studying many-class segmentation and indoor/outdoor scene diversity.</div>
+              <div><strong>Key challenge:</strong> 150 categories with significant class imbalance and fine-grained distinctions (e.g., different wall types).</div>
+              <div><strong>Notes for students:</strong> Useful for studying many-class semantic segmentation and evaluating transformer-based models on a diverse scene vocabulary.</div>
+            </div>
+            <div class="badge-row">
+              <span class="badge">Semantic</span>
+              <span class="badge">150 classes</span>
+              <span class="badge">Indoor + outdoor</span>
             </div>
           </article>
 
           <article class="dataset-card">
             <h2>Pascal VOC</h2>
-            <p>Classic benchmark for object recognition and segmentation with a manageable number of classes.</p>
+            <p>Classic benchmark for object recognition and segmentation. 20 foreground object classes plus background. The first widely-used semantic segmentation standard.</p>
             <div class="dataset-meta">
-              <div><strong>Task type:</strong> Semantic segmentation.</div>
-              <div><strong>Annotation format:</strong> Pixel masks for foreground object categories.</div>
+              <div><strong>Task type:</strong> Semantic segmentation (VOC 2012) and object detection.</div>
+              <div><strong>Annotation format:</strong> Pixel masks for 20 foreground object categories. Boundary annotations available with SBD extension.</div>
               <div><strong>Suitable models:</strong> FCN, U-Net-style baselines, DeepLab, lightweight student models.</div>
-              <div><strong>Notes for students:</strong> Good first benchmark because the class list is smaller and many tutorials use it.</div>
+              <div><strong>Key challenge:</strong> Small dataset by modern standards. Augmentation and pretrained weights are essential for good performance.</div>
+              <div><strong>Notes for students:</strong> The best first benchmark. Many tutorials and pretrained models use VOC. Class list is manageable for learning annotation workflows.</div>
+            </div>
+            <div class="badge-row">
+              <span class="badge">Semantic</span>
+              <span class="badge">Beginner friendly</span>
+              <span class="badge">20 classes</span>
             </div>
           </article>
 
           <article class="dataset-card">
             <h2>Medical Imaging Datasets</h2>
-            <p>Includes organ, lesion, cell, vessel, tumor, and tissue segmentation datasets across modalities.</p>
+            <p>Includes organ delineation, lesion detection, cell counting, vessel tracking, and tissue segmentation datasets across CT, MRI, and pathology slide modalities.</p>
             <div class="dataset-meta">
-              <div><strong>Task type:</strong> Semantic, instance, or volumetric segmentation depending on the dataset.</div>
-              <div><strong>Annotation format:</strong> Binary masks, multiclass masks, 3D volumes, or contours.</div>
-              <div><strong>Suitable models:</strong> U-Net, nnU-Net, attention U-Net, transformer U-Net variants.</div>
-              <div><strong>Notes for students:</strong> Pay attention to patient-level splits, privacy, modality differences, and class imbalance.</div>
+              <div><strong>Task type:</strong> Semantic, instance, or volumetric (3D) segmentation depending on the dataset and modality.</div>
+              <div><strong>Annotation format:</strong> Binary masks, multiclass masks, 3D volume labels (NIfTI, DICOM), or contour files.</div>
+              <div><strong>Notable datasets:</strong> ISIC (skin lesion), BraTS (brain tumor), LUNA (lung nodule), MoNuSeg (nuclei), CHAOS (abdominal organs).</div>
+              <div><strong>Suitable models:</strong> U-Net, nnU-Net, Attention U-Net, transformer U-Net variants, MedSAM.</div>
+              <div><strong>Notes for students:</strong> Observe patient-level train/val/test splits to prevent data leakage. Account for class imbalance, modality differences, and imaging artifacts. Privacy constraints limit dataset sharing in some cases.</div>
+            </div>
+            <div class="badge-row">
+              <span class="badge">Medical</span>
+              <span class="badge">Semantic</span>
+              <span class="badge">3D volumes available</span>
+              <span class="badge">Patient splits required</span>
             </div>
           </article>
 
           <article class="dataset-card">
-            <h2>Agricultural Disease Segmentation Datasets</h2>
-            <p>Datasets for segmenting diseased leaf regions, crops, weeds, fruits, canopy, and field objects.</p>
+            <h2>Agricultural Disease Segmentation</h2>
+            <p>Datasets for segmenting diseased leaf regions, crops, weeds, fruits, canopy cover, and field-level objects from drone, ground-level, or close-up imagery.</p>
             <div class="dataset-meta">
-              <div><strong>Task type:</strong> Semantic or instance segmentation for plant regions and disease symptoms.</div>
-              <div><strong>Annotation format:</strong> Pixel masks, polygons, or bounding boxes converted to weak masks.</div>
-              <div><strong>Suitable models:</strong> U-Net, DeepLabV3, SegFormer, YOLO segmentation, SAM-assisted annotation workflows.</div>
-              <div><strong>Notes for students:</strong> Watch for lighting variation, small lesions, background clutter, and dataset bias across crop species.</div>
+              <div><strong>Task type:</strong> Semantic or instance segmentation for plant regions, disease symptoms, and crop rows.</div>
+              <div><strong>Annotation format:</strong> Pixel masks, polygon annotations, or bounding boxes converted to weak masks. Some use SAM-assisted annotation workflows.</div>
+              <div><strong>Notable datasets:</strong> PlantVillage (leaf disease), DeepWeeds, iBean, GrowliFlower, Crop and Weed Field Image Dataset.</div>
+              <div><strong>Suitable models:</strong> U-Net, DeepLabV3, SegFormer, YOLO segmentation, SAM with domain fine-tuning.</div>
+              <div><strong>Notes for students:</strong> Watch for lighting variation, small lesion sizes, cluttered backgrounds, and severe domain shift between crop species and imaging conditions. Always inspect annotation quality before training.</div>
+            </div>
+            <div class="badge-row">
+              <span class="badge">Agriculture</span>
+              <span class="badge">Semantic</span>
+              <span class="badge">Small scale</span>
+              <span class="badge">Domain shift risk</span>
             </div>
           </article>
         </div>
+
+        <!-- Guidance callout -->
+        <div class="callout intuition" style="margin-top: 36px;">
+          <strong>Choosing a dataset for a student project:</strong> Start with Pascal VOC or a small medical dataset. Both have manageable sizes, clear annotation formats, and existing baseline results to compare against. Scale up to COCO or Cityscapes once training and evaluation pipelines are working correctly.
+        </div>
+
+        <div class="callout pitfall" style="margin-top: 16px;">
+          <strong>Data quality warning:</strong> SAM-generated pseudo masks and crowd-sourced annotations may contain noise. Always visually inspect a random sample before training. Poor annotation quality is a common source of unexpectedly low performance that is easily misdiagnosed as a model problem.
+        </div>
+
       </div>
     </section>
   </main>
@@ -119,15 +236,27 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <h2>Open Segmentation Lab</h2>
-          <p>Free academic tutorials for image segmentation, metrics, and research reading.</p>
+          <p class="footer-heading" style="font-size: 1.1rem; font-weight: 800; color:#fff; margin: 0 0 8px;">Open Segmentation Lab</p>
+          <p class="footer-tagline">Free academic tutorials for image segmentation, metrics, and research reading.</p>
           <address class="footer-contact">
             <strong>Mohammad Rifat Ahmmad Rashid</strong><br>
             Computer Vision Researcher | Associate Professor<br>
-            Department of Computer Science and Engineering<br>
+            Dept. of Computer Science and Engineering<br>
             East West University, Dhaka 1212, Bangladesh<br>
             <a href="mailto:rifat.rashid@ewubd.edu">rifat.rashid@ewubd.edu</a>
           </address>
+        </div>
+        <div style="padding-top: 6px;">
+          <p class="footer-heading">Topics</p>
+          <ul class="footer-nav-list">
+            <li><a href="semantic.html">Semantic Segmentation</a></li>
+            <li><a href="instance.html">Instance Segmentation</a></li>
+            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Segmentation</a></li>
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="datasets.html">Datasets</a></li>
+          </ul>
         </div>
       </div>
       <p class="footer-note">Educational content is free for students and researchers.</p>

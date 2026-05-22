@@ -54,9 +54,9 @@
             <p>Instance segmentation combines object localization, class prediction, and pixel-level mask estimation. Instead of assigning one class label to every pixel, the model predicts a set of object instances. Each instance usually contains a class label, confidence score, bounding box, and binary mask.</p>
             <div class="formula-box math-panel" aria-label="Instance segmentation output notation">
               <span class="math-label">Output set</span>
-              <span class="math-line">S = {(c<sub>k</sub>, s<sub>k</sub>, b<sub>k</sub>, M<sub>k</sub>)}<sub>k=1...N</sub></span>
+              <span class="math-line"><em>S</em> = {&thinsp;(<em>c</em><sub><em>k</em></sub>,&thinsp;<em>s</em><sub><em>k</em></sub>,&thinsp;<em>b</em><sub><em>k</em></sub>,&thinsp;<em>M</em><sub><em>k</em></sub>)&thinsp;}<sub><em>k</em> = 1,&hellip;,<em>N</em></sub></span>
               <span class="math-label">Mask shape</span>
-              <span class="math-line">M<sub>k</sub> &isin; {0,1}<sup>H &times; W</sup></span>
+              <span class="math-line"><em>M</em><sub><em>k</em></sub> &isin; {0,&thinsp;1}<sup><em>H</em> &times; <em>W</em></sup></span>
             </div>
             <div class="callout definition"><strong>Definition:</strong> If an image contains five concrete cracks, five leaves, or five cells from the same class, instance segmentation should produce five separate masks rather than one merged foreground region.</div>
           </section>
@@ -111,165 +111,640 @@
             <p>Mask IoU measures overlap between one predicted instance mask and one ground-truth instance mask. Mask AP evaluates a ranked set of predictions across confidence and IoU thresholds.</p>
             <div class="formula-box math-panel" aria-label="Mask IoU formula">
               <span class="math-label">Mask IoU</span>
-              <span class="math-line">IoU(M, G) = |M &cap; G| / |M &cup; G|</span>
-              <span class="math-label">Detection quality</span>
-              <span class="math-line">AP = area under the precision-recall curve over matched masks</span>
+              <span class="math-line">IoU(<em>M</em>,&thinsp;<em>G</em>) = |<em>M</em>&thinsp;&cap;&thinsp;<em>G</em>| / |<em>M</em>&thinsp;&cup;&thinsp;<em>G</em>|</span>
+              <span class="math-label">Mask Average Precision</span>
+              <span class="math-line">AP = (1/<em>T</em>)&ensp;&Sigma;<sub><em>t</em></sub>&ensp;AP<sub>IoU=<em>t</em></sub>,&ensp;<em>t</em> &isin; {0.50, 0.55, &hellip;, 0.95}</span>
             </div>
             <div class="callout pitfall"><strong>Pitfall:</strong> A model can detect the correct object with a good box but still predict a poor mask. Always inspect visual masks and mask metrics, not only detection scores.</div>
           </section>
 
           <section id="pytorch-lab">
             <h2>PyTorch Tutorial Lab</h2>
-            <p>These tabs provide compact starting points for instance segmentation training and inference. The examples use commonly available research libraries and keep the code commented for classroom discussion.</p>
+            <p>This step-by-step lab walks through a complete instance segmentation pipeline — from building a COCO-format dataset to choosing a model, running a full training loop, and computing Mask AP. Use the step buttons to progress or jump to any step directly.</p>
 
-            <div class="code-tabs" data-code-tabs>
-              <div class="code-tab-list" role="tablist" aria-label="Instance segmentation PyTorch code tabs">
-                <button class="code-tab active" id="tab-maskrcnn" type="button" role="tab" aria-selected="true" aria-controls="panel-maskrcnn" data-tab-target="panel-maskrcnn">Mask R-CNN</button>
-                <button class="code-tab" id="tab-yolo-seg" type="button" role="tab" aria-selected="false" aria-controls="panel-yolo-seg" data-tab-target="panel-yolo-seg">YOLO Seg</button>
-                <button class="code-tab" id="tab-sam-pseudo" type="button" role="tab" aria-selected="false" aria-controls="panel-sam-pseudo" data-tab-target="panel-sam-pseudo">SAM Pseudo Masks</button>
-                <button class="code-tab" id="tab-instance-eval" type="button" role="tab" aria-selected="false" aria-controls="panel-instance-eval" data-tab-target="panel-instance-eval">Evaluation</button>
+            <div class="tutorial-wizard" id="inst-wizard" role="region" aria-label="Instance segmentation tutorial wizard">
+              <div class="wizard-header" role="tablist" aria-label="Tutorial steps">
+                <button class="wizard-step-btn active" type="button" role="tab" aria-selected="true" aria-controls="inst-panel-1" id="inst-btn-1">
+                  <span class="step-num">1</span>
+                  <span class="step-info">
+                    <span class="step-title">Dataset Preparation</span>
+                    <span class="step-sub">COCO format, masks, boxes</span>
+                  </span>
+                </button>
+                <button class="wizard-step-btn" type="button" role="tab" aria-selected="false" aria-controls="inst-panel-2" id="inst-btn-2">
+                  <span class="step-num">2</span>
+                  <span class="step-info">
+                    <span class="step-title">Model Architecture</span>
+                    <span class="step-sub">Mask R-CNN, YOLO, SAM</span>
+                  </span>
+                </button>
+                <button class="wizard-step-btn" type="button" role="tab" aria-selected="false" aria-controls="inst-panel-3" id="inst-btn-3">
+                  <span class="step-num">3</span>
+                  <span class="step-info">
+                    <span class="step-title">Training Loop</span>
+                    <span class="step-sub">Multi-task loss, checkpoints</span>
+                  </span>
+                </button>
+                <button class="wizard-step-btn" type="button" role="tab" aria-selected="false" aria-controls="inst-panel-4" id="inst-btn-4">
+                  <span class="step-num">4</span>
+                  <span class="step-info">
+                    <span class="step-title">Evaluation</span>
+                    <span class="step-sub">Mask IoU, Mask AP</span>
+                  </span>
+                </button>
               </div>
 
-              <div class="code-panel active" id="panel-maskrcnn" role="tabpanel" aria-labelledby="tab-maskrcnn">
-                <article class="tutorial-card code-tutorial">
-                  <h3>Mask R-CNN Fine-tuning with Torchvision</h3>
-                  <p><strong>Libraries:</strong> PyTorch, Torchvision. The dataset must return an image and a target dictionary containing boxes, labels, and masks.</p>
-                  <pre><code>import torch
-from torch.utils.data import DataLoader
-from torchvision.models.detection import maskrcnn_resnet50_fpn
+              <div class="wizard-body">
+
+                <!-- Step 1: Dataset -->
+                <div class="wizard-panel active" id="inst-panel-1" role="tabpanel" aria-labelledby="inst-btn-1">
+                  <h3>Step 1 &mdash; Dataset Preparation</h3>
+                  <p>Instance segmentation datasets differ from semantic datasets in one critical way: each sample must return one binary mask <em>per object instance</em>, along with bounding boxes and class labels. Torchvision detection models expect a specific target dictionary format.</p>
+
+                  <div class="code-note">
+                    <em class="code-note-icon">&#9432;</em>
+                    <span><strong>Target format:</strong> Torchvision detection/instance models require <code>targets</code> as a list of dicts — one dict per image — containing <code>boxes</code> (float32, xyxy), <code>labels</code> (int64), and <code>masks</code> (uint8, binary, one per instance).</span>
+                  </div>
+
+                  <pre><code>import os
+import torch
+import numpy as np
+from PIL import Image
+from pathlib import Path
+from torch.utils.data import Dataset
+import torchvision.transforms.functional as TF
+
+
+class InstanceSegDataset(Dataset):
+    """
+    Folder layout:
+        root/images/   image_001.png  (RGB)
+        root/masks/    image_001/     (one binary PNG per instance)
+            class_1_inst_0.png
+            class_1_inst_1.png
+            class_2_inst_0.png
+    Mask PNG filenames encode the class id as the first integer in the name.
+    """
+    def __init__(self, root, split="train", image_size=(512, 512)):
+        self.image_dir = Path(root) / split / "images"
+        self.mask_dir  = Path(root) / split / "masks"
+        self.image_size = image_size
+        # Collect all image paths
+        self.paths = sorted(self.image_dir.glob("*.png"))
+
+    def __len__(self):
+        return len(self.paths)
+
+    def __getitem__(self, idx):
+        img_path   = self.paths[idx]
+        image      = Image.open(img_path).convert("RGB")
+        image      = TF.resize(image, self.image_size)
+        image      = TF.to_tensor(image)   # (3, H, W) float32 in [0, 1]
+
+        # Each image has its own sub-folder of per-instance binary masks.
+        inst_dir   = self.mask_dir / img_path.stem
+        mask_paths = sorted(inst_dir.glob("*.png"))
+
+        boxes, labels, masks = [], [], []
+
+        for mp in mask_paths:
+            # Parse the class id from the filename prefix (e.g. "2_inst_0.png" -> class 2).
+            class_id = int(mp.stem.split("_")[0])
+
+            mask = Image.open(mp).convert("L")
+            mask = TF.resize(mask, self.image_size,
+                             interpolation=TF.InterpolationMode.NEAREST)
+            mask = torch.as_tensor(np.array(mask), dtype=torch.uint8)
+            mask = (mask > 127).to(torch.uint8)   # binarize
+
+            # Skip empty masks that result from resize rounding.
+            if mask.sum() == 0:
+                continue
+
+            # Compute tight bounding box from the binary mask.
+            rows = torch.where(mask.any(dim=1))[0]
+            cols = torch.where(mask.any(dim=0))[0]
+            x1, y1 = cols[0].item(),  rows[0].item()
+            x2, y2 = cols[-1].item(), rows[-1].item()
+
+            boxes.append([x1, y1, x2, y2])
+            labels.append(class_id)
+            masks.append(mask)
+
+        target = {
+            # boxes: (N, 4) float32 in xyxy format
+            "boxes":  torch.tensor(boxes,  dtype=torch.float32),
+            # labels: (N,) int64 — class id for each instance
+            "labels": torch.tensor(labels, dtype=torch.int64),
+            # masks: (N, H, W) uint8 binary — one mask per instance
+            "masks":  torch.stack(masks)  if masks else torch.zeros((0, *self.image_size), dtype=torch.uint8),
+        }
+        return image, target
+
+
+# DataLoader must use a collate function because images may have different numbers of instances.
+def collate_fn(batch):
+    return tuple(zip(*batch))
+
+train_ds     = InstanceSegDataset("data/", split="train")
+val_ds       = InstanceSegDataset("data/", split="val")
+train_loader = torch.utils.data.DataLoader(
+    train_ds, batch_size=2, shuffle=True, collate_fn=collate_fn, num_workers=4
+)
+val_loader   = torch.utils.data.DataLoader(
+    val_ds, batch_size=1, shuffle=False, collate_fn=collate_fn, num_workers=2
+)
+
+# Sanity check: inspect one sample
+image, target = train_ds[0]
+print("Image shape:  ", image.shape)           # (3, 512, 512)
+print("Num instances:", target["masks"].shape[0])
+print("Box format:   ", target["boxes"])       # [[x1,y1,x2,y2], ...]</code></pre>
+
+                  <ul class="code-checklist">
+                    <li>Each instance needs its own binary mask — do not use a single mask with different integer values per instance for Torchvision detection models.</li>
+                    <li>Boxes must be in <code>xyxy</code> (x1, y1, x2, y2) format as float32 — not xywh or normalized coordinates.</li>
+                    <li>Labels must include background as class 0; your foreground classes start from 1.</li>
+                    <li>Use a custom <code>collate_fn</code> with <code>tuple(zip(*))</code> so batches work even when instances counts differ across images.</li>
+                  </ul>
+
+                  <div class="wizard-nav">
+                    <button class="btn btn-outline wizard-prev" type="button" disabled>Previous</button>
+                    <span class="wizard-nav-info">Step 1 of 4</span>
+                    <button class="btn btn-primary wizard-next" type="button">Next: Model Architecture</button>
+                  </div>
+                </div>
+
+                <!-- Step 2: Models -->
+                <div class="wizard-panel" id="inst-panel-2" role="tabpanel" aria-labelledby="inst-btn-2" hidden>
+                  <h3>Step 2 &mdash; Model Architecture</h3>
+                  <p>Three common approaches to instance segmentation are shown below. Mask R-CNN is the standard academic baseline. YOLO segmentation is the practical real-time choice. SAM-assisted labeling accelerates annotation for custom datasets.</p>
+
+                  <div class="model-tabs-grid" id="inst-models" role="region" aria-label="Instance model selector">
+                    <div class="model-tab-list" role="tablist" aria-label="Architecture options">
+                      <button class="model-tab-btn active" type="button" role="tab" aria-selected="true" aria-controls="imodel-panel-maskrcnn" id="imodel-btn-maskrcnn">Mask R-CNN</button>
+                      <button class="model-tab-btn" type="button" role="tab" aria-selected="false" aria-controls="imodel-panel-yolo" id="imodel-btn-yolo">YOLO Seg</button>
+                      <button class="model-tab-btn" type="button" role="tab" aria-selected="false" aria-controls="imodel-panel-sam" id="imodel-btn-sam">SAM Pseudo Masks</button>
+                      <button class="model-tab-btn" type="button" role="tab" aria-selected="false" aria-controls="imodel-panel-compare" id="imodel-btn-compare">Compare All</button>
+                    </div>
+
+                    <!-- Mask R-CNN -->
+                    <div class="model-panel active" id="imodel-panel-maskrcnn" role="tabpanel" aria-labelledby="imodel-btn-maskrcnn">
+                      <span class="model-badge cnn">CNN</span><span class="model-badge pretrained">Pretrained (COCO)</span>
+                      <h4>Mask R-CNN &mdash; Two-Stage Proposal + Mask Head</h4>
+                      <p>Mask R-CNN first proposes candidate regions, classifies and refines each box, then predicts a binary mask inside each box. It is an excellent academic baseline because each stage (RPN, RoIAlign, classifier, mask head) can be studied independently.</p>
+                      <pre><code>import torch
+from torchvision.models.detection import (
+    maskrcnn_resnet50_fpn,
+    MaskRCNN_ResNet50_FPN_Weights,
+)
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor
 
-num_classes = 3  # background + class 1 + class 2
 
-# Load a COCO-pretrained Mask R-CNN backbone.
-model = maskrcnn_resnet50_fpn(weights="DEFAULT")
+def build_maskrcnn(num_classes, pretrained=True):
+    """
+    num_classes includes background as class 0.
+    Example: num_classes=3 means background + 2 foreground classes.
+    """
+    weights = MaskRCNN_ResNet50_FPN_Weights.DEFAULT if pretrained else None
+    model   = maskrcnn_resnet50_fpn(weights=weights)
 
-# Replace the box classifier for the target dataset.
-in_features = model.roi_heads.box_predictor.cls_score.in_features
-model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
+    # --- Replace the box classification head ---
+    # in_features: number of channels coming into the classifier from RoI pooling
+    in_features = model.roi_heads.box_predictor.cls_score.in_features
+    model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
 
-# Replace the mask predictor for the target dataset.
-in_channels = model.roi_heads.mask_predictor.conv5_mask.in_channels
-hidden_layer = 256
-model.roi_heads.mask_predictor = MaskRCNNPredictor(
-    in_channels,
-    hidden_layer,
-    num_classes
-)
+    # --- Replace the mask prediction head ---
+    # in_channels: feature map depth entering the mask head (typically 256)
+    in_channels  = model.roi_heads.mask_predictor.conv5_mask.in_channels
+    hidden_layer = 256    # number of channels in the mask head's hidden conv layers
+    model.roi_heads.mask_predictor = MaskRCNNPredictor(
+        in_channels, hidden_layer, num_classes
+    )
+    return model
 
+
+# Build model — num_classes = background(0) + your classes
+model  = build_maskrcnn(num_classes=3, pretrained=True)
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model.to(device)
-optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
+model  = model.to(device)
 
-for images, targets in DataLoader(train_dataset, batch_size=2, collate_fn=lambda x: tuple(zip(*x))):
-    images = [img.to(device) for img in images]
-    targets = [{key: value.to(device) for key, value in t.items()} for t in targets]
+# Quick shape check in eval mode (training mode returns losses, not predictions)
+model.eval()
+with torch.no_grad():
+    dummy  = [torch.rand(3, 512, 512).to(device)]
+    output = model(dummy)
+    print("Predicted instances:", len(output[0]["masks"]))
+    print("Mask shape:         ", output[0]["masks"].shape)  # (N, 1, H, W)</code></pre>
+                      <div class="code-note">
+                        <em class="code-note-icon">&#9432;</em>
+                        <span>In Torchvision, Mask R-CNN returns a <strong>list of dicts</strong> during inference — one dict per image. Each dict contains <code>boxes</code>, <code>labels</code>, <code>scores</code>, and <code>masks</code> (soft sigmoid output, shape <code>N×1×H×W</code>). Binarize masks with <code>&gt; 0.5</code> before use.</span>
+                      </div>
+                    </div>
 
-    # During training, Mask R-CNN returns a dictionary of losses.
-    loss_dict = model(images, targets)
-    loss = sum(loss_value for loss_value in loss_dict.values())
+                    <!-- YOLO -->
+                    <div class="model-panel" id="imodel-panel-yolo" role="tabpanel" aria-labelledby="imodel-btn-yolo" hidden>
+                      <span class="model-badge cnn">CNN</span><span class="model-badge pretrained">Pretrained</span>
+                      <h4>YOLO Segmentation &mdash; Real-Time Instance Masks</h4>
+                      <p>YOLOv8 segmentation adds a lightweight mask head to the detection backbone using prototype masks and per-instance coefficients. It is much faster than Mask R-CNN but typically less accurate on small or overlapping objects.</p>
+                      <pre><code>from ultralytics import YOLO
 
-    optimizer.zero_grad()
-    loss.backward()
-    optimizer.step()</code></pre>
-                  <p><strong>Explanation:</strong> The model learns proposal quality, class labels, bounding boxes, and masks together. For small datasets, start from COCO weights and replace only the prediction heads.</p>
-                </article>
-              </div>
+# --- Training ---
+# Load a pretrained YOLOv8 segmentation checkpoint.
+# Sizes: yolov8n-seg (nano) ... yolov8x-seg (extra-large)
+model = YOLO("yolov8s-seg.pt")
 
-              <div class="code-panel" id="panel-yolo-seg" role="tabpanel" aria-labelledby="tab-yolo-seg" hidden>
-                <article class="tutorial-card code-tutorial">
-                  <h3>YOLO-style Segmentation Training</h3>
-                  <p><strong>Libraries:</strong> Ultralytics YOLO. Labels are commonly stored as polygon masks in a YOLO segmentation dataset format.</p>
-                  <pre><code>from ultralytics import YOLO
-
-# Start from a pretrained segmentation checkpoint.
-model = YOLO("yolov8n-seg.pt")
-
-# data.yaml should define train/val image folders and class names.
+# data.yaml must define:
+#   path: /data/my_dataset
+#   train: images/train
+#   val: images/val
+#   names: {0: background, 1: crack, 2: spall}
+# Labels: polygon coordinates in YOLO segmentation format (class + normalized points)
 model.train(
     data="data.yaml",
-    epochs=80,
-    imgsz=640,
+    epochs=100,
+    imgsz=640,       # resize images to this square during training
     batch=8,
-    lr0=0.001,
-    patience=20
+    lr0=1e-3,        # initial learning rate
+    patience=20,     # stop if no improvement for 20 epochs
+    save=True,
 )
 
-# Run inference and save visual mask overlays.
+# --- Inference ---
 results = model.predict(
     source="test_images/",
-    conf=0.35,
-    save=True,
-    save_txt=True
+    conf=0.35,         # minimum confidence to accept a detection
+    iou=0.45,          # NMS IoU threshold — reduce to merge fewer overlapping boxes
+    save=True,         # save annotated images
+    save_txt=True,     # save polygon predictions as .txt files
 )
 
 for result in results:
-    # result.masks contains predicted instance masks.
-    print(result.boxes.cls, result.boxes.conf)</code></pre>
-                  <p><strong>Explanation:</strong> YOLO-style segmentation is useful for real-time applied systems. Use it when fast inference is a priority, then compare accuracy with a stronger but slower model such as Mask R-CNN.</p>
-                </article>
-              </div>
+    # result.masks.xy: list of polygon coords per instance
+    # result.boxes.cls: class ids
+    # result.boxes.conf: confidence scores
+    if result.masks is not None:
+        print(f"Instances found: {len(result.masks.xy)}")
+        print(f"Classes: {result.boxes.cls.tolist()}")</code></pre>
+                      <div class="code-note">
+                        <em class="code-note-icon">&#9432;</em>
+                        <span>YOLO segmentation labels use polygon format — each line in a label .txt file is <code>class_id x1 y1 x2 y2 ... xn yn</code> with coordinates normalized to [0, 1]. Use tools like <a href="https://roboflow.com" target="_blank" rel="noopener">Roboflow</a> or LabelImg to create these annotations.</span>
+                      </div>
+                    </div>
 
-              <div class="code-panel" id="panel-sam-pseudo" role="tabpanel" aria-labelledby="tab-sam-pseudo" hidden>
-                <article class="tutorial-card code-tutorial">
-                  <h3>SAM-assisted Pseudo Mask Generation</h3>
-                  <p><strong>Libraries:</strong> Segment Anything, OpenCV, NumPy. Use generated masks as candidates, then filter and manually verify them before training.</p>
-                  <pre><code>import cv2
+                    <!-- SAM -->
+                    <div class="model-panel" id="imodel-panel-sam" role="tabpanel" aria-labelledby="imodel-btn-sam" hidden>
+                      <span class="model-badge transformer">Transformer</span><span class="model-badge pretrained">Pretrained (SA-1B)</span>
+                      <h4>SAM &mdash; Promptable Pseudo-Mask Generation</h4>
+                      <p>The Segment Anything Model (SAM) can generate candidate instance masks automatically or from point/box prompts. These masks are class-agnostic — a classifier or human must still assign class labels. Use SAM to speed up annotation, not to replace it.</p>
+                      <pre><code>import cv2
+import numpy as np
 from segment_anything import SamAutomaticMaskGenerator, sam_model_registry
 
-image = cv2.imread("image.jpg")
-image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-sam = sam_model_registry["vit_b"](checkpoint="sam_vit_b.pth")
+# --- Load SAM ---
+# Download checkpoint from: https://github.com/facebookresearch/segment-anything
+# Model sizes: vit_b (~375 MB), vit_l (~1.2 GB), vit_h (~2.4 GB)
+sam = sam_model_registry["vit_b"](checkpoint="sam_vit_b_01ec64.pth")
+sam.to("cuda")
+
+# --- Automatic mask generation ---
+# Tune these thresholds for your domain.
 mask_generator = SamAutomaticMaskGenerator(
     model=sam,
-    points_per_side=32,
-    pred_iou_thresh=0.88,
-    stability_score_thresh=0.92
+    points_per_side=32,          # grid density — higher finds smaller objects
+    pred_iou_thresh=0.88,        # discard masks where SAM's own quality score is low
+    stability_score_thresh=0.92, # discard unstable masks (sensitive to threshold shifts)
+    min_mask_region_area=300,    # discard masks smaller than 300 pixels
 )
 
-masks = mask_generator.generate(image_rgb)
+image_bgr = cv2.imread("image.jpg")
+image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
 
-filtered_masks = []
-for mask_info in masks:
-    area = mask_info["area"]
-    score = mask_info["predicted_iou"]
+# Returns a list of dicts, each with keys:
+#   segmentation (H x W bool), area, bbox, predicted_iou, stability_score
+all_masks = mask_generator.generate(image_rgb)
 
-    # Remove very small or low-confidence candidate masks.
-    if area &gt; 300 and score &gt; 0.90:
-        filtered_masks.append(mask_info["segmentation"])
+# --- Filter and keep only high-quality candidates ---
+filtered = []
+for m in all_masks:
+    if m["predicted_iou"] &gt; 0.90 and m["area"] &gt; 400:
+        filtered.append({
+            "mask":  m["segmentation"],       # (H, W) bool
+            "area":  m["area"],
+            "score": m["predicted_iou"],
+        })
 
-print(f"Kept {len(filtered_masks)} candidate instance masks")</code></pre>
-                  <p><strong>Explanation:</strong> SAM can reduce annotation time, but generated masks are class-agnostic. A human or a classifier must still assign class semantics and remove incorrect masks.</p>
-                </article>
-              </div>
+print(f"Total masks: {len(all_masks)}, kept after filtering: {len(filtered)}")
 
-              <div class="code-panel" id="panel-instance-eval" role="tabpanel" aria-labelledby="tab-instance-eval" hidden>
-                <article class="tutorial-card code-tutorial">
-                  <h3>Mask IoU Matching for Evaluation</h3>
-                  <p><strong>Libraries:</strong> PyTorch. This function computes pairwise IoU between predicted and ground-truth masks before matching instances.</p>
+# --- Next step: assign class labels ---
+# Option A: manually review filtered masks in a labeling tool.
+# Option B: classify each crop using a small image classifier.
+# Always validate pseudo labels on a held-out set before using them for training.</code></pre>
+                      <div class="code-note">
+                        <em class="code-note-icon">&#9432;</em>
+                        <span>SAM masks are class-agnostic and may include background regions, object parts, and full objects at multiple granularity levels. Always filter by area and quality score, then have a human or classifier assign class semantics before using as training targets.</span>
+                      </div>
+                    </div>
+
+                    <!-- Compare -->
+                    <div class="model-panel" id="imodel-panel-compare" role="tabpanel" aria-labelledby="imodel-btn-compare" hidden>
+                      <h4>Architecture Comparison</h4>
+                      <p>Use this table to select the right approach for your dataset size, speed requirement, and annotation budget.</p>
+                      <div class="table-wrap">
+                        <table class="model-comparison-table">
+                          <thead>
+                            <tr>
+                              <th>Model</th>
+                              <th>Type</th>
+                              <th>Speed</th>
+                              <th>Accuracy</th>
+                              <th>Best for</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Mask R-CNN (ResNet-50 FPN)</td>
+                              <td>Two-stage CNN</td>
+                              <td>Slow (~5 fps)</td>
+                              <td>High</td>
+                              <td>Academic baselines, overlapping objects, detailed mask quality</td>
+                            </tr>
+                            <tr>
+                              <td>YOLOv8s-seg</td>
+                              <td>Single-stage CNN</td>
+                              <td>Fast (~40 fps)</td>
+                              <td>Good</td>
+                              <td>Real-time deployment, edge devices, applied projects</td>
+                            </tr>
+                            <tr>
+                              <td>SAM (ViT-B)</td>
+                              <td>Transformer</td>
+                              <td>Slow per image</td>
+                              <td>Class-agnostic</td>
+                              <td>Annotation assistance, pseudo-label generation, zero-shot exploration</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="wizard-nav">
+                    <button class="btn btn-outline wizard-prev" type="button">Previous</button>
+                    <span class="wizard-nav-info">Step 2 of 4</span>
+                    <button class="btn btn-primary wizard-next" type="button">Next: Training Loop</button>
+                  </div>
+                </div>
+
+                <!-- Step 3: Training -->
+                <div class="wizard-panel" id="inst-panel-3" role="tabpanel" aria-labelledby="inst-btn-3" hidden>
+                  <h3>Step 3 &mdash; Training Loop</h3>
+                  <p>Mask R-CNN is trained with a combined multi-task loss. The model automatically computes all loss components internally — you only need to sum the returned loss dictionary values and call <code>backward()</code>. There is no separate logit output during training.</p>
+
+                  <div class="code-note">
+                    <em class="code-note-icon">&#9432;</em>
+                    <span><strong>Training vs. inference mode:</strong> When targets are passed to Mask R-CNN, it returns a loss dictionary. When no targets are passed (eval mode), it returns predicted instance dicts. Never pass targets during evaluation — it will crash.</span>
+                  </div>
+
                   <pre><code>import torch
+from torch.optim import SGD
+from torch.optim.lr_scheduler import CosineAnnealingLR
 
+
+DEVICE  = "cuda" if torch.cuda.is_available() else "cpu"
+EPOCHS  = 30
+
+model     = build_maskrcnn(num_classes=3, pretrained=True).to(DEVICE)
+
+# SGD with momentum is the standard optimizer for Torchvision detection models.
+# AdamW also works but SGD tends to generalize better for detection.
+optimizer = SGD(
+    [p for p in model.parameters() if p.requires_grad],
+    lr=0.005,
+    momentum=0.9,
+    weight_decay=1e-4,
+)
+scheduler = CosineAnnealingLR(optimizer, T_max=EPOCHS, eta_min=1e-6)
+
+best_loss = float("inf")
+
+for epoch in range(EPOCHS):
+    model.train()
+    epoch_loss = 0.0
+    loss_components = {"rpn_cls": 0, "rpn_box": 0, "cls": 0, "box": 0, "mask": 0}
+
+    for images, targets in train_loader:
+        # Move images and every tensor inside each target dict to GPU.
+        images  = [img.to(DEVICE) for img in images]
+        targets = [
+            {k: v.to(DEVICE) for k, v in t.items()}
+            for t in targets
+        ]
+
+        # Forward pass — Mask R-CNN returns a dict of 5 losses during training:
+        #   loss_rpn_box_reg:  RPN bounding box regression quality
+        #   loss_objectness:   RPN foreground vs. background classification
+        #   loss_classifier:   ROI head class probability
+        #   loss_box_reg:      ROI head refined bounding box regression
+        #   loss_mask:         Binary cross-entropy on the predicted mask
+        loss_dict = model(images, targets)
+
+        # Sum all losses — no manual weighting needed for the default heads.
+        losses = sum(loss for loss in loss_dict.values())
+
+        optimizer.zero_grad()
+        losses.backward()
+        # Clip gradients to prevent exploding updates (useful with large batches).
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=5.0)
+        optimizer.step()
+
+        epoch_loss += losses.item()
+        # Track individual components for debugging.
+        loss_components["rpn_cls"] += loss_dict.get("loss_objectness",   0).item()
+        loss_components["rpn_box"] += loss_dict.get("loss_rpn_box_reg",  0).item()
+        loss_components["cls"]     += loss_dict.get("loss_classifier",   0).item()
+        loss_components["box"]     += loss_dict.get("loss_box_reg",      0).item()
+        loss_components["mask"]    += loss_dict.get("loss_mask",         0).item()
+
+    scheduler.step()
+    n = len(train_loader)
+    print(
+        f"Epoch {epoch+1:03d}/{EPOCHS} | total {epoch_loss/n:.4f} | "
+        f"rpn_cls {loss_components['rpn_cls']/n:.3f} | "
+        f"mask {loss_components['mask']/n:.3f} | "
+        f"lr {scheduler.get_last_lr()[0]:.2e}"
+    )
+
+    # Save checkpoint when training loss improves.
+    if epoch_loss &lt; best_loss:
+        best_loss = epoch_loss
+        torch.save({"epoch": epoch, "model": model.state_dict(),
+                    "loss": epoch_loss}, "maskrcnn_best.pth")</code></pre>
+
+                  <ul class="code-checklist">
+                    <li>Mask R-CNN computes all 5 loss components internally — only sum the returned dict and call <code>backward()</code>.</li>
+                    <li>Targets must be moved to GPU separately from images, since they are dicts, not tensors.</li>
+                    <li>Track <code>loss_mask</code> individually — a rising mask loss with a falling box loss often means the annotation masks have errors.</li>
+                    <li>Save <code>model.state_dict()</code> for portable checkpoints that work across PyTorch versions.</li>
+                    <li>Gradient clipping with <code>max_norm=5.0</code> is standard for detection models with FPN backbones.</li>
+                  </ul>
+
+                  <div class="wizard-nav">
+                    <button class="btn btn-outline wizard-prev" type="button">Previous</button>
+                    <span class="wizard-nav-info">Step 3 of 4</span>
+                    <button class="btn btn-primary wizard-next" type="button">Next: Evaluation</button>
+                  </div>
+                </div>
+
+                <!-- Step 4: Evaluation -->
+                <div class="wizard-panel" id="inst-panel-4" role="tabpanel" aria-labelledby="inst-btn-4" hidden>
+                  <h3>Step 4 &mdash; Evaluation &amp; Mask AP</h3>
+                  <p>Instance segmentation evaluation uses Mask AP — a precision-recall summary computed by matching predicted masks to ground-truth instances at multiple IoU thresholds. The function below implements pairwise Mask IoU matching and TP/FP/FN counting, which is the core of any Mask AP calculation.</p>
+
+                  <pre><code>import torch
+import numpy as np
+
+
+# ---------------------------------------------------------------
+# Pairwise Mask IoU
+# ---------------------------------------------------------------
 def pairwise_mask_iou(pred_masks, gt_masks, eps=1e-7):
-    # pred_masks: [N, H, W], gt_masks: [M, H, W]
-    pred = pred_masks.bool().flatten(1)
-    gt = gt_masks.bool().flatten(1)
+    """
+    Compute an (N x M) IoU matrix between N predicted masks and M GT masks.
 
-    intersection = (pred[:, None, :] &amp; gt[None, :, :]).sum(dim=-1).float()
-    union = (pred[:, None, :] | gt[None, :, :]).sum(dim=-1).float()
+    Args:
+        pred_masks: (N, H, W) bool or uint8 tensor
+        gt_masks:   (M, H, W) bool or uint8 tensor
+    Returns:
+        iou_matrix: (N, M) float tensor
+    """
+    # Flatten spatial dims: (N, H*W) and (M, H*W)
+    pred = pred_masks.bool().flatten(1)   # (N, H*W)
+    gt   = gt_masks.bool().flatten(1)     # (M, H*W)
+
+    # Broadcast: pred[:, None, :] is (N, 1, H*W), gt[None, :, :] is (1, M, H*W)
+    intersection = (pred[:, None, :] &amp; gt[None, :, :]).sum(-1).float()  # (N, M)
+    union        = (pred[:, None, :] | gt[None, :, :]).sum(-1).float()  # (N, M)
     return intersection / (union + eps)
 
-iou_matrix = pairwise_mask_iou(pred_masks, gt_masks)
-matched_pred, matched_gt = torch.where(iou_matrix &gt;= 0.50)
 
-true_positives = len(matched_pred)
-false_positives = pred_masks.shape[0] - true_positives
-false_negatives = gt_masks.shape[0] - true_positives</code></pre>
-                  <p><strong>Explanation:</strong> Mask AP uses this matching idea repeatedly across IoU thresholds and confidence thresholds, then summarizes the precision-recall behavior.</p>
-                </article>
-              </div>
-            </div>
+# ---------------------------------------------------------------
+# TP / FP / FN matching at a single IoU threshold
+# ---------------------------------------------------------------
+def match_instances(pred_masks, pred_scores, gt_masks, iou_thresh=0.50):
+    """
+    Match predicted instances to ground-truth instances by greedy IoU matching.
+
+    Returns:
+        tp, fp, fn counts and a list of IoUs for matched pairs
+    """
+    if len(pred_masks) == 0:
+        return 0, 0, len(gt_masks), []
+    if len(gt_masks) == 0:
+        return 0, len(pred_masks), 0, []
+
+    iou_mat = pairwise_mask_iou(pred_masks, gt_masks)
+
+    # Sort predictions by descending confidence score.
+    order       = torch.argsort(pred_scores, descending=True)
+    used_gt     = set()
+    matched_iou = []
+    tp, fp      = 0, 0
+
+    for pred_idx in order:
+        # Find the best unmatched GT for this prediction.
+        best_iou, best_gt = 0.0, -1
+        for gt_idx in range(len(gt_masks)):
+            if gt_idx in used_gt:
+                continue
+            if iou_mat[pred_idx, gt_idx].item() &gt; best_iou:
+                best_iou  = iou_mat[pred_idx, gt_idx].item()
+                best_gt   = gt_idx
+
+        if best_iou &gt;= iou_thresh:
+            tp += 1
+            used_gt.add(best_gt)
+            matched_iou.append(best_iou)
+        else:
+            fp += 1
+
+    fn = len(gt_masks) - len(used_gt)
+    return tp, fp, fn, matched_iou
+
+
+# ---------------------------------------------------------------
+# Inference and evaluation over the validation set
+# ---------------------------------------------------------------
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+checkpoint = torch.load("maskrcnn_best.pth", map_location=DEVICE)
+model      = build_maskrcnn(num_classes=3).to(DEVICE)
+model.load_state_dict(checkpoint["model"])
+model.eval()
+
+all_tp, all_fp, all_fn = 0, 0, 0
+all_matched_iou = []
+
+with torch.no_grad():
+    for images, targets in val_loader:
+        images  = [img.to(DEVICE) for img in images]
+
+        # In eval mode, model returns predictions (no targets needed).
+        outputs = model(images)
+
+        for out, tgt in zip(outputs, targets):
+            # Binarize soft masks — model outputs sigmoid probabilities in [0,1].
+            pred_masks  = (out["masks"].squeeze(1) &gt; 0.5).cpu()  # (N, H, W) bool
+            pred_scores = out["scores"].cpu()                       # (N,) float
+            gt_masks    = tgt["masks"].bool().cpu()                 # (M, H, W) bool
+
+            # Filter predictions below a confidence threshold.
+            keep        = pred_scores &gt;= 0.50
+            pred_masks  = pred_masks[keep]
+            pred_scores = pred_scores[keep]
+
+            tp, fp, fn, miou = match_instances(
+                pred_masks, pred_scores, gt_masks, iou_thresh=0.50
+            )
+            all_tp  += tp
+            all_fp  += fp
+            all_fn  += fn
+            all_matched_iou.extend(miou)
+
+# Compute precision, recall, and F1 at IoU=0.50
+precision = all_tp / (all_tp + all_fp + 1e-7)
+recall    = all_tp / (all_tp + all_fn + 1e-7)
+f1        = 2 * precision * recall / (precision + recall + 1e-7)
+mean_iou  = np.mean(all_matched_iou) if all_matched_iou else 0.0
+
+print(f"Precision @ IoU=0.50: {precision:.4f}")
+print(f"Recall    @ IoU=0.50: {recall:.4f}")
+print(f"F1 Score  @ IoU=0.50: {f1:.4f}")
+print(f"Mean IoU of matched:  {mean_iou:.4f}")</code></pre>
+
+                  <div class="code-note">
+                    <em class="code-note-icon">&#9432;</em>
+                    <span>COCO Mask AP averages this matching procedure over 10 IoU thresholds (0.50 to 0.95 in steps of 0.05) and reports the mean. For a full COCO AP evaluation, use the <code>pycocotools</code> library — it handles category matching, area ranges (small/medium/large), and the full precision-recall curve automatically.</span>
+                  </div>
+
+                  <ul class="code-checklist">
+                    <li>Binarize Mask R-CNN output masks with <code>&gt; 0.5</code> — the model outputs soft probability maps, not binary masks.</li>
+                    <li>Filter predictions by a confidence threshold before matching to avoid penalizing the recall of high-quality predictions.</li>
+                    <li>Greedy matching assigns each GT to at most one prediction — the standard COCO evaluation approach.</li>
+                    <li>Track precision and recall separately: low precision means too many false detections; low recall means missed objects.</li>
+                  </ul>
+
+                  <div class="wizard-nav">
+                    <button class="btn btn-outline wizard-prev" type="button">Previous</button>
+                    <span class="wizard-nav-info">Step 4 of 4</span>
+                    <button class="btn btn-primary wizard-next" type="button" disabled>Complete</button>
+                  </div>
+                </div>
+
+              </div><!-- /.wizard-body -->
+            </div><!-- /#inst-wizard -->
           </section>
         </article>
       </div>
@@ -280,20 +755,74 @@ false_negatives = gt_masks.shape[0] - true_positives</code></pre>
     <div class="container">
       <div class="footer-grid">
         <div>
-          <h2>Open Segmentation Lab</h2>
-          <p>Free academic tutorials for image segmentation, metrics, and research reading.</p>
+          <p class="footer-heading" style="font-size: 1.1rem; font-weight: 800; color:#fff; margin: 0 0 8px;">Open Segmentation Lab</p>
+          <p class="footer-tagline">Free academic tutorials for image segmentation, metrics, and research reading.</p>
           <address class="footer-contact">
             <strong>Mohammad Rifat Ahmmad Rashid</strong><br>
             Computer Vision Researcher | Associate Professor<br>
-            Department of Computer Science and Engineering<br>
+            Dept. of Computer Science and Engineering<br>
             East West University, Dhaka 1212, Bangladesh<br>
             <a href="mailto:rifat.rashid@ewubd.edu">rifat.rashid@ewubd.edu</a>
           </address>
+        </div>
+        <div style="padding-top: 6px;">
+          <p class="footer-heading">Topics</p>
+          <ul class="footer-nav-list">
+            <li><a href="semantic.html">Semantic Segmentation</a></li>
+            <li><a href="instance.html">Instance Segmentation</a></li>
+            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Segmentation</a></li>
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="datasets.html">Datasets</a></li>
+          </ul>
         </div>
       </div>
       <p class="footer-note">Educational content is free for students and researchers.</p>
     </div>
   </footer>
   <script src="js/main.js"></script>
+  <script>
+  (function () {
+    function initWizard(wizardId) {
+      var wizard = document.getElementById(wizardId);
+      if (!wizard) return;
+      var stepBtns = Array.from(wizard.querySelectorAll('.wizard-step-btn'));
+      var panels   = Array.from(wizard.querySelectorAll(':scope > .wizard-body > .wizard-panel'));
+      var current  = 0;
+      function show(idx) {
+        stepBtns.forEach(function (btn, i) {
+          btn.classList.toggle('active', i === idx);
+          btn.setAttribute('aria-selected', String(i === idx));
+          if (i < idx) btn.classList.add('completed'); else btn.classList.remove('completed');
+        });
+        panels.forEach(function (p, i) { p.classList.toggle('active', i === idx); p.hidden = i !== idx; });
+        current = idx;
+      }
+      stepBtns.forEach(function (btn, i) { btn.addEventListener('click', function () { show(i); }); });
+      wizard.querySelectorAll('.wizard-prev').forEach(function (btn) {
+        btn.addEventListener('click', function () { if (current > 0) show(current - 1); });
+      });
+      wizard.querySelectorAll('.wizard-next').forEach(function (btn) {
+        btn.addEventListener('click', function () { if (current < stepBtns.length - 1) show(current + 1); });
+      });
+      show(0);
+    }
+    function initModelTabs(groupId) {
+      var group = document.getElementById(groupId);
+      if (!group) return;
+      var btns   = Array.from(group.querySelectorAll('.model-tab-btn'));
+      var panels = Array.from(group.querySelectorAll('.model-panel'));
+      btns.forEach(function (btn, i) {
+        btn.addEventListener('click', function () {
+          btns.forEach(function (b, j) { b.classList.toggle('active', j === i); b.setAttribute('aria-selected', String(j === i)); });
+          panels.forEach(function (p, j) { p.classList.toggle('active', j === i); p.hidden = j !== i; });
+        });
+      });
+    }
+    initWizard('inst-wizard');
+    initModelTabs('inst-models');
+  })();
+  </script>
 </body>
 </html>

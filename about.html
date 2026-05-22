@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About | Open Segmentation Lab</title>
-  <meta name="description" content="About Open Segmentation Lab, a free academic image segmentation tutorial platform for students and researchers.">
+  <meta name="description" content="About Open Segmentation Lab — a free academic image segmentation tutorial platform maintained by Mohammad Rifat Ahmmad Rashid, Associate Professor at East West University, Bangladesh.">
   <meta property="og:title" content="About Open Segmentation Lab">
   <meta property="og:description" content="Learn the academic purpose, intended users, and free-access policy of Open Segmentation Lab.">
   <meta property="og:type" content="website">
@@ -37,41 +37,125 @@
       <div class="container">
         <p class="eyebrow">About</p>
         <h1>About Open Segmentation Lab</h1>
-        <p>This project is a static, free academic website for learning image segmentation through tutorials, references, formulas, paper summaries, and small browser-based tools.</p>
+        <p>Open Segmentation Lab is a free, static academic website for learning image segmentation through tutorials, formulas, reference tables, paper summaries, and small browser-based tools — no login, no backend, no tracking.</p>
       </div>
     </section>
 
     <section class="section">
       <div class="container">
+
+        <!-- Profile card -->
         <div class="profile-strip">
           <p class="eyebrow">Maintained by</p>
           <h2>Mohammad Rifat Ahmmad Rashid</h2>
-          <p>Computer Vision Researcher | Associate Professor</p>
-          <p>Department of Computer Science and Engineering<br>East West University, Dhaka 1212, Bangladesh</p>
-          <p><a href="mailto:rifat.rashid@ewubd.edu">rifat.rashid@ewubd.edu</a></p>
+          <p style="margin: 6px 0 0; color: var(--color-muted);">Computer Vision Researcher &amp; Associate Professor<br>
+          Department of Computer Science and Engineering<br>
+          East West University, Dhaka 1212, Bangladesh</p>
+          <p style="margin: 10px 0 0;"><a href="mailto:rifat.rashid@ewubd.edu">rifat.rashid@ewubd.edu</a></p>
+
+          <div class="research-areas">
+            <span class="research-badge">Computer Vision</span>
+            <span class="research-badge">Image Segmentation</span>
+            <span class="research-badge">Medical Imaging</span>
+            <span class="research-badge">Agricultural Analysis</span>
+            <span class="research-badge">Deep Learning</span>
+            <span class="research-badge">Self-Supervised Learning</span>
+          </div>
+
+          <div class="profile-links">
+            <a class="profile-link" href="https://www.kaggle.com/mrifatrashid" target="_blank" rel="noopener noreferrer">Kaggle Notebooks</a>
+            <a class="profile-link" href="mailto:rifat.rashid@ewubd.edu">Email</a>
+            <a class="profile-link" href="https://www.ewubd.edu" target="_blank" rel="noopener noreferrer">East West University</a>
+          </div>
         </div>
 
+        <!-- Platform info cards -->
         <div class="grid two">
           <article class="card">
             <h2>Purpose of the Platform</h2>
-            <p>Open Segmentation Lab is intended to help students understand the major segmentation tasks before they implement or evaluate models. The site emphasizes correct terminology, readable explanations, and practical academic context.</p>
+            <p>Open Segmentation Lab is intended to help students understand the major segmentation tasks before they implement or evaluate models. The site emphasizes correct terminology, readable definitions, worked formulas, and practical academic context — not just code.</p>
+            <p>Content is written to support lecture preparation, reading group discussions, and independent study in computer vision courses.</p>
           </article>
           <article class="card">
             <h2>Intended Users</h2>
-            <p>The primary users are university students, instructors, early-stage computer vision researchers, and project teams who need a clear starting point for segmentation concepts and evaluation.</p>
+            <p>The primary users are university students, course instructors, early-stage computer vision researchers, and project teams who need a clear starting point for segmentation concepts and evaluation practice.</p>
+            <p>No prior deep learning experience is assumed for the definitions and metrics pages. Code tutorials assume basic familiarity with PyTorch.</p>
           </article>
           <article class="card">
             <h2>Free for Students and Researchers</h2>
-            <p>All educational content is free to read and share. The site has no login system, no paid course gate, no backend, and no database requirement.</p>
+            <p>All educational content is free to read and share. The site has no login system, no paid course gate, no backend, and no database requirement. It runs entirely as a static site that can be hosted on GitHub Pages, Vercel, or any CDN.</p>
           </article>
           <article class="card">
             <h2>Open Academic Use</h2>
-            <p>The platform is written as a lightweight reference that can be used in classes, reading groups, and student projects. The emphasis is on clarity, correctness, and long-term maintainability.</p>
+            <p>The platform is written as a lightweight reference that can be used in classes, reading groups, lab meetings, and student projects. Content prioritizes clarity, correctness, and long-term maintainability over completeness or novelty.</p>
           </article>
         </div>
 
-        <div class="callout exam">
-          <strong>Academic promise:</strong> Open Segmentation Lab should remain a learning resource first, with clear tutorials and practical references for students and researchers.
+        <!-- Platform goals -->
+        <div class="section-title" style="margin-top: 48px;">
+          <h2>Platform Design Goals</h2>
+          <p>These principles guide every page on the site.</p>
+        </div>
+        <div class="grid three">
+          <div class="card">
+            <h3>Correctness first</h3>
+            <p>Definitions and formulas follow standard academic usage. When simplifications are made, they are stated explicitly so students can read primary sources without confusion.</p>
+          </div>
+          <div class="card">
+            <h3>No unnecessary complexity</h3>
+            <p>Each page covers one topic clearly. The site does not bundle advertising, gamification, or account systems that distract from learning.</p>
+          </div>
+          <div class="card">
+            <h3>Lightweight and accessible</h3>
+            <p>Pure HTML, CSS, and vanilla JavaScript. Accessible navigation, keyboard-friendly interactive tools, and readable typography on all screen sizes.</p>
+          </div>
+          <div class="card">
+            <h3>Code as a learning tool</h3>
+            <p>PyTorch templates are kept short and commented so students can identify the role of each component — not copied-and-run recipes, but study aids.</p>
+          </div>
+          <div class="card">
+            <h3>Paper-first mindset</h3>
+            <p>The reading list points directly to original papers with summaries of what to focus on. Students are encouraged to read primary sources, not rely solely on secondary explanations.</p>
+          </div>
+          <div class="card">
+            <h3>Long-term maintainability</h3>
+            <p>Static HTML means the site stays accessible for years without server maintenance. New content is added by editing plain text files.</p>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="section-title" style="margin-top: 48px;">
+          <h2>Frequently Asked Questions</h2>
+        </div>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Who is this platform for?</h3>
+            <p>Primarily undergraduate and graduate students in computer vision courses, researchers starting a new segmentation project, and instructors who need reference material for lecture preparation. The metrics and tutorial pages are useful for anyone who needs a quick, reliable refresher.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Is this really free to use?</h3>
+            <p>Yes. There are no paywalls, login requirements, or subscription tiers. All content is accessible directly as static HTML. The site has no backend and collects no user data.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Can I cite or share this site in academic work?</h3>
+            <p>You are welcome to share and reference the site. For formal academic citation, cite the primary papers listed on the Papers page — those are the authoritative sources. This site is a study aid, not a research publication.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Can I use the code examples in my own projects?</h3>
+            <p>The code templates are short instructional examples. You may adapt them freely. For production use, review the documentation of PyTorch, Torchvision, Hugging Face Transformers, and Ultralytics, as APIs may change over time.</p>
+          </div>
+          <div class="faq-item">
+            <h3>How is the site maintained and updated?</h3>
+            <p>Content is maintained by Mohammad Rifat Ahmmad Rashid. Updates are made when course material changes, new foundational papers emerge, or corrections are needed. The site does not aim to track every new model release.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Are there interactive tools?</h3>
+            <p>Yes. The Metrics page includes IoU and Dice calculators. The Playground page includes a browser-based segmentation type selector and a visual mask demo. The Semantic Segmentation page includes an interactive task simulator. All tools run entirely in the browser with no server dependency.</p>
+          </div>
+        </div>
+
+        <div class="callout exam" style="margin-top: 32px;">
+          <strong>Academic promise:</strong> Open Segmentation Lab should remain a learning resource first — clear tutorials and practical references for students and researchers, never a product or a course gate.
         </div>
       </div>
     </section>
@@ -81,18 +165,30 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <h2>Open Segmentation Lab</h2>
-          <p>Free academic tutorials for image segmentation, metrics, and research reading.</p>
+          <p class="footer-heading" style="font-size: 1.1rem; font-weight: 800; color:#fff; margin: 0 0 8px;">Open Segmentation Lab</p>
+          <p class="footer-tagline">Free academic tutorials for image segmentation, metrics, and research reading.</p>
           <address class="footer-contact">
             <strong>Mohammad Rifat Ahmmad Rashid</strong><br>
             Computer Vision Researcher | Associate Professor<br>
-            Department of Computer Science and Engineering<br>
+            Dept. of Computer Science and Engineering<br>
             East West University, Dhaka 1212, Bangladesh<br>
             <a href="mailto:rifat.rashid@ewubd.edu">rifat.rashid@ewubd.edu</a>
           </address>
         </div>
+        <div style="padding-top: 6px;">
+          <p class="footer-heading">Topics</p>
+          <ul class="footer-nav-list">
+            <li><a href="semantic.html">Semantic Segmentation</a></li>
+            <li><a href="instance.html">Instance Segmentation</a></li>
+            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Segmentation</a></li>
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="datasets.html">Datasets</a></li>
+          </ul>
+        </div>
       </div>
-      <p class="footer-note">The site is intentionally static so it can be hosted on GitHub and Vercel without a build step.</p>
+      <p class="footer-note">The site is intentionally static so it can be hosted on GitHub and Vercel without a build step. No login or tracking required.</p>
     </div>
   </footer>
   <script src="js/main.js"></script>

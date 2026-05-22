@@ -54,9 +54,9 @@
             <p>A panoptic output assigns every pixel to exactly one segment. Background-like regions such as road, sky, grass, tissue, or soil are labeled as <strong>stuff</strong>. Countable objects such as people, cars, fruits, cells, or tools are labeled as <strong>things</strong> with instance identities.</p>
             <div class="formula-box math-panel" aria-label="Panoptic segmentation output notation">
               <span class="math-label">Pixel assignment</span>
-              <span class="math-line">P(i,j) = (c, id), where id = 0 for stuff and id &gt; 0 for thing instances</span>
+              <span class="math-line"><em>P</em>(<em>i</em>,<em>j</em>) = (<em>c</em>,&thinsp;id),&ensp;id = 0 for stuff,&ensp;id &gt; 0 for thing instances</span>
               <span class="math-label">Constraint</span>
-              <span class="math-line">Each pixel belongs to one and only one panoptic segment</span>
+              <span class="math-line">&forall;&thinsp;(<em>i</em>,<em>j</em>): exactly one segment covers pixel (<em>i</em>,&thinsp;<em>j</em>)</span>
             </div>
             <div class="callout definition"><strong>Definition:</strong> Panoptic segmentation is a unified scene parsing task: it labels stuff regions and separates thing instances in one non-overlapping output.</div>
           </section>
@@ -106,9 +106,9 @@
               <span class="math-label">Panoptic Quality</span>
               <span class="math-line">PQ = SQ &times; RQ</span>
               <span class="math-label">Segmentation Quality</span>
-              <span class="math-line">SQ = average IoU over matched segments</span>
+              <span class="math-line">SQ = (1/|TP|)&ensp;&Sigma;<sub>(<em>p</em>,<em>g</em>)&thinsp;&isin;&thinsp;TP</sub>&ensp;IoU(<em>p</em>,&thinsp;<em>g</em>)</span>
               <span class="math-label">Recognition Quality</span>
-              <span class="math-line">RQ = TP / (TP + 0.5 FP + 0.5 FN)</span>
+              <span class="math-line">RQ = TP / (TP + &frac12;&thinsp;FP + &frac12;&thinsp;FN)</span>
             </div>
             <div class="callout exam"><strong>Exam note:</strong> PQ is not just IoU. It combines the quality of predicted masks with the model's ability to find the correct set of segments.</div>
           </section>
@@ -125,156 +125,525 @@
 
           <section id="pytorch-lab">
             <h2>PyTorch Tutorial Lab</h2>
-            <p>These examples show how panoptic labels are prepared, how a universal segmentation model can be loaded, and how Panoptic Quality logic is implemented.</p>
+            <p>This step-by-step lab covers the complete panoptic segmentation pipeline — building non-overlapping panoptic targets, loading a universal segmentation model, running the training loop with combined losses, and computing Panoptic Quality on a validation set.</p>
 
-            <div class="code-tabs" data-code-tabs>
-              <div class="code-tab-list" role="tablist" aria-label="Panoptic segmentation code tabs">
-                <button class="code-tab active" id="tab-panoptic-format" type="button" role="tab" aria-selected="true" aria-controls="panel-panoptic-format" data-tab-target="panel-panoptic-format">Label Format</button>
-                <button class="code-tab" id="tab-mask2former-panoptic" type="button" role="tab" aria-selected="false" aria-controls="panel-mask2former-panoptic" data-tab-target="panel-mask2former-panoptic">Mask2Former</button>
-                <button class="code-tab" id="tab-pq-code" type="button" role="tab" aria-selected="false" aria-controls="panel-pq-code" data-tab-target="panel-pq-code">PQ Metric</button>
-                <button class="code-tab" id="tab-panoptic-training" type="button" role="tab" aria-selected="false" aria-controls="panel-panoptic-training" data-tab-target="panel-panoptic-training">Training Loop</button>
+            <div class="tutorial-wizard" id="pan-wizard" role="region" aria-label="Panoptic segmentation tutorial wizard">
+              <div class="wizard-header" role="tablist" aria-label="Tutorial steps">
+                <button class="wizard-step-btn active" type="button" role="tab" aria-selected="true" aria-controls="pan-panel-1" id="pan-btn-1">
+                  <span class="step-num">1</span>
+                  <span class="step-info">
+                    <span class="step-title">Label Format</span>
+                    <span class="step-sub">Stuff, things, non-overlapping</span>
+                  </span>
+                </button>
+                <button class="wizard-step-btn" type="button" role="tab" aria-selected="false" aria-controls="pan-panel-2" id="pan-btn-2">
+                  <span class="step-num">2</span>
+                  <span class="step-info">
+                    <span class="step-title">Model &amp; Inference</span>
+                    <span class="step-sub">Mask2Former panoptic</span>
+                  </span>
+                </button>
+                <button class="wizard-step-btn" type="button" role="tab" aria-selected="false" aria-controls="pan-panel-3" id="pan-btn-3">
+                  <span class="step-num">3</span>
+                  <span class="step-info">
+                    <span class="step-title">Training Loop</span>
+                    <span class="step-sub">CE + mask + dice losses</span>
+                  </span>
+                </button>
+                <button class="wizard-step-btn" type="button" role="tab" aria-selected="false" aria-controls="pan-panel-4" id="pan-btn-4">
+                  <span class="step-num">4</span>
+                  <span class="step-info">
+                    <span class="step-title">PQ Evaluation</span>
+                    <span class="step-sub">SQ, RQ, Panoptic Quality</span>
+                  </span>
+                </button>
               </div>
 
-              <div class="code-panel active" id="panel-panoptic-format" role="tabpanel" aria-labelledby="tab-panoptic-format">
-                <article class="tutorial-card code-tutorial">
-                  <h3>Preparing Panoptic Targets</h3>
-                  <p><strong>Libraries:</strong> PyTorch, NumPy. A panoptic target stores a semantic class and an instance id for each segment.</p>
+              <div class="wizard-body">
+
+                <!-- Step 1: Label Format -->
+                <div class="wizard-panel active" id="pan-panel-1" role="tabpanel" aria-labelledby="pan-btn-1">
+                  <h3>Step 1 &mdash; Panoptic Label Format</h3>
+                  <p>A panoptic label assigns every pixel exactly one segment. Each segment has a semantic class id, and thing segments also have a unique instance id. Stuff segments share one region per class with instance id 0. This step shows how to build and validate panoptic target tensors from raw annotation files.</p>
+
+                  <div class="code-note">
+                    <em class="code-note-icon">&#9432;</em>
+                    <span><strong>No overlaps allowed:</strong> Every pixel must belong to exactly one segment. Verify this with a uniqueness check before training — even a single overlapping pixel in your labels will silently corrupt the matching loss.</span>
+                  </div>
+
                   <pre><code>import torch
+import numpy as np
+from PIL import Image
+from pathlib import Path
 
-height, width = 512, 512
 
-# Example target tensors for one image.
-semantic_map = torch.zeros((height, width), dtype=torch.long)
-instance_map = torch.zeros((height, width), dtype=torch.long)
+# ---------------------------------------------------------------
+# Panoptic target structure
+# ---------------------------------------------------------------
+# semantic_map : (H, W) int64  — class id at every pixel
+# instance_map : (H, W) int64  — instance id at every pixel
+#                                0 for stuff, >0 for each thing instance
+# segments_info: list of dicts — one entry per unique segment
+# ---------------------------------------------------------------
 
-# Segment 1: road as stuff class.
-road_pixels = semantic_map == 0
-semantic_map[road_pixels] = 7       # class id for road
-instance_map[road_pixels] = 0       # stuff has no instance id
+HEIGHT, WIDTH = 512, 512
 
-# Segment 2: first car as thing class.
-car_1_mask = torch.zeros((height, width), dtype=torch.bool)
-car_1_mask[220:300, 140:240] = True
-semantic_map[car_1_mask] = 2        # class id for car
-instance_map[car_1_mask] = 1        # first car instance
+# --- Example: manually building a panoptic target ---
+
+# Start with all pixels assigned to the background stuff class (id=0, instance=0).
+semantic_map = torch.zeros((HEIGHT, WIDTH), dtype=torch.long)
+instance_map = torch.zeros((HEIGHT, WIDTH), dtype=torch.long)
+
+# Stuff region: road covering the bottom third of the image.
+# Stuff uses instance_id=0 — there is only one road region.
+road_mask                 = torch.zeros((HEIGHT, WIDTH), dtype=torch.bool)
+road_mask[340:, :]        = True
+semantic_map[road_mask]   = 7    # class 7 = road
+instance_map[road_mask]   = 0    # stuff has no instance id
+
+# Stuff region: sky covering the top quarter of the image.
+sky_mask                  = torch.zeros((HEIGHT, WIDTH), dtype=torch.bool)
+sky_mask[:130, :]         = True
+semantic_map[sky_mask]    = 10   # class 10 = sky
+instance_map[sky_mask]    = 0
+
+# Thing instance 1: first car
+car_1_mask                = torch.zeros((HEIGHT, WIDTH), dtype=torch.bool)
+car_1_mask[220:300, 60:200] = True
+semantic_map[car_1_mask]  = 2    # class 2 = car
+instance_map[car_1_mask]  = 1    # first car gets instance_id=1
+
+# Thing instance 2: second car (different location, same class)
+car_2_mask                = torch.zeros((HEIGHT, WIDTH), dtype=torch.bool)
+car_2_mask[230:310, 300:460] = True
+semantic_map[car_2_mask]  = 2    # same class id as first car
+instance_map[car_2_mask]  = 2    # but different instance id
+
+# Thing instance 3: a pedestrian
+ped_mask                  = torch.zeros((HEIGHT, WIDTH), dtype=torch.bool)
+ped_mask[200:350, 470:520] = True
+semantic_map[ped_mask]    = 1    # class 1 = person
+instance_map[ped_mask]    = 3
+
+# --- Build segments_info metadata ---
+# This mirrors the COCO panoptic annotation format.
+segments_info = [
+    {"id": 0, "category_id": 7,  "is_thing": False, "area": int(road_mask.sum())},
+    {"id": 0, "category_id": 10, "is_thing": False, "area": int(sky_mask.sum())},
+    {"id": 1, "category_id": 2,  "is_thing": True,  "area": int(car_1_mask.sum())},
+    {"id": 2, "category_id": 2,  "is_thing": True,  "area": int(car_2_mask.sum())},
+    {"id": 3, "category_id": 1,  "is_thing": True,  "area": int(ped_mask.sum())},
+]
 
 target = {
-    "semantic_map": semantic_map,
-    "instance_map": instance_map
-}</code></pre>
-                  <p><strong>Explanation:</strong> Panoptic labels must avoid overlapping assignments. Every pixel should have exactly one semantic class, and thing pixels should also have an instance id.</p>
-                </article>
-              </div>
+    "semantic_map":  semantic_map,   # (H, W) class ids
+    "instance_map":  instance_map,   # (H, W) instance ids
+    "segments_info": segments_info,
+}
 
-              <div class="code-panel" id="panel-mask2former-panoptic" role="tabpanel" aria-labelledby="tab-mask2former-panoptic" hidden>
-                <article class="tutorial-card code-tutorial">
-                  <h3>Mask2Former Panoptic Inference</h3>
-                  <p><strong>Libraries:</strong> Transformers, PyTorch, Pillow. Mask2Former predicts masks and classes through a mask classification formulation.</p>
+# --- Validation: every pixel must be covered exactly once ---
+# Verify no pixel was left unassigned (still at the initial class 0 unless road/sky covers it)
+total_assigned = (road_mask | sky_mask | car_1_mask | car_2_mask | ped_mask).sum()
+print(f"Pixels assigned: {total_assigned.item()} / {HEIGHT * WIDTH}")
+
+# Verify thing masks do not overlap each other
+thing_overlap = (car_1_mask &amp; car_2_mask).any() or \
+                (car_1_mask &amp; ped_mask).any()   or \
+                (car_2_mask &amp; ped_mask).any()
+print(f"Thing mask overlap detected: {thing_overlap}")   # should be False
+
+# Unique (class_id, instance_id) pairs in the label
+unique_segments = set()
+for cls, inst in zip(semantic_map.flatten().tolist(),
+                     instance_map.flatten().tolist()):
+    unique_segments.add((cls, inst))
+print(f"Unique segments in target: {len(unique_segments)}")</code></pre>
+
+                  <ul class="code-checklist">
+                    <li>Every pixel must be assigned to exactly one segment — overlapping masks will cause the matching loss to assign incorrect targets during training.</li>
+                    <li>Stuff regions use <code>instance_id=0</code>; thing instances use unique positive integers starting from 1.</li>
+                    <li>Two thing instances of the same class (e.g., car 1 and car 2) share the same <code>category_id</code> but have different <code>instance_id</code> values.</li>
+                    <li>Always run a validation check on a sample of your annotations before training — panoptic label errors are silent but severely degrade PQ.</li>
+                  </ul>
+
+                  <div class="wizard-nav">
+                    <button class="btn btn-outline wizard-prev" type="button" disabled>Previous</button>
+                    <span class="wizard-nav-info">Step 1 of 4</span>
+                    <button class="btn btn-primary wizard-next" type="button">Next: Model &amp; Inference</button>
+                  </div>
+                </div>
+
+                <!-- Step 2: Model -->
+                <div class="wizard-panel" id="pan-panel-2" role="tabpanel" aria-labelledby="pan-btn-2" hidden>
+                  <h3>Step 2 &mdash; Model Architecture &amp; Panoptic Inference</h3>
+                  <p>Mask2Former is the current standard for universal segmentation including panoptic tasks. It uses a masked cross-attention transformer decoder with a Swin Transformer backbone to predict a set of mask queries, then post-processing assembles the final panoptic output.</p>
+
+                  <div class="code-note">
+                    <em class="code-note-icon">&#9432;</em>
+                    <span><strong>Post-processing is mandatory:</strong> Mask2Former's raw output is a set of query masks and class logits — not a panoptic map. Always use <code>post_process_panoptic_segmentation</code> from the image processor to convert them into a usable segment map.</span>
+                  </div>
+
                   <pre><code>from PIL import Image
 import torch
-from transformers import Mask2FormerImageProcessor, Mask2FormerForUniversalSegmentation
-
-image = Image.open("street_scene.jpg").convert("RGB")
-
-processor = Mask2FormerImageProcessor.from_pretrained(
-    "facebook/mask2former-swin-small-coco-panoptic"
-)
-model = Mask2FormerForUniversalSegmentation.from_pretrained(
-    "facebook/mask2former-swin-small-coco-panoptic"
+from transformers import (
+    Mask2FormerImageProcessor,
+    Mask2FormerForUniversalSegmentation,
 )
 
+
+# ---------------------------------------------------------------
+# Load model and processor
+# ---------------------------------------------------------------
+# Available panoptic checkpoints (COCO-trained):
+#   facebook/mask2former-swin-tiny-coco-panoptic   (~47M params, ~4 GB GPU)
+#   facebook/mask2former-swin-small-coco-panoptic  (~69M params, ~6 GB GPU)
+#   facebook/mask2former-swin-large-coco-panoptic  (~216M params, ~14 GB GPU)
+MODEL_NAME = "facebook/mask2former-swin-small-coco-panoptic"
+
+processor = Mask2FormerImageProcessor.from_pretrained(MODEL_NAME)
+model     = Mask2FormerForUniversalSegmentation.from_pretrained(MODEL_NAME)
+model.eval()
+
+# ---------------------------------------------------------------
+# Single-image inference
+# ---------------------------------------------------------------
+image  = Image.open("street_scene.jpg").convert("RGB")
+
+# Processor resizes, normalizes, and pads the image for the model.
 inputs = processor(images=image, return_tensors="pt")
 
 with torch.no_grad():
     outputs = model(**inputs)
 
-panoptic = processor.post_process_panoptic_segmentation(
+# ---------------------------------------------------------------
+# Post-process into a panoptic segmentation map
+# ---------------------------------------------------------------
+# target_sizes: original (height, width) BEFORE processor resize.
+# The processor will upsample predictions back to this resolution.
+panoptic_result = processor.post_process_panoptic_segmentation(
     outputs,
-    target_sizes=[image.size[::-1]]
+    target_sizes=[image.size[::-1]],   # PIL image.size = (W, H), flip to (H, W)
 )[0]
 
-segmentation_map = panoptic["segmentation"]
-segments_info = panoptic["segments_info"]
-print(segments_info[:3])</code></pre>
-                  <p><strong>Explanation:</strong> Post-processing converts model logits into a panoptic map and metadata for each segment, including class labels and instance ids.</p>
-                </article>
-              </div>
+# segmentation: (H, W) integer tensor — each unique value is a segment id
+seg_map       = panoptic_result["segmentation"]
 
-              <div class="code-panel" id="panel-pq-code" role="tabpanel" aria-labelledby="tab-pq-code" hidden>
-                <article class="tutorial-card code-tutorial">
-                  <h3>Core Panoptic Quality Calculation</h3>
-                  <p><strong>Libraries:</strong> PyTorch. Real benchmarks include category matching and ignore labels; this compact version shows the core idea.</p>
+# segments_info: list of dicts, one per unique segment id in seg_map
+# Each dict contains: id, label_id, was_fused, score
+segments_info = panoptic_result["segments_info"]
+
+print(f"Segmentation map shape: {seg_map.shape}")
+print(f"Number of segments predicted: {len(segments_info)}")
+
+# Inspect first 3 segments
+for seg in segments_info[:3]:
+    print(f"  Segment id={seg['id']}  class={seg['label_id']}  "
+          f"is_thing={model.config.id2label[seg['label_id']]}")
+
+# ---------------------------------------------------------------
+# Separate thing instances from stuff regions
+# ---------------------------------------------------------------
+thing_ids = set(model.config.id2label[seg["label_id"]]
+                for seg in segments_info
+                if seg["label_id"] in model.config.thing_class_ids)
+
+stuff_segments = [s for s in segments_info
+                  if s["label_id"] not in model.config.thing_class_ids]
+thing_segments = [s for s in segments_info
+                  if s["label_id"] in model.config.thing_class_ids]
+
+print(f"\nStuff regions: {len(stuff_segments)}")
+print(f"Thing instances: {len(thing_segments)}")</code></pre>
+
+                  <ul class="code-checklist">
+                    <li>Pass <code>target_sizes</code> as the <strong>original</strong> image resolution before any processor resizing — the processor upsamples predictions to match.</li>
+                    <li>The <code>segmentation</code> map uses segment ids, not class ids. Look up class ids via <code>segments_info</code>.</li>
+                    <li>Use <code>model.config.thing_class_ids</code> to separate thing instances from stuff regions in the post-processed output.</li>
+                    <li>Set <code>model.eval()</code> and use <code>torch.no_grad()</code> during inference to disable dropout and gradient computation.</li>
+                  </ul>
+
+                  <div class="wizard-nav">
+                    <button class="btn btn-outline wizard-prev" type="button">Previous</button>
+                    <span class="wizard-nav-info">Step 2 of 4</span>
+                    <button class="btn btn-primary wizard-next" type="button">Next: Training Loop</button>
+                  </div>
+                </div>
+
+                <!-- Step 3: Training -->
+                <div class="wizard-panel" id="pan-panel-3" role="tabpanel" aria-labelledby="pan-btn-3" hidden>
+                  <h3>Step 3 &mdash; Training Loop</h3>
+                  <p>Universal segmentation models like Mask2Former use three combined losses: cross-entropy for class prediction, binary cross-entropy for mask pixels, and Dice for mask shape quality. A Hungarian matching algorithm assigns predicted queries to ground-truth segments during each forward pass.</p>
+
+                  <div class="code-note">
+                    <em class="code-note-icon">&#9432;</em>
+                    <span><strong>HuggingFace training mode:</strong> When targets are passed to a HuggingFace Mask2Former model, it returns <code>outputs.loss</code> directly. The Hungarian matching and all three loss components are computed internally — you do not need to implement them manually.</span>
+                  </div>
+
                   <pre><code>import torch
+from torch.optim import AdamW
+from torch.optim.lr_scheduler import CosineAnnealingLR
+from transformers import (
+    Mask2FormerImageProcessor,
+    Mask2FormerForUniversalSegmentation,
+)
 
-def segment_iou(pred_segment, gt_segment, eps=1e-7):
-    intersection = (pred_segment &amp; gt_segment).sum().float()
-    union = (pred_segment | gt_segment).sum().float()
-    return intersection / (union + eps)
 
-matched_ious = []
-tp, fp, fn = 0, 0, 0
-used_gt = set()
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+EPOCHS = 40
 
-for pred_id, pred_mask in predicted_segments.items():
-    best_gt_id, best_iou = None, 0.0
+# ---------------------------------------------------------------
+# Load pretrained model for fine-tuning
+# ---------------------------------------------------------------
+MODEL_NAME = "facebook/mask2former-swin-small-coco-panoptic"
+processor  = Mask2FormerImageProcessor.from_pretrained(MODEL_NAME)
+model      = Mask2FormerForUniversalSegmentation.from_pretrained(MODEL_NAME)
+model      = model.to(DEVICE)
 
-    for gt_id, gt_mask in ground_truth_segments.items():
-        if gt_id in used_gt:
-            continue
-        iou = segment_iou(pred_mask, gt_mask)
-        if iou &gt; best_iou:
-            best_gt_id, best_iou = gt_id, iou
+# Fine-tune all parameters; freeze backbone for limited GPU memory.
+# Uncomment below to freeze the Swin Transformer backbone:
+# for param in model.model.pixel_level_module.encoder.parameters():
+#     param.requires_grad = False
 
-    if best_iou &gt; 0.50:
-        tp += 1
-        used_gt.add(best_gt_id)
-        matched_ious.append(best_iou)
-    else:
-        fp += 1
+optimizer = AdamW(
+    [p for p in model.parameters() if p.requires_grad],
+    lr=1e-4, weight_decay=1e-2
+)
+scheduler = CosineAnnealingLR(optimizer, T_max=EPOCHS, eta_min=1e-6)
 
-fn = len(ground_truth_segments) - len(used_gt)
-sq = torch.stack(matched_ious).mean() if matched_ious else torch.tensor(0.0)
-rq = tp / (tp + 0.5 * fp + 0.5 * fn + 1e-7)
-pq = sq * rq</code></pre>
-                  <p><strong>Explanation:</strong> PQ rewards good masks and correct recognition. False positives and false negatives reduce RQ even when matched masks have high IoU.</p>
-                </article>
-              </div>
+best_loss = float("inf")
 
-              <div class="code-panel" id="panel-panoptic-training" role="tabpanel" aria-labelledby="tab-panoptic-training" hidden>
-                <article class="tutorial-card code-tutorial">
-                  <h3>Panoptic Training Skeleton</h3>
-                  <p><strong>Libraries:</strong> PyTorch. Universal segmentation models often combine classification, mask, and matching losses.</p>
+for epoch in range(EPOCHS):
+    model.train()
+    epoch_loss, n_batches = 0.0, 0
+
+    for batch in train_loader:
+        # Processor prepares pixel_values and a formatted mask_labels list.
+        # For custom datasets, prepare targets as:
+        #   [{"class_labels": tensor, "mask_labels": tensor}, ...] per image
+        pixel_values = batch["pixel_values"].to(DEVICE)
+        mask_labels  = [m.to(DEVICE) for m in batch["mask_labels"]]
+        class_labels = [c.to(DEVICE) for c in batch["class_labels"]]
+
+        # Forward pass — returns outputs.loss (CE + mask BCE + Dice, weighted)
+        outputs = model(
+            pixel_values=pixel_values,
+            mask_labels=mask_labels,
+            class_labels=class_labels,
+        )
+
+        loss = outputs.loss
+        # For debugging, also check auxiliary losses if enabled in the model config.
+        # outputs.auxiliary_logits contains intermediate decoder outputs.
+
+        optimizer.zero_grad()
+        loss.backward()
+        # Clip gradients — transformer models can have large gradient norms early in training.
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=0.01)
+        optimizer.step()
+
+        epoch_loss += loss.item()
+        n_batches  += 1
+
+    scheduler.step()
+    avg_loss = epoch_loss / max(n_batches, 1)
+    print(f"Epoch {epoch+1:03d}/{EPOCHS} | loss {avg_loss:.4f} | "
+          f"lr {scheduler.get_last_lr()[0]:.2e}")
+
+    if avg_loss &lt; best_loss:
+        best_loss = avg_loss
+        model.save_pretrained("panoptic_best/")
+        processor.save_pretrained("panoptic_best/")
+        print(f"  Saved checkpoint at epoch {epoch+1}")</code></pre>
+
+                  <ul class="code-checklist">
+                    <li>Mask2Former's three loss components (CE + mask BCE + Dice) are weighted and summed internally — <code>outputs.loss</code> is the combined scalar to backpropagate.</li>
+                    <li>Hungarian matching assigns each predicted query to the closest GT segment; unmatched predictions receive a background class penalty.</li>
+                    <li>Use a very small gradient clip norm (<code>0.01</code> to <code>0.1</code>) for transformer-based models to avoid training instability.</li>
+                    <li>Freeze the backbone encoder when GPU memory is limited — only the transformer decoder and heads need to learn domain-specific features.</li>
+                    <li>Use <code>model.save_pretrained()</code> to save HuggingFace models so they reload cleanly with <code>from_pretrained()</code>.</li>
+                  </ul>
+
+                  <div class="wizard-nav">
+                    <button class="btn btn-outline wizard-prev" type="button">Previous</button>
+                    <span class="wizard-nav-info">Step 3 of 4</span>
+                    <button class="btn btn-primary wizard-next" type="button">Next: PQ Evaluation</button>
+                  </div>
+                </div>
+
+                <!-- Step 4: Evaluation -->
+                <div class="wizard-panel" id="pan-panel-4" role="tabpanel" aria-labelledby="pan-btn-4" hidden>
+                  <h3>Step 4 &mdash; Panoptic Quality Evaluation</h3>
+                  <p>Panoptic Quality (PQ) evaluates both the quality of matched masks (SQ) and the model's ability to find the right set of segments (RQ). This step implements segment-level IoU matching and the full PQ formula from scratch so you can understand every component.</p>
+
                   <pre><code>import torch
+import numpy as np
+from collections import defaultdict
 
-model.train()
 
-for batch in train_loader:
-    images = batch["images"].to(device)
-    targets = batch["targets"]
+# ---------------------------------------------------------------
+# Helper: segment-level IoU between two boolean masks
+# ---------------------------------------------------------------
+def segment_iou(pred_mask, gt_mask, eps=1e-7):
+    """
+    Compute IoU between two boolean tensors of the same shape (H, W).
+    Uses element-wise AND for intersection and OR for union.
+    """
+    intersection = (pred_mask &amp; gt_mask).sum().float()
+    union        = (pred_mask | gt_mask).sum().float()
+    return (intersection / (union + eps)).item()
 
-    # The model returns losses for masks, classes, and matching.
-    outputs = model(images, targets=targets)
-    loss_dict = outputs.losses
 
-    total_loss = (
-        loss_dict["loss_ce"]
-        + loss_dict["loss_mask"]
-        + loss_dict["loss_dice"]
-    )
+# ---------------------------------------------------------------
+# Per-category PQ accumulator
+# ---------------------------------------------------------------
+def compute_pq(predicted_segments, ground_truth_segments, iou_thresh=0.50):
+    """
+    Args:
+        predicted_segments: dict {segment_id: {"mask": BoolTensor(H,W), "category_id": int}}
+        ground_truth_segments: same structure
+        iou_thresh: IoU threshold for a match to count as TP (COCO standard: 0.5)
+    Returns:
+        dict with per-category and overall PQ, SQ, RQ
+    """
+    # Accumulate TP/FP/FN and summed IoU per category
+    stats = defaultdict(lambda: {"tp": 0, "fp": 0, "fn": 0, "iou_sum": 0.0})
+    used_gt_ids = set()
 
-    optimizer.zero_grad()
-    total_loss.backward()
-    optimizer.step()
+    # --- Match predictions to ground truth ---
+    for pred_id, pred_info in predicted_segments.items():
+        cat   = pred_info["category_id"]
+        pmask = pred_info["mask"]
+        best_iou, best_gt_id = 0.0, None
 
-    print({
-        "class": float(loss_dict["loss_ce"]),
-        "mask": float(loss_dict["loss_mask"]),
-        "dice": float(loss_dict["loss_dice"])
-    })</code></pre>
-                  <p><strong>Explanation:</strong> A panoptic model must learn what each mask represents and where the mask is located. Matching losses help assign predicted masks to ground-truth segments during training.</p>
-                </article>
-              </div>
-            </div>
+        for gt_id, gt_info in ground_truth_segments.items():
+            if gt_id in used_gt_ids:
+                continue
+            # Only match within the same category
+            if gt_info["category_id"] != cat:
+                continue
+            iou = segment_iou(pmask, gt_info["mask"])
+            if iou &gt; best_iou:
+                best_iou, best_gt_id = iou, gt_id
+
+        if best_iou &gt;= iou_thresh:
+            # True positive: matched prediction with sufficient overlap
+            stats[cat]["tp"]      += 1
+            stats[cat]["iou_sum"] += best_iou
+            used_gt_ids.add(best_gt_id)
+        else:
+            # False positive: prediction with no matching GT
+            stats[cat]["fp"] += 1
+
+    # --- Count false negatives (GT segments not matched) ---
+    for gt_id, gt_info in ground_truth_segments.items():
+        if gt_id not in used_gt_ids:
+            stats[gt_info["category_id"]]["fn"] += 1
+
+    # --- Compute PQ = SQ x RQ per category ---
+    results = {}
+    all_pq, all_sq, all_rq = [], [], []
+
+    for cat, s in stats.items():
+        tp, fp, fn = s["tp"], s["fp"], s["fn"]
+
+        # SQ: average IoU of matched segments (quality of the masks)
+        sq = s["iou_sum"] / (tp + 1e-7) if tp &gt; 0 else 0.0
+
+        # RQ: F1-like recognition score (were the right segments found?)
+        rq = tp / (tp + 0.5 * fp + 0.5 * fn + 1e-7)
+
+        # PQ: combined score — a mask must be both well-shaped AND correctly detected
+        pq = sq * rq
+
+        results[cat] = {"PQ": pq, "SQ": sq, "RQ": rq,
+                        "TP": tp, "FP": fp, "FN": fn}
+        all_pq.append(pq); all_sq.append(sq); all_rq.append(rq)
+
+    results["overall"] = {
+        "PQ": np.mean(all_pq) if all_pq else 0.0,
+        "SQ": np.mean(all_sq) if all_sq else 0.0,
+        "RQ": np.mean(all_rq) if all_rq else 0.0,
+    }
+    return results
+
+
+# ---------------------------------------------------------------
+# Run PQ evaluation on the validation set
+# ---------------------------------------------------------------
+DEVICE    = "cuda" if torch.cuda.is_available() else "cpu"
+MODEL_DIR = "panoptic_best/"
+
+processor = Mask2FormerImageProcessor.from_pretrained(MODEL_DIR)
+model     = Mask2FormerForUniversalSegmentation.from_pretrained(MODEL_DIR)
+model.eval().to(DEVICE)
+
+accumulated_pq = defaultdict(lambda: {"tp": 0, "fp": 0, "fn": 0, "iou_sum": 0.0})
+
+with torch.no_grad():
+    for batch in val_loader:
+        images_pil   = batch["images_pil"]    # list of PIL images
+        gt_targets   = batch["panoptic_targets"]  # list of GT segment dicts
+
+        inputs   = processor(images=images_pil, return_tensors="pt").to(DEVICE)
+        outputs  = model(**inputs)
+
+        panoptic_results = processor.post_process_panoptic_segmentation(
+            outputs,
+            target_sizes=[img.size[::-1] for img in images_pil],
+        )
+
+        for result, gt in zip(panoptic_results, gt_targets):
+            seg_map  = result["segmentation"].cpu()
+            pred_seg = {}
+            for seg in result["segments_info"]:
+                pred_seg[seg["id"]] = {
+                    "mask":        seg_map == seg["id"],
+                    "category_id": seg["label_id"],
+                }
+            pq_result = compute_pq(pred_seg, gt["segments"])
+            # Accumulate per-category stats across all images
+            for cat, s in pq_result.items():
+                if cat == "overall":
+                    continue
+                accumulated_pq[cat]["tp"]      += s["TP"]
+                accumulated_pq[cat]["fp"]      += s["FP"]
+                accumulated_pq[cat]["fn"]      += s["FN"]
+                accumulated_pq[cat]["iou_sum"] += s["SQ"] * s["TP"]
+
+# Final PQ summary across all validation images
+print("\n=== Panoptic Quality Results ===")
+pq_vals = []
+for cat, s in accumulated_pq.items():
+    tp = s["tp"]; fp = s["fp"]; fn = s["fn"]
+    sq = s["iou_sum"] / (tp + 1e-7) if tp &gt; 0 else 0.0
+    rq = tp / (tp + 0.5*fp + 0.5*fn + 1e-7)
+    pq = sq * rq
+    pq_vals.append(pq)
+    print(f"  Category {cat:3d}: PQ={pq:.3f}  SQ={sq:.3f}  RQ={rq:.3f}  "
+          f"TP={tp}  FP={fp}  FN={fn}")
+print(f"\n  Mean PQ (all categories): {np.mean(pq_vals):.4f}")</code></pre>
+
+                  <div class="code-note">
+                    <em class="code-note-icon">&#9432;</em>
+                    <span><strong>Reading the results:</strong> A low SQ with high RQ means the model finds the right segments but predicts poorly shaped masks. A high SQ with low RQ means the masks are precise but many segments are missed or spuriously added. Both components must be high for a good PQ score.</span>
+                  </div>
+
+                  <ul class="code-checklist">
+                    <li>PQ = SQ × RQ — a segment must be both well-shaped (high SQ) and correctly detected (high RQ) to contribute to PQ.</li>
+                    <li>Segments are matched within the same category only — a predicted car cannot match a GT pedestrian even if their masks overlap.</li>
+                    <li>The IoU threshold for a TP match is 0.5 by default in the COCO panoptic benchmark.</li>
+                    <li>Accumulate TP/FP/FN across the entire validation set before computing final PQ — per-image averages can produce misleading results when segment counts vary.</li>
+                  </ul>
+
+                  <div class="wizard-nav">
+                    <button class="btn btn-outline wizard-prev" type="button">Previous</button>
+                    <span class="wizard-nav-info">Step 4 of 4</span>
+                    <button class="btn btn-primary wizard-next" type="button" disabled>Complete</button>
+                  </div>
+                </div>
+
+              </div><!-- /.wizard-body -->
+            </div><!-- /#pan-wizard -->
           </section>
         </article>
       </div>
@@ -285,20 +654,61 @@ for batch in train_loader:
     <div class="container">
       <div class="footer-grid">
         <div>
-          <h2>Open Segmentation Lab</h2>
-          <p>Free academic tutorials for image segmentation, metrics, and research reading.</p>
+          <p class="footer-heading" style="font-size: 1.1rem; font-weight: 800; color:#fff; margin: 0 0 8px;">Open Segmentation Lab</p>
+          <p class="footer-tagline">Free academic tutorials for image segmentation, metrics, and research reading.</p>
           <address class="footer-contact">
             <strong>Mohammad Rifat Ahmmad Rashid</strong><br>
             Computer Vision Researcher | Associate Professor<br>
-            Department of Computer Science and Engineering<br>
+            Dept. of Computer Science and Engineering<br>
             East West University, Dhaka 1212, Bangladesh<br>
             <a href="mailto:rifat.rashid@ewubd.edu">rifat.rashid@ewubd.edu</a>
           </address>
+        </div>
+        <div style="padding-top: 6px;">
+          <p class="footer-heading">Topics</p>
+          <ul class="footer-nav-list">
+            <li><a href="semantic.html">Semantic Segmentation</a></li>
+            <li><a href="instance.html">Instance Segmentation</a></li>
+            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Segmentation</a></li>
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="datasets.html">Datasets</a></li>
+          </ul>
         </div>
       </div>
       <p class="footer-note">Educational content is free for students and researchers.</p>
     </div>
   </footer>
   <script src="js/main.js"></script>
+  <script>
+  (function () {
+    function initWizard(wizardId) {
+      var wizard = document.getElementById(wizardId);
+      if (!wizard) return;
+      var stepBtns = Array.from(wizard.querySelectorAll('.wizard-step-btn'));
+      var panels   = Array.from(wizard.querySelectorAll(':scope > .wizard-body > .wizard-panel'));
+      var current  = 0;
+      function show(idx) {
+        stepBtns.forEach(function (btn, i) {
+          btn.classList.toggle('active', i === idx);
+          btn.setAttribute('aria-selected', String(i === idx));
+          if (i < idx) btn.classList.add('completed'); else btn.classList.remove('completed');
+        });
+        panels.forEach(function (p, i) { p.classList.toggle('active', i === idx); p.hidden = i !== idx; });
+        current = idx;
+      }
+      stepBtns.forEach(function (btn, i) { btn.addEventListener('click', function () { show(i); }); });
+      wizard.querySelectorAll('.wizard-prev').forEach(function (btn) {
+        btn.addEventListener('click', function () { if (current > 0) show(current - 1); });
+      });
+      wizard.querySelectorAll('.wizard-next').forEach(function (btn) {
+        btn.addEventListener('click', function () { if (current < stepBtns.length - 1) show(current + 1); });
+      });
+      show(0);
+    }
+    initWizard('pan-wizard');
+  })();
+  </script>
 </body>
 </html>
