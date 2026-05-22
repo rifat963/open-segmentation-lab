@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Segmentation Playground | Open Segmentation Lab</title>
-  <meta name="description" content="Use free client-side tools for calculating IoU, Dice score, comparing segmentation types, and visualizing a mask overlay.">
+  <meta name="description" content="Use free client-side tools for simulating semantic, instance, and panoptic segmentation, calculating IoU, Dice score, and visualizing mask overlays.">
   <meta property="og:title" content="Segmentation Playground">
   <meta property="og:description" content="Interactive vanilla JavaScript calculators and visual demos for image segmentation students.">
   <meta property="og:type" content="website">
@@ -39,12 +39,89 @@
       <div class="container">
         <p class="eyebrow">Interactive tools</p>
         <h1>Segmentation Playground</h1>
-        <p>These tools run entirely in the browser with vanilla JavaScript. They are intended for classroom exercises and quick metric checks.</p>
+        <p>These tools run entirely in the browser with vanilla JavaScript. Use the simulator to compare segmentation task outputs, then practice metric calculations with small classroom examples.</p>
       </div>
     </section>
 
-    <section class="section">
+    <section class="section simulator-section" aria-labelledby="simulator-title">
       <div class="container">
+        <div class="section-title">
+          <h2 id="simulator-title">Segmentation Task Simulator</h2>
+          <p>Switch between semantic, instance, and panoptic segmentation to see how the same scene is represented differently.</p>
+        </div>
+
+        <div class="simulator-shell">
+          <div class="simulator-stage">
+            <canvas id="task-simulator-canvas" width="960" height="560" role="img" aria-label="Interactive segmentation simulator canvas"></canvas>
+            <p class="simulator-caption" id="simulator-caption" aria-live="polite">Semantic mode shows one class color per pixel.</p>
+          </div>
+
+          <aside class="simulator-controls" aria-label="Segmentation simulator controls">
+            <h2>Simulation Controls</h2>
+            <fieldset class="segmented-control">
+              <legend>Task mode</legend>
+              <label>
+                <input type="radio" name="sim-task" value="semantic" checked>
+                <span>Semantic</span>
+              </label>
+              <label>
+                <input type="radio" name="sim-task" value="instance">
+                <span>Instance</span>
+              </label>
+              <label>
+                <input type="radio" name="sim-task" value="panoptic">
+                <span>Panoptic</span>
+              </label>
+            </fieldset>
+
+            <label for="sim-scene">Scene preset</label>
+            <select id="sim-scene">
+              <option value="street">Urban street scene</option>
+              <option value="clinic">Microscopy cell field</option>
+              <option value="agriculture">Agricultural field</option>
+            </select>
+
+            <label class="range-label" for="sim-uncertainty">Boundary uncertainty <output id="sim-uncertainty-value" for="sim-uncertainty">18%</output></label>
+            <input id="sim-uncertainty" type="range" min="0" max="40" value="18">
+
+            <div class="toggle-grid" aria-label="Canvas layers">
+              <label><input id="sim-show-image" type="checkbox" checked> Image layer</label>
+              <label><input id="sim-show-mask" type="checkbox" checked> Mask layer</label>
+              <label><input id="sim-show-boundaries" type="checkbox" checked> Boundaries</label>
+              <label><input id="sim-show-labels" type="checkbox" checked> Labels</label>
+            </div>
+
+            <button class="btn btn-outline" id="sim-resample" type="button">Resample scene</button>
+
+            <div class="simulator-summary" id="simulator-summary" aria-live="polite"></div>
+            <div class="simulator-legend" id="simulator-legend" aria-label="Segmentation legend"></div>
+          </aside>
+        </div>
+
+        <div class="grid three simulator-notes" aria-label="Task interpretation cards">
+          <article class="card">
+            <h3>Semantic View</h3>
+            <p>Pixels with the same category share one color, even when they belong to different objects.</p>
+          </article>
+          <article class="card">
+            <h3>Instance View</h3>
+            <p>Each countable object receives its own mask and identity, while background stuff is not the main output.</p>
+          </article>
+          <article class="card">
+            <h3>Panoptic View</h3>
+            <p>Stuff regions and thing instances appear together in one complete, non-overlapping scene map.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section compact">
+      <div class="container">
+        <div class="section-title">
+          <h2>Metric Calculators and Mask Controls</h2>
+          <p>Use these compact tools after the simulation to connect visual output with common evaluation formulas.</p>
+        </div>
+
         <div class="tool-grid">
           <article class="tool-card">
             <h2>IoU Calculator</h2>
