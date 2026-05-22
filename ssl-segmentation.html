@@ -42,37 +42,46 @@
     </section>
 
     <div class="section">
-      <div class="container page-grid">
-        <article class="content-panel">
+      <div class="container">
+        <article class="content-panel semantic-article">
+          <figure class="visual-card wide">
+            <img src="images/ssl-segmentation-workflow.webp.png" alt="Self-supervised segmentation workflow with pretraining, pseudo masks, fine-tuning, and evaluation">
+            <figcaption>Self-supervised segmentation reduces annotation pressure by learning useful visual features from unlabeled images, generating pseudo masks, and fine-tuning with trusted labels.</figcaption>
+          </figure>
+
           <section id="annotation-cost">
             <h2>Why Annotation Cost Matters</h2>
-            <p>Segmentation labels are expensive because annotators must trace object boundaries or region interiors. In medical and agricultural datasets, expert knowledge may also be required. Self-supervised learning helps by pretraining encoders on unlabeled data before the model sees dense labels.</p>
-            <div class="callout definition"><strong>Definition:</strong> Self-supervised learning creates training signals from the data itself, such as predicting missing patches or matching different augmented views of the same image.</div>
+            <p>Dense segmentation labels are expensive because annotators must trace boundaries or assign labels at pixel level. In medical imaging, agriculture, remote sensing, and industrial inspection, expert review may be required. Self-supervised learning helps by using unlabeled images before the final supervised segmentation stage.</p>
+            <div class="callout definition"><strong>Definition:</strong> Self-supervised learning creates supervision from the data itself, such as predicting missing image patches, matching augmented views, or distilling representations from a teacher network.</div>
           </section>
 
-          <section id="contrastive">
-            <h2>Contrastive Learning for Segmentation</h2>
-            <p>Contrastive methods learn representations by pulling related views together and pushing unrelated views apart. For segmentation, the challenge is to preserve local spatial detail while learning global invariances.</p>
-            <div class="formula-box">positive pair: augmented views of same image or region<br>negative pair: views from different images or regions</div>
-            <div class="callout intuition"><strong>Intuition:</strong> A good segmentation encoder should recognize that two augmented views contain the same object while still retaining boundary-sensitive features.</div>
-          </section>
-
-          <section id="mim">
-            <h2>Masked Image Modeling</h2>
-            <p>Masked image modeling hides patches and trains the model to reconstruct missing visual information. This encourages the encoder to learn spatial structure, texture, and context useful for dense prediction.</p>
-            <pre><code>image patches -> mask random patches -> encode visible patches
-decoder reconstructs masked content -> use encoder for segmentation</code></pre>
-          </section>
-
-          <section id="dino">
-            <h2>DINO-style Representation Learning</h2>
-            <p>DINO-style methods use teacher-student training to learn visual representations without labels. Attention maps from vision transformers can reveal object-like regions, making them useful for weak localization and pseudo-mask discovery.</p>
-            <div class="callout pitfall"><strong>Pitfall:</strong> Object-like attention is not the same as a verified segmentation label. Pseudo masks must be inspected, filtered, or refined before training a final model.</div>
-          </section>
-
-          <section id="sam">
-            <h2>SAM-assisted Pseudo-labeling</h2>
-            <p>Promptable foundation models can generate candidate masks from points, boxes, or automatic mask generation. These masks can bootstrap a dataset, but the class semantics still need task-specific mapping and quality control.</p>
+          <section id="core-ideas">
+            <h2>Core Ideas for Self-Supervised Segmentation</h2>
+            <div class="grid two">
+              <article class="card">
+                <h3>Contrastive Learning</h3>
+                <p>Learns invariance by pulling related augmented views together and pushing unrelated examples apart. For segmentation, local spatial detail must be preserved.</p>
+              </article>
+              <article class="card">
+                <h3>Masked Image Modeling</h3>
+                <p>Hides image patches and trains the model to reconstruct missing content, encouraging contextual and structural features useful for dense prediction.</p>
+              </article>
+              <article class="card">
+                <h3>DINO-style Learning</h3>
+                <p>Uses teacher-student self-distillation. Vision transformer attention can reveal object-like regions that are helpful for pseudo-mask discovery.</p>
+              </article>
+              <article class="card">
+                <h3>SAM-assisted Pseudo-labeling</h3>
+                <p>Uses promptable or automatic masks as annotation candidates, then filters and maps them to task-specific semantic classes.</p>
+              </article>
+            </div>
+            <div class="formula-box math-panel" aria-label="Contrastive learning intuition">
+              <span class="math-label">Positive pair</span>
+              <span class="math-line">x<sub>i</sub><sup>a</sup>, x<sub>i</sub><sup>b</sup> = two augmented views of the same image or region</span>
+              <span class="math-label">Dense prediction goal</span>
+              <span class="math-line">Learn features that are invariant enough for recognition and spatial enough for boundaries</span>
+            </div>
+            <div class="callout intuition"><strong>Intuition:</strong> A good segmentation encoder should understand that two augmented views contain the same structure while still keeping enough local detail to recover boundaries.</div>
           </section>
 
           <section id="pipeline">
@@ -80,34 +89,158 @@ decoder reconstructs masked content -> use encoder for segmentation</code></pre>
             <div class="grid auto learning-path">
               <article class="card path-item"><h3>Pretrain Encoder</h3><p>Use unlabeled domain images with contrastive learning, masked image modeling, or teacher-student representation learning.</p></article>
               <article class="card path-item"><h3>Generate Pseudo Masks</h3><p>Use clustering, attention maps, SAM prompts, or a weak teacher model to propose candidate masks.</p></article>
-              <article class="card path-item"><h3>Fine-tune Segmentation Head</h3><p>Train a decoder or mask head with available labels and filtered pseudo labels.</p></article>
+              <article class="card path-item"><h3>Fine-tune Segmentation Head</h3><p>Train a decoder or mask head with available labels and carefully filtered pseudo labels.</p></article>
               <article class="card path-item"><h3>Evaluate Quality</h3><p>Measure IoU, Dice, AP, or PQ on a trusted validation set with human-reviewed labels.</p></article>
             </div>
+            <div class="callout pitfall"><strong>Pitfall:</strong> Object-like attention maps and promptable masks are not automatically verified labels. Pseudo masks should be filtered, inspected, and validated before being treated as training targets.</div>
           </section>
 
-          <section id="tutorials">
-            <h2>Tutorial Cards</h2>
-            <div class="grid two">
-              <article class="tutorial-card"><h3>SimCLR for Visual Representation Learning</h3><p>Learn how augmentation, positive pairs, and contrastive loss shape image encoders.</p></article>
-              <article class="tutorial-card"><h3>DINO for Dense Prediction</h3><p>Use self-distilled features and attention maps as dense representation signals.</p></article>
-              <article class="tutorial-card"><h3>Masked Autoencoders for Segmentation</h3><p>Study patch masking and transfer a pretrained encoder to segmentation tasks.</p></article>
-              <article class="tutorial-card"><h3>Pseudo Mask Training Pipeline</h3><p>Build a careful workflow for mask generation, filtering, fine-tuning, and validation.</p></article>
+          <section id="pytorch-lab">
+            <h2>PyTorch Tutorial Lab</h2>
+            <p>These tabs show practical building blocks for representation pretraining, pseudo-mask creation, and segmentation fine-tuning.</p>
+
+            <div class="code-tabs" data-code-tabs>
+              <div class="code-tab-list" role="tablist" aria-label="Self-supervised segmentation code tabs">
+                <button class="code-tab active" id="tab-simclr" type="button" role="tab" aria-selected="true" aria-controls="panel-simclr" data-tab-target="panel-simclr">SimCLR</button>
+                <button class="code-tab" id="tab-dino" type="button" role="tab" aria-selected="false" aria-controls="panel-dino" data-tab-target="panel-dino">DINO</button>
+                <button class="code-tab" id="tab-mae" type="button" role="tab" aria-selected="false" aria-controls="panel-mae" data-tab-target="panel-mae">MAE</button>
+                <button class="code-tab" id="tab-pseudo-training" type="button" role="tab" aria-selected="false" aria-controls="panel-pseudo-training" data-tab-target="panel-pseudo-training">Pseudo Training</button>
+              </div>
+
+              <div class="code-panel active" id="panel-simclr" role="tabpanel" aria-labelledby="tab-simclr">
+                <article class="tutorial-card code-tutorial">
+                  <h3>SimCLR-style Encoder Pretraining</h3>
+                  <p><strong>Libraries:</strong> PyTorch, Torchvision. This sketch trains an encoder to make two augmented views of the same image close in embedding space.</p>
+                  <pre><code>import torch
+import torch.nn.functional as F
+from torchvision.models import resnet18
+
+encoder = resnet18(weights=None)
+encoder.fc = torch.nn.Identity()  # use features instead of classifier logits
+projection = torch.nn.Sequential(
+    torch.nn.Linear(512, 256),
+    torch.nn.ReLU(),
+    torch.nn.Linear(256, 128)
+)
+
+def nt_xent_loss(z1, z2, temperature=0.2):
+    z1 = F.normalize(z1, dim=1)
+    z2 = F.normalize(z2, dim=1)
+    logits = z1 @ z2.T / temperature
+    labels = torch.arange(z1.size(0), device=z1.device)
+    return F.cross_entropy(logits, labels)
+
+for view_a, view_b in unlabeled_loader:
+    view_a, view_b = view_a.to(device), view_b.to(device)
+
+    z_a = projection(encoder(view_a))
+    z_b = projection(encoder(view_b))
+    loss = nt_xent_loss(z_a, z_b)
+
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()</code></pre>
+                  <p><strong>Explanation:</strong> After pretraining, remove the projection head and transfer the encoder into a segmentation model. This works best when the unlabeled images come from the target domain.</p>
+                </article>
+              </div>
+
+              <div class="code-panel" id="panel-dino" role="tabpanel" aria-labelledby="tab-dino" hidden>
+                <article class="tutorial-card code-tutorial">
+                  <h3>DINO Feature Extraction for Dense Prediction</h3>
+                  <p><strong>Libraries:</strong> Transformers, PyTorch, Pillow. DINO features can be used for clustering, visualization, or initializing dense prediction models.</p>
+                  <pre><code>from PIL import Image
+import torch
+from transformers import AutoImageProcessor, AutoModel
+
+image = Image.open("unlabeled_image.jpg").convert("RGB")
+
+processor = AutoImageProcessor.from_pretrained("facebook/dinov2-base")
+model = AutoModel.from_pretrained("facebook/dinov2-base")
+
+inputs = processor(images=image, return_tensors="pt")
+
+with torch.no_grad():
+    outputs = model(**inputs)
+
+# Patch tokens carry spatial information from the image.
+patch_tokens = outputs.last_hidden_state[:, 1:, :]
+features = torch.nn.functional.normalize(patch_tokens, dim=-1)
+print(features.shape)</code></pre>
+                  <p><strong>Explanation:</strong> Patch-level features can reveal object structure. For segmentation, reshape patch tokens into a feature grid and train a decoder or cluster features into candidate regions.</p>
+                </article>
+              </div>
+
+              <div class="code-panel" id="panel-mae" role="tabpanel" aria-labelledby="tab-mae" hidden>
+                <article class="tutorial-card code-tutorial">
+                  <h3>Masked Autoencoder Pretraining Skeleton</h3>
+                  <p><strong>Libraries:</strong> PyTorch. This simplified skeleton shows the learning objective: reconstruct masked visual content from visible patches.</p>
+                  <pre><code>import torch
+import torch.nn.functional as F
+
+def random_patch_mask(patches, mask_ratio=0.75):
+    batch, num_patches, dim = patches.shape
+    keep_count = int(num_patches * (1 - mask_ratio))
+    noise = torch.rand(batch, num_patches, device=patches.device)
+    keep_ids = noise.argsort(dim=1)[:, :keep_count]
+    return keep_ids
+
+for images in unlabeled_loader:
+    images = images.to(device)
+    patches = patch_embed(images)
+    keep_ids = random_patch_mask(patches)
+
+    visible = torch.gather(
+        patches,
+        dim=1,
+        index=keep_ids.unsqueeze(-1).expand(-1, -1, patches.size(-1))
+    )
+
+    latent = encoder(visible)
+    reconstructed = decoder(latent, keep_ids)
+    loss = F.mse_loss(reconstructed, patches)
+
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()</code></pre>
+                  <p><strong>Explanation:</strong> Masked image modeling encourages the encoder to learn context and structure. The pretrained encoder can then be attached to a segmentation decoder.</p>
+                </article>
+              </div>
+
+              <div class="code-panel" id="panel-pseudo-training" role="tabpanel" aria-labelledby="tab-pseudo-training" hidden>
+                <article class="tutorial-card code-tutorial">
+                  <h3>Pseudo-mask Fine-tuning Pipeline</h3>
+                  <p><strong>Libraries:</strong> PyTorch. This example mixes trusted human labels with filtered pseudo masks during semantic segmentation training.</p>
+                  <pre><code>import torch
+import torch.nn.functional as F
+
+model.train()
+
+for batch in train_loader:
+    images = batch["image"].to(device)
+    labels = batch["mask"].to(device)
+    pseudo = batch["pseudo_mask"].to(device)
+    pseudo_conf = batch["pseudo_confidence"].to(device)
+
+    logits = model(images)
+
+    supervised_loss = F.cross_entropy(logits, labels, ignore_index=255)
+
+    # Only trust pseudo labels above a confidence threshold.
+    valid_pseudo = pseudo_conf &gt; 0.85
+    pseudo_loss_map = F.cross_entropy(logits, pseudo, reduction="none")
+    pseudo_loss = pseudo_loss_map[valid_pseudo].mean()
+
+    loss = supervised_loss + 0.4 * pseudo_loss
+
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()</code></pre>
+                  <p><strong>Explanation:</strong> Pseudo labels can improve data efficiency, but low-quality masks can damage training. Confidence filtering and a trusted validation set are essential.</p>
+                </article>
+              </div>
             </div>
           </section>
         </article>
-
-        <aside class="sidebar" aria-label="Self-supervised segmentation sidebar">
-          <div class="sidebar-card">
-            <h2>On this page</h2>
-            <ul class="toc">
-              <li><a href="#annotation-cost">Annotation cost</a></li>
-              <li><a href="#contrastive">Contrastive learning</a></li>
-              <li><a href="#mim">Masked modeling</a></li>
-              <li><a href="#dino">DINO-style learning</a></li>
-              <li><a href="#pipeline">Pipeline</a></li>
-            </ul>
-          </div>
-        </aside>
       </div>
     </div>
   </main>

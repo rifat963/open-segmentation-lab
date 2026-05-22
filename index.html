@@ -51,17 +51,7 @@
           <h2>What is Image Segmentation?</h2>
           <p>Image segmentation is the task of partitioning an image into meaningful pixel-level regions. Instead of predicting only an image label or drawing a bounding box, segmentation asks a model to describe where each visual concept occurs.</p>
         </div>
-        <div class="grid two">
-          <div class="card">
-            <h3>Dense Prediction</h3>
-            <p>Segmentation models produce spatial outputs. A model may assign a class to every pixel, separate each object instance, or create a unified map of things and stuff.</p>
-            <div class="callout definition"><strong>Definition:</strong> A segmentation mask is an image-sized annotation where pixel values encode classes, instances, or both.</div>
-          </div>
-          <figure class="visual-card">
-            <img src="images/placeholder-segmentation.svg" alt="Stylized segmentation diagram showing images, masks, and region labels">
-            <figcaption>Segmentation turns visual scenes into structured pixel-level representations.</figcaption>
-          </figure>
-        </div>
+        <div class="callout definition"><strong>Definition:</strong> A segmentation mask is an image-sized annotation where pixel values encode classes, instances, or both.</div>
       </div>
     </section>
 
@@ -71,6 +61,10 @@
           <h2>Semantic vs Instance vs Panoptic Segmentation</h2>
           <p>These tasks share the goal of pixel-level understanding, but they answer different questions.</p>
         </div>
+        <figure class="visual-card wide">
+          <img src="images/semantic-instance-panoptic-comparison.png" alt="Comparison of semantic, instance, and panoptic segmentation outputs">
+          <figcaption>Visual comparison of the three major segmentation tasks: class-level masks, object-level masks, and unified panoptic maps.</figcaption>
+        </figure>
         <div class="table-wrap">
           <table>
             <thead>
@@ -109,92 +103,86 @@
     <section class="section">
       <div class="container">
         <div class="section-title">
-          <h2>Recommended Learning Path</h2>
-          <p>Students can follow this order from fundamentals to modern research pipelines.</p>
-        </div>
-        <div class="grid auto learning-path">
-          <article class="card path-item">
-            <h3>Learn Pixel Metrics</h3>
-            <p>Start with IoU, Dice, pixel accuracy, and confusion matrices. These explain how segmentation quality is measured.</p>
-          </article>
-          <article class="card path-item">
-            <h3>Study Semantic Models</h3>
-            <p>Move from FCN and U-Net to DeepLab and transformer encoders. Focus on dense prediction and multiscale context.</p>
-          </article>
-          <article class="card path-item">
-            <h3>Add Object Instances</h3>
-            <p>Study Mask R-CNN, YOLO-style segmentation, and mask AP to understand detection plus mask prediction.</p>
-          </article>
-          <article class="card path-item">
-            <h3>Connect to Research</h3>
-            <p>Finish with panoptic segmentation, self-supervised representation learning, and foundation-model assisted annotation.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="section-title">
           <h2>Core Topics</h2>
           <p>Each topic page is written as a concise tutorial with definitions, intuition, formulas, and reading guidance.</p>
         </div>
-        <div class="grid auto">
-          <article class="tutorial-card">
+        <div class="topic-grid">
+          <article class="topic-card topic-card-featured">
+            <span class="topic-kicker">Start here</span>
             <h3>Semantic Segmentation</h3>
             <p>Pixel-wise classification, encoder-decoder architectures, multiscale context, and semantic metrics.</p>
-            <a href="semantic.html">Open tutorial</a>
+            <ul class="topic-list">
+              <li>Class label for every pixel</li>
+              <li>U-Net, DeepLab, SegFormer</li>
+              <li>mIoU, Dice, pixel accuracy</li>
+            </ul>
+            <a class="topic-link" href="semantic.html">Open tutorial</a>
           </article>
-          <article class="tutorial-card">
+          <article class="topic-card">
+            <span class="topic-kicker">Object masks</span>
             <h3>Instance Segmentation</h3>
             <p>Object proposals, mask heads, real-time mask pipelines, and instance-level evaluation.</p>
-            <a href="instance.html">Open tutorial</a>
+            <ul class="topic-list">
+              <li>Separate mask per object</li>
+              <li>Mask R-CNN, YOLACT, YOLO</li>
+              <li>Mask AP and IoU</li>
+            </ul>
+            <a class="topic-link" href="instance.html">Open tutorial</a>
           </article>
-          <article class="tutorial-card">
+          <article class="topic-card">
+            <span class="topic-kicker">Unified scene map</span>
             <h3>Panoptic Segmentation</h3>
             <p>Unified scene understanding with things, stuff, and Panoptic Quality.</p>
-            <a href="panoptic.html">Open tutorial</a>
+            <ul class="topic-list">
+              <li>Things and stuff classes</li>
+              <li>Complete pixel assignment</li>
+              <li>Panoptic Quality</li>
+            </ul>
+            <a class="topic-link" href="panoptic.html">Open tutorial</a>
           </article>
-          <article class="tutorial-card">
+          <article class="topic-card">
+            <span class="topic-kicker">Low annotation setup</span>
             <h3>Self-Supervised Segmentation</h3>
             <p>Representation learning, pseudo masks, and low-annotation segmentation workflows.</p>
-            <a href="ssl-segmentation.html">Open tutorial</a>
+            <ul class="topic-list">
+              <li>Pretrained encoders</li>
+              <li>Pseudo-mask generation</li>
+              <li>Fine-tuning and validation</li>
+            </ul>
+            <a class="topic-link" href="ssl-segmentation.html">Open tutorial</a>
           </article>
         </div>
       </div>
     </section>
 
-    <section class="section">
+    <section class="section featured-papers">
       <div class="container">
         <div class="section-title">
           <h2>Featured Papers</h2>
-          <p>Start with these papers to understand how the field developed from fully convolutional networks to foundation models.</p>
+          <p>A short reading path from end-to-end dense prediction to instance masks and universal segmentation models.</p>
         </div>
-        <div class="grid auto">
-          <article class="paper-card">
-            <p class="paper-meta">2015</p>
+        <div class="featured-paper-grid">
+          <article class="featured-paper-card">
+            <p class="paper-meta">2015 | Semantic segmentation</p>
             <h3>Fully Convolutional Networks for Semantic Segmentation</h3>
-            <p>Popularized end-to-end dense prediction with convolutional networks.</p>
+            <p>Introduced end-to-end pixel-level prediction by converting classification CNNs into fully convolutional networks for dense labeling.</p>
+            <a class="paper-link" href="https://arxiv.org/abs/1411.4038" target="_blank" rel="noopener noreferrer">Read paper</a>
           </article>
-          <article class="paper-card">
-            <p class="paper-meta">2017</p>
+          <article class="featured-paper-card">
+            <p class="paper-meta">2017 | Instance segmentation</p>
             <h3>Mask R-CNN</h3>
-            <p>Extended Faster R-CNN with a parallel mask branch for instance segmentation.</p>
+            <p>Extended Faster R-CNN with a parallel mask branch, making instance-level masks practical for detection-centered pipelines.</p>
+            <a class="paper-link" href="https://arxiv.org/abs/1703.06870" target="_blank" rel="noopener noreferrer">Read paper</a>
           </article>
-          <article class="paper-card">
-            <p class="paper-meta">2022</p>
+          <article class="featured-paper-card">
+            <p class="paper-meta">2022 | Universal segmentation</p>
             <h3>Mask2Former</h3>
-            <p>Unified semantic, instance, and panoptic segmentation through masked attention.</p>
+            <p>Unified semantic, instance, and panoptic segmentation using masked attention and a shared mask classification formulation.</p>
+            <a class="paper-link" href="https://arxiv.org/abs/2112.01527" target="_blank" rel="noopener noreferrer">Read paper</a>
           </article>
         </div>
-      </div>
-    </section>
-
-    <section class="section compact">
-      <div class="container">
-        <div class="section-title">
-          <h2>Why this platform is free</h2>
-          <p>Open Segmentation Lab is designed for university students, early researchers, and instructors who need accessible computer vision material without a paywall. The first version keeps the platform lightweight, static, and focused on open academic learning.</p>
+        <div class="button-row compact-actions">
+          <a class="btn btn-outline" href="papers.html">View full reading list</a>
         </div>
       </div>
     </section>

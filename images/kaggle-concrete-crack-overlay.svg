@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 300" role="img" aria-labelledby="title desc">
+  <title id="title">Concrete crack segmentation preview</title>
+  <desc id="desc">Three-panel preview showing an input concrete image, a ground-truth crack mask, and a U-Net prediction overlay.</desc>
+  <rect width="860" height="300" fill="#ffffff"/>
+
+  <style>
+    .label { font: 15px Arial, sans-serif; fill: #111827; text-anchor: middle; }
+    .panel { stroke: #d1d5db; stroke-width: 1; }
+  </style>
+
+  <text x="140" y="22" class="label">Input Image</text>
+  <text x="430" y="22" class="label">Ground Truth Mask</text>
+  <text x="710" y="22" class="label">UNet Prediction (Overlay)</text>
+
+  <defs>
+    <filter id="rough">
+      <feTurbulence type="fractalNoise" baseFrequency="0.042" numOctaves="4" seed="8"/>
+      <feColorMatrix type="matrix" values="0.34 0.22 0.18 0 0.38  0.28 0.30 0.22 0 0.40  0.23 0.26 0.30 0 0.42  0 0 0 1 0"/>
+    </filter>
+    <filter id="lightRough">
+      <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="4" seed="9"/>
+      <feColorMatrix type="matrix" values="0.55 0.2 0.15 0 0.70  0.24 0.52 0.18 0 0.70  0.18 0.22 0.48 0 0.70  0 0 0 .44 0"/>
+    </filter>
+    <linearGradient id="maskEdge" x1="0" x2="1">
+      <stop offset="0" stop-color="#000000"/>
+      <stop offset=".78" stop-color="#000000"/>
+      <stop offset=".79" stop-color="#ffffff"/>
+      <stop offset=".86" stop-color="#ffffff"/>
+      <stop offset=".87" stop-color="#000000"/>
+      <stop offset="1" stop-color="#000000"/>
+    </linearGradient>
+  </defs>
+
+  <g transform="translate(10 32)">
+    <rect width="270" height="258" class="panel" fill="#7d858c" filter="url(#rough)"/>
+    <g opacity=".42" fill="#f3f4f6">
+      <polygon points="22,28 46,14 70,30 55,54"/>
+      <polygon points="110,42 145,24 170,52 132,70"/>
+      <polygon points="210,30 252,42 235,78 194,67"/>
+      <polygon points="36,104 92,82 116,126 58,143"/>
+      <polygon points="152,112 204,92 228,144 178,160"/>
+      <polygon points="34,188 88,168 120,220 56,238"/>
+      <polygon points="178,194 246,174 260,230 202,250"/>
+    </g>
+    <path d="M225 6 C218 42 222 75 212 103 C203 130 218 157 205 185 C198 204 204 230 190 256" fill="none" stroke="#1f2937" stroke-width="5" opacity=".58"/>
+    <path d="M232 5 C226 45 232 76 218 104 C211 130 224 156 212 184 C205 207 210 230 198 256" fill="none" stroke="#111827" stroke-width="2" opacity=".6"/>
+  </g>
+
+  <g transform="translate(305 32)">
+    <rect width="270" height="258" class="panel" fill="#000000"/>
+    <path d="M197 0 C202 33 199 69 207 99 C213 123 208 151 218 181 C225 202 224 232 236 258 L214 258 C205 226 205 203 196 180 C186 151 191 125 184 96 C177 65 181 30 174 0 Z" fill="#ffffff"/>
+    <path d="M198 0 C198 21 204 40 200 60 C198 75 205 85 205 101" fill="none" stroke="#000000" stroke-width="3"/>
+  </g>
+
+  <g transform="translate(600 32)">
+    <rect width="270" height="258" class="panel" fill="#eef0f1"/>
+    <rect width="270" height="258" fill="#aeb5ba" filter="url(#lightRough)" opacity=".72"/>
+    <g opacity=".58" fill="#ffffff">
+      <polygon points="18,22 62,14 84,42 44,62"/>
+      <polygon points="106,38 160,18 182,64 126,84"/>
+      <polygon points="210,26 260,40 238,80 194,70"/>
+      <polygon points="36,132 88,108 116,146 58,166"/>
+      <polygon points="155,125 214,105 236,160 176,176"/>
+      <polygon points="28,205 90,178 126,232 52,250"/>
+      <polygon points="180,200 250,174 262,230 206,252"/>
+    </g>
+    <path d="M188 0 C189 28 190 54 188 80" fill="none" stroke="#7f1d1d" stroke-width="5" opacity=".88"/>
+    <path d="M96 66 C90 88 98 110 92 132" fill="none" stroke="#7f1d1d" stroke-width="5" opacity=".88"/>
+    <path d="M201 112 C198 135 209 156 201 181 C197 198 201 214 197 230" fill="none" stroke="#7f1d1d" stroke-width="5" opacity=".88"/>
+    <path d="M188 0 C189 28 190 54 188 80 M96 66 C90 88 98 110 92 132 M201 112 C198 135 209 156 201 181 C197 198 201 214 197 230" fill="none" stroke="#4c0519" stroke-width="1.8" opacity=".9"/>
+  </g>
+</svg>

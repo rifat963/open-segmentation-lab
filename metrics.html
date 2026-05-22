@@ -47,6 +47,10 @@
           <section id="iou">
             <h2>IoU Formula</h2>
             <p>Intersection over Union measures how much a predicted mask overlaps with the ground-truth mask relative to their combined area.</p>
+            <figure class="visual-card wide">
+              <img src="images/iou-dice-metrics.webp.png" alt="Diagram explaining IoU and Dice score overlap for segmentation masks">
+              <figcaption>IoU and Dice both measure mask overlap, but they weight the overlap differently and can behave differently on small foreground regions.</figcaption>
+            </figure>
             <div class="formula-box">IoU = Intersection / Union = TP / (TP + FP + FN)</div>
           </section>
 

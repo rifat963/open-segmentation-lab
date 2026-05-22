@@ -41,89 +41,328 @@
       </div>
     </section>
 
-    <div class="section">
-      <div class="container page-grid">
-        <article class="content-panel">
+    <section class="section">
+      <div class="container">
+        <article class="content-panel semantic-article">
+          <figure class="visual-card wide">
+            <img src="images/segmentation-pipeline.webp.png" alt="Segmentation model pipeline from input image to predicted semantic mask">
+            <figcaption>Semantic segmentation is a dense prediction pipeline: encode the image, decode spatial features, classify each pixel, and compare the predicted mask with the ground-truth annotation.</figcaption>
+          </figure>
+
           <section id="definition">
-            <h2>Definition</h2>
-            <p>Semantic segmentation is pixel-wise classification. Given an input image <code>I</code>, the model predicts a class map <code>Y</code> with the same spatial resolution, or a lower-resolution map that is upsampled back to image size.</p>
-            <div class="callout definition"><strong>Definition:</strong> In semantic segmentation, two pixels with the same class label are treated the same even if they belong to different physical objects.</div>
-            <figure class="visual-card">
-              <img src="images/semantic-mask.svg" alt="Semantic segmentation mask with shared class colors">
-              <figcaption>Semantic masks describe categories, not individual object identities.</figcaption>
+            <h2>Semantic Segmentation Definition</h2>
+            <p>Semantic segmentation is the computer vision task of assigning a semantic class label to every pixel in an image. If an image has height <code>H</code>, width <code>W</code>, and <code>C</code> target classes, a segmentation model usually predicts a score tensor with shape <code>C x H x W</code>. The final class map is obtained by choosing the highest-scoring class at each pixel.</p>
+            <div class="formula-box math-panel" aria-label="Semantic segmentation prediction formula">
+              <span class="math-label">Logit tensor</span>
+              <span class="math-line">Z = f<sub>&theta;</sub>(X), &nbsp; Z &isin; R<sup>C &times; H &times; W</sup></span>
+              <span class="math-label">Pixel prediction</span>
+              <span class="math-line">y&#770;<sub>i,j</sub> = argmax<sub>c</sub> Z<sub>c,i,j</sub></span>
+            </div>
+            <div class="callout definition"><strong>Definition:</strong> Semantic segmentation treats all pixels of the same class as the same category. Two cars, two crop leaves, or two tumor regions share one class label unless the task is changed to instance segmentation.</div>
+          </section>
+
+          <section id="dense-prediction">
+            <h2>How Dense Prediction Works</h2>
+            <p>A semantic segmentation network keeps spatial structure throughout the model. The encoder extracts visual features, the decoder restores spatial resolution, and the classifier projects features into class logits. The model learns boundaries, textures, shapes, and context because the loss is computed at the pixel level.</p>
+            <figure class="visual-card wide">
+              <img src="images/how_dense_prediction_work.png" alt="Dense prediction workflow showing encoder features, decoder reconstruction, and pixel-wise class prediction">
+              <figcaption>Dense prediction keeps the spatial grid alive: features are encoded, decoded back to image resolution, and classified into a label for each pixel.</figcaption>
             </figure>
+            <div class="formula-box math-panel" aria-label="Pixel-wise cross entropy formula">
+              <span class="math-label">Pixel-wise cross entropy</span>
+              <span class="math-line">L = -1/(H W) &Sigma;<sub>i</sub> &Sigma;<sub>j</sub> log softmax(Z<sub>:,i,j</sub>)<sub>y<sub>i,j</sub></sub></span>
+            </div>
+            <div class="grid two">
+              <div class="card"><h3>Encoder</h3><p>Extracts low-level edges, textures, high-level parts, and global context using CNN or transformer layers.</p></div>
+              <div class="card"><h3>Decoder</h3><p>Upsamples feature maps and combines coarse semantic context with fine spatial detail.</p></div>
+              <div class="card"><h3>Classifier Head</h3><p>Uses a small convolutional layer to convert feature channels into class logits for every pixel.</p></div>
+              <div class="card"><h3>Loss and Metrics</h3><p>Optimizes pixel-wise classification loss and evaluates overlap with mIoU, Dice, or pixel accuracy.</p></div>
+            </div>
           </section>
 
-          <section id="pixel-wise">
-            <h2>Pixel-wise Classification</h2>
-            <p>A common network outputs a tensor of shape <code>H x W x C</code>, where <code>C</code> is the number of classes. Each pixel receives class scores, and the final prediction is usually the class with the highest score.</p>
-            <pre><code>for each pixel p:
-    scores = model(image)[p]
-    predicted_class[p] = argmax(scores)</code></pre>
-            <div class="callout intuition"><strong>Intuition:</strong> Image classification asks "what is in the image?" Semantic segmentation asks "where is each class in the image?"</div>
-          </section>
-
-          <section id="example">
-            <h2>Input-output Example</h2>
-            <p>For a street scene, the input may contain road, sky, pedestrians, signs, and cars. The output is a map where all road pixels share one label, all sky pixels share another label, and all car pixels share the car label regardless of the number of cars.</p>
-            <div class="formula-box">Input image -> encoder features -> decoder upsampling -> per-pixel class probabilities -> semantic mask</div>
+          <section id="models">
+            <h2>Important Model Families</h2>
+            <p><strong>FCN</strong> showed that classification networks could be converted into dense predictors. <strong>U-Net</strong> added an encoder-decoder structure with skip connections, making it especially strong for medical and agricultural imagery. <strong>DeepLab</strong> uses atrous convolution and multiscale context. Modern transformer-based models such as <strong>SegFormer</strong> and <strong>Mask2Former</strong> improve representation learning and support strong performance across complex scenes.</p>
+            <div class="callout exam"><strong>Exam note:</strong> U-Net is a strong baseline when labeled data is limited and boundary localization matters. DeepLab is useful for discussing multiscale context, while SegFormer and Mask2Former are useful for transformer-era segmentation.</div>
           </section>
 
           <section id="applications">
             <h2>Applications</h2>
             <div class="grid two">
-              <div class="card"><h3>Medical Imaging</h3><p>Segment organs, tumors, lesions, cells, or tissue regions for measurement and clinical research.</p></div>
-              <div class="card"><h3>Agriculture</h3><p>Separate crop, weed, soil, leaf disease, and canopy regions for precision farming.</p></div>
-              <div class="card"><h3>Autonomous Driving</h3><p>Estimate road layout, lane regions, sidewalks, vegetation, and other scene classes.</p></div>
-              <div class="card"><h3>Remote Sensing</h3><p>Map buildings, water, forest, roads, and land-cover classes from aerial or satellite images.</p></div>
+              <div class="card"><h3>Medical Imaging</h3><p>Segment organs, tumors, lesions, cells, vessels, or tissue regions for measurement and clinical research.</p></div>
+              <div class="card"><h3>Agriculture</h3><p>Separate crop, weed, soil, canopy, leaf disease, and plant stress regions for precision agriculture.</p></div>
+              <div class="card"><h3>Autonomous Driving</h3><p>Estimate road, lane, sidewalk, vegetation, vehicle, pedestrian, and traffic-scene regions.</p></div>
+              <div class="card"><h3>Remote Sensing</h3><p>Map buildings, roads, water, forest, and land-cover classes from aerial or satellite images.</p></div>
             </div>
-          </section>
-
-          <section id="models">
-            <h2>Classical Models</h2>
-            <p><strong>FCN</strong> replaced fully connected classification layers with convolutional layers, enabling dense outputs. <strong>U-Net</strong> uses skip connections between encoder and decoder stages, which is especially useful when precise boundaries matter. <strong>DeepLab</strong> introduced atrous convolution and spatial pyramid pooling to capture multiscale context without aggressively reducing resolution.</p>
-            <div class="callout exam"><strong>Exam note:</strong> U-Net is often used when data is limited and boundary localization is important. DeepLab is often discussed for multiscale context and strong natural-image benchmarks.</div>
-          </section>
-
-          <section id="transformers">
-            <h2>Transformer-based Models</h2>
-            <p><strong>SegFormer</strong> combines hierarchical transformer encoders with a lightweight decoder. <strong>Mask2Former</strong> frames segmentation as mask classification and uses masked attention to support semantic, instance, and panoptic tasks in one architecture family.</p>
-            <div class="callout pitfall"><strong>Pitfall:</strong> Transformer models may perform well but often require careful pretraining, memory planning, and data augmentation.</div>
-          </section>
-
-          <section id="metrics">
-            <h2>Metrics</h2>
-            <p><strong>Pixel accuracy</strong> measures the fraction of correctly classified pixels. <strong>Mean IoU</strong> averages intersection-over-union across classes. <strong>Dice score</strong> emphasizes overlap and is popular in medical segmentation.</p>
-            <div class="formula-box">IoU(class c) = TP_c / (TP_c + FP_c + FN_c)</div>
-            <div class="formula-box">Dice(class c) = 2TP_c / (2TP_c + FP_c + FN_c)</div>
           </section>
 
           <section id="tutorials">
-            <h2>Tutorial Cards</h2>
-            <div class="grid two">
-              <article class="tutorial-card"><h3>U-Net from Scratch</h3><p>Build an encoder-decoder model with skip connections and learn why feature alignment matters.</p></article>
-              <article class="tutorial-card"><h3>DeepLabV3 Explained</h3><p>Understand atrous convolution, output stride, and atrous spatial pyramid pooling.</p></article>
-              <article class="tutorial-card"><h3>Semantic Segmentation Metrics</h3><p>Practice pixel accuracy, mIoU, Dice, and confusion-matrix interpretation.</p></article>
-              <article class="tutorial-card"><h3>Medical and Agricultural Segmentation</h3><p>Compare domain-specific challenges such as small objects, imbalance, and annotation noise.</p></article>
+            <h2>PyTorch Tutorial Lab</h2>
+            <p>Use these tabs as compact starter templates. The code is commented so students can identify the role of each library, model block, training step, and inference step.</p>
+
+            <div class="code-tabs" data-code-tabs>
+              <div class="code-tab-list" role="tablist" aria-label="Semantic segmentation PyTorch code tabs">
+                <button class="code-tab active" id="tab-basic" type="button" role="tab" aria-selected="true" aria-controls="panel-basic" data-tab-target="panel-basic">Basic</button>
+                <button class="code-tab" id="tab-unet" type="button" role="tab" aria-selected="false" aria-controls="panel-unet" data-tab-target="panel-unet">U-Net</button>
+                <button class="code-tab" id="tab-deeplab" type="button" role="tab" aria-selected="false" aria-controls="panel-deeplab" data-tab-target="panel-deeplab">DeepLabV3</button>
+                <button class="code-tab" id="tab-segformer" type="button" role="tab" aria-selected="false" aria-controls="panel-segformer" data-tab-target="panel-segformer">SegFormer</button>
+                <button class="code-tab" id="tab-mask2former" type="button" role="tab" aria-selected="false" aria-controls="panel-mask2former" data-tab-target="panel-mask2former">Mask2Former</button>
+                <button class="code-tab" id="tab-training" type="button" role="tab" aria-selected="false" aria-controls="panel-training" data-tab-target="panel-training">Training + Inference</button>
+              </div>
+
+              <article class="tutorial-card code-tutorial code-panel active" id="panel-basic" role="tabpanel" aria-labelledby="tab-basic">
+                <h3>Basic Dataset and Metric Utilities</h3>
+                <p><strong>Libraries used:</strong> PyTorch for tensors and datasets. This tab prepares class-index masks and computes mIoU from logits.</p>
+                <pre aria-label="Basic PyTorch dataset and metric code"><code>import torch
+from torch.utils.data import Dataset
+
+class SegmentationDataset(Dataset):
+    # images: list/tensor of RGB images with shape 3 x H x W
+    # masks: list/tensor of class-index masks with shape H x W
+    def __init__(self, images, masks, image_transform=None):
+        self.images = images
+        self.masks = masks
+        self.image_transform = image_transform
+
+    def __len__(self):
+        return len(self.images)
+
+    def __getitem__(self, index):
+        image = self.images[index].float()
+        mask = self.masks[index].long()
+
+        if self.image_transform:
+            image = self.image_transform(image)
+
+        return image, mask
+
+def mean_iou(logits, masks, num_classes):
+    # logits: N x C x H x W, masks: N x H x W
+    predictions = torch.argmax(logits, dim=1)
+    scores = []
+
+    for cls in range(num_classes):
+        pred_cls = predictions == cls
+        mask_cls = masks == cls
+        intersection = torch.logical_and(pred_cls, mask_cls).sum()
+        union = torch.logical_or(pred_cls, mask_cls).sum()
+
+        if union > 0:
+            scores.append(intersection.float() / union.float())
+
+    return torch.stack(scores).mean()</code></pre>
+                <p><strong>Explanation:</strong> Semantic segmentation masks must store class ids, not RGB colors. <code>nn.CrossEntropyLoss</code> expects logits with shape <code>N x C x H x W</code> and masks with shape <code>N x H x W</code>.</p>
+              </article>
+
+              <article class="tutorial-card code-tutorial code-panel" id="panel-unet" role="tabpanel" aria-labelledby="tab-unet" hidden>
+                <h3>U-Net Style Model</h3>
+                <p><strong>Libraries used:</strong> PyTorch <code>torch.nn</code> for convolution blocks, pooling, upsampling, and skip connections.</p>
+                <pre aria-label="Commented PyTorch U-Net code"><code>import torch
+import torch.nn as nn
+
+
+class DoubleConv(nn.Module):
+    # Two convolution layers are used in many U-Net implementations.
+    def __init__(self, in_channels, out_channels):
+        super().__init__()
+        self.block = nn.Sequential(
+            nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True)
+        )
+
+    def forward(self, x):
+        return self.block(x)
+
+
+class MiniUNet(nn.Module):
+    def __init__(self, num_classes):
+        super().__init__()
+        self.enc1 = DoubleConv(3, 32)
+        self.enc2 = DoubleConv(32, 64)
+        self.pool = nn.MaxPool2d(2)
+
+        self.bridge = DoubleConv(64, 128)
+
+        # ConvTranspose2d upsamples the low-resolution feature map.
+        self.up2 = nn.ConvTranspose2d(128, 64, kernel_size=2, stride=2)
+        self.dec2 = DoubleConv(128, 64)
+        self.up1 = nn.ConvTranspose2d(64, 32, kernel_size=2, stride=2)
+        self.dec1 = DoubleConv(64, 32)
+
+        # 1 x 1 convolution maps features to class logits.
+        self.classifier = nn.Conv2d(32, num_classes, kernel_size=1)
+
+    def forward(self, x):
+        skip1 = self.enc1(x)
+        skip2 = self.enc2(self.pool(skip1))
+        x = self.bridge(self.pool(skip2))
+
+        # Concatenate decoder features with encoder skip features.
+        x = self.up2(x)
+        x = torch.cat([x, skip2], dim=1)
+        x = self.dec2(x)
+
+        x = self.up1(x)
+        x = torch.cat([x, skip1], dim=1)
+        x = self.dec1(x)
+
+        return self.classifier(x)</code></pre>
+                <p><strong>Explanation:</strong> U-Net preserves boundary information through skip connections. The decoder uses encoder features to recover spatial detail lost during pooling.</p>
+              </article>
+
+              <article class="tutorial-card code-tutorial code-panel" id="panel-deeplab" role="tabpanel" aria-labelledby="tab-deeplab" hidden>
+                <h3>DeepLabV3 with Torchvision</h3>
+                <p><strong>Libraries used:</strong> PyTorch and Torchvision. Torchvision provides pretrained DeepLabV3 models with ResNet backbones.</p>
+                <pre aria-label="Commented Torchvision DeepLabV3 code"><code>import torch
+from torchvision.models.segmentation import deeplabv3_resnet50
+
+
+def build_deeplabv3(num_classes):
+    # weights=None avoids downloading pretrained weights.
+    # Use pretrained weights only when your environment permits downloads.
+    model = deeplabv3_resnet50(weights=None, num_classes=num_classes)
+    return model
+
+
+model = build_deeplabv3(num_classes=4)
+images = torch.randn(2, 3, 256, 256)
+
+# Torchvision segmentation models return a dictionary.
+outputs = model(images)
+logits = outputs["out"]          # shape: N x C x H x W
+pred_masks = logits.argmax(dim=1)</code></pre>
+                <p><strong>Explanation:</strong> DeepLabV3 uses atrous convolution and multiscale context. In Torchvision, the main semantic logits are stored in <code>outputs["out"]</code>.</p>
+              </article>
+
+              <article class="tutorial-card code-tutorial code-panel" id="panel-segformer" role="tabpanel" aria-labelledby="tab-segformer" hidden>
+                <h3>SegFormer with Hugging Face Transformers</h3>
+                <p><strong>Libraries used:</strong> PyTorch and Hugging Face Transformers. SegFormer combines a hierarchical transformer encoder with a lightweight decoder.</p>
+                <pre aria-label="Commented SegFormer code"><code>import torch
+import torch.nn.functional as F
+from transformers import SegformerForSemanticSegmentation
+
+
+num_classes = 4
+model = SegformerForSemanticSegmentation.from_pretrained(
+    "nvidia/segformer-b0-finetuned-ade-512-512",
+    num_labels=num_classes,
+    ignore_mismatched_sizes=True
+)
+
+images = torch.randn(2, 3, 512, 512)
+outputs = model(pixel_values=images)
+
+# SegFormer logits may be lower resolution than the input image.
+logits = F.interpolate(
+    outputs.logits,
+    size=images.shape[-2:],
+    mode="bilinear",
+    align_corners=False
+)
+pred_masks = logits.argmax(dim=1)</code></pre>
+                <p><strong>Explanation:</strong> Transformer segmentation models often output lower-resolution logits. Upsampling makes predictions align with the original mask size for loss and evaluation.</p>
+              </article>
+
+              <article class="tutorial-card code-tutorial code-panel" id="panel-mask2former" role="tabpanel" aria-labelledby="tab-mask2former" hidden>
+                <h3>Mask2Former-style Inference</h3>
+                <p><strong>Libraries used:</strong> PyTorch and Hugging Face Transformers. Mask2Former predicts masks and class scores using a mask classification formulation.</p>
+                <pre aria-label="Commented Mask2Former code"><code>import torch
+from transformers import Mask2FormerForUniversalSegmentation
+
+
+model = Mask2FormerForUniversalSegmentation.from_pretrained(
+    "facebook/mask2former-swin-tiny-ade-semantic"
+)
+
+images = torch.randn(1, 3, 512, 512)
+outputs = model(pixel_values=images)
+
+# Class scores for predicted masks.
+class_logits = outputs.class_queries_logits
+
+# Soft mask logits for each predicted mask query.
+mask_logits = outputs.masks_queries_logits
+
+# In production, use the matching image processor post-processing
+# utilities to convert query masks into a semantic map.
+print(class_logits.shape, mask_logits.shape)</code></pre>
+                <p><strong>Explanation:</strong> Mask2Former differs from ordinary per-pixel classifiers. It predicts a set of mask queries and class scores, then post-processing converts those predictions into semantic, instance, or panoptic outputs.</p>
+              </article>
+
+              <article class="tutorial-card code-tutorial code-panel" id="panel-training" role="tabpanel" aria-labelledby="tab-training" hidden>
+                <h3>Training and Inference Template</h3>
+                <p><strong>Libraries used:</strong> PyTorch for training, <code>torch.optim</code> for optimization, <code>nn.CrossEntropyLoss</code> for pixel-wise supervised learning, and <code>torch.no_grad</code> for inference.</p>
+                <pre aria-label="Commented PyTorch training and inference code"><code>import torch
+import torch.nn as nn
+
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+num_classes = 4
+
+# Replace MiniUNet with DeepLabV3, SegFormer, or another model.
+model = MiniUNet(num_classes=num_classes).to(device)
+criterion = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+
+
+def train_one_epoch(model, train_loader):
+    model.train()
+    total_loss = 0.0
+
+    for images, masks in train_loader:
+        images = images.to(device)
+        masks = masks.to(device)
+
+        logits = model(images)
+        loss = criterion(logits, masks)
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        total_loss += loss.item()
+
+    return total_loss / len(train_loader)
+
+
+@torch.no_grad()
+def predict_mask(model, image):
+    model.eval()
+    image = image.unsqueeze(0).to(device)    # 1 x 3 x H x W
+    logits = model(image)
+    prediction = logits.argmax(dim=1)        # 1 x H x W
+    return prediction.squeeze(0).cpu()</code></pre>
+                <div class="formula-box math-panel" aria-label="Cross entropy per pixel formula">
+                  <span class="math-label">Cross entropy per pixel</span>
+                  <span class="math-line">L<sub>i,j</sub> = -log p(y<sub>i,j</sub> | X, i, j)</span>
+                </div>
+                <p><strong>Explanation:</strong> During training, use raw logits and class-index masks. During inference, use <code>argmax</code> to convert logits into a discrete semantic mask.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="kaggle-resource" id="kaggle-notebook">
+            <div class="kaggle-card">
+              <h2>CSE 438: Semantic Segmentation of Concrete Cracks</h2>
+              <p>This Kaggle notebook demonstrates semantic segmentation for concrete crack detection. Students can study the dataset preparation, model training workflow, prediction masks, and evaluation process.</p>
+              <figure class="kaggle-preview">
+                <img src="images/kaggle-concrete-crack-overlay.svg" alt="Concrete crack segmentation example showing input image, ground truth mask, and U-Net prediction overlay">
+                <figcaption>Preview of the notebook workflow: original concrete patch, ground-truth crack mask, and U-Net overlay prediction.</figcaption>
+              </figure>
+              <a
+                href="https://www.kaggle.com/code/mrifatrashid/cse-438-semantic-segmentation-of-concrete-cracks"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="kaggle-btn">Open Kaggle Notebook</a>
             </div>
           </section>
         </article>
-
-        <aside class="sidebar" aria-label="Semantic segmentation sidebar">
-          <div class="sidebar-card">
-            <h2>On this page</h2>
-            <ul class="toc">
-              <li><a href="#definition">Definition</a></li>
-              <li><a href="#pixel-wise">Pixel-wise classification</a></li>
-              <li><a href="#applications">Applications</a></li>
-              <li><a href="#models">Classical models</a></li>
-              <li><a href="#transformers">Transformers</a></li>
-              <li><a href="#metrics">Metrics</a></li>
-            </ul>
-          </div>
-        </aside>
       </div>
-    </div>
+    </section>
   </main>
 
   <footer class="site-footer">

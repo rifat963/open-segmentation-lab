@@ -40,6 +40,43 @@
     });
   });
 
+  document.querySelectorAll("[data-code-tabs]").forEach(function (tabSet) {
+    const tabs = Array.from(tabSet.querySelectorAll("[data-tab-target]"));
+    const panels = Array.from(tabSet.querySelectorAll(".code-panel"));
+
+    function activateTab(tab) {
+      const targetId = tab.getAttribute("data-tab-target");
+      tabs.forEach(function (item) {
+        const isActive = item === tab;
+        item.classList.toggle("active", isActive);
+        item.setAttribute("aria-selected", String(isActive));
+      });
+
+      panels.forEach(function (panel) {
+        const isActive = panel.id === targetId;
+        panel.classList.toggle("active", isActive);
+        panel.hidden = !isActive;
+      });
+    }
+
+    tabs.forEach(function (tab, index) {
+      tab.addEventListener("click", function () {
+        activateTab(tab);
+      });
+
+      tab.addEventListener("keydown", function (event) {
+        if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
+          return;
+        }
+        event.preventDefault();
+        const direction = event.key === "ArrowRight" ? 1 : -1;
+        const nextIndex = (index + direction + tabs.length) % tabs.length;
+        tabs[nextIndex].focus();
+        activateTab(tabs[nextIndex]);
+      });
+    });
+  });
+
   const simulatorCanvas = document.getElementById("task-simulator-canvas");
   if (simulatorCanvas) {
     const ctx = simulatorCanvas.getContext("2d");

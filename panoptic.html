@@ -42,27 +42,44 @@
     </section>
 
     <div class="section">
-      <div class="container page-grid">
-        <article class="content-panel">
+      <div class="container">
+        <article class="content-panel semantic-article">
+          <figure class="visual-card wide">
+            <img src="images/semantic-instance-panoptic-comparison.png" alt="Comparison diagram showing semantic, instance, and panoptic segmentation">
+            <figcaption>Panoptic segmentation combines dense class labels with separate object identities. The result is a complete, non-overlapping map of the full scene.</figcaption>
+          </figure>
+
           <section id="definition">
-            <h2>Definition</h2>
-            <p>A panoptic output is a complete scene map. It has no unlabeled pixels: background regions such as road or sky are labeled as stuff, while countable objects such as cars or people are labeled as things with instance ids.</p>
-            <div class="callout definition"><strong>Definition:</strong> Panoptic segmentation requires a non-overlapping assignment for every pixel in the image.</div>
-            <figure class="visual-card">
-              <img src="images/panoptic-mask.svg" alt="Panoptic segmentation map with stuff regions and thing instances">
-              <figcaption>Panoptic maps combine stuff classes and thing instances.</figcaption>
-            </figure>
+            <h2>Panoptic Segmentation Definition</h2>
+            <p>A panoptic output assigns every pixel to exactly one segment. Background-like regions such as road, sky, grass, tissue, or soil are labeled as <strong>stuff</strong>. Countable objects such as people, cars, fruits, cells, or tools are labeled as <strong>things</strong> with instance identities.</p>
+            <div class="formula-box math-panel" aria-label="Panoptic segmentation output notation">
+              <span class="math-label">Pixel assignment</span>
+              <span class="math-line">P(i,j) = (c, id), where id = 0 for stuff and id &gt; 0 for thing instances</span>
+              <span class="math-label">Constraint</span>
+              <span class="math-line">Each pixel belongs to one and only one panoptic segment</span>
+            </div>
+            <div class="callout definition"><strong>Definition:</strong> Panoptic segmentation is a unified scene parsing task: it labels stuff regions and separates thing instances in one non-overlapping output.</div>
           </section>
 
           <section id="things-stuff">
             <h2>Things vs Stuff Classes</h2>
-            <p><strong>Things</strong> are countable objects, such as pedestrians, cars, chairs, fruits, or cells. <strong>Stuff</strong> refers to amorphous regions, such as road, sky, grass, water, tissue background, or soil.</p>
-            <div class="callout intuition"><strong>Intuition:</strong> If asking "how many?" makes sense, the category is often a thing. If the region is better described as material or background, it is often stuff.</div>
+            <p>The thing-stuff distinction is central to panoptic datasets. <strong>Things</strong> are countable objects with individual identities. <strong>Stuff</strong> is amorphous material or background context that usually does not need an instance id.</p>
+            <div class="grid two">
+              <article class="card">
+                <h3>Things</h3>
+                <p>Cars, pedestrians, leaves, fruits, tools, animals, lesions, and cell nuclei. These categories can be counted and separated into individual instances.</p>
+              </article>
+              <article class="card">
+                <h3>Stuff</h3>
+                <p>Road, sky, water, soil, grass, wall, tissue background, and other continuous regions. These categories are labeled as semantic regions.</p>
+              </article>
+            </div>
+            <div class="callout intuition"><strong>Intuition:</strong> If asking "how many?" makes sense, the category is often a thing. If the region is better described as material, surface, or background, it is often stuff.</div>
           </section>
 
           <section id="relationship">
             <h2>Relationship with Semantic and Instance Segmentation</h2>
-            <p>Panoptic segmentation can be viewed as a constraint-aware combination of semantic segmentation and instance segmentation. It keeps the dense class assignment of semantic segmentation while preserving individual identities for thing classes.</p>
+            <p>Panoptic segmentation can be understood as a disciplined merge of semantic segmentation and instance segmentation. It keeps the full pixel coverage of semantic segmentation while preserving individual identities for thing classes.</p>
             <div class="table-wrap">
               <table>
                 <thead>
@@ -84,45 +101,182 @@
 
           <section id="pq">
             <h2>Panoptic Quality</h2>
-            <p>Panoptic Quality evaluates both recognition and segmentation quality. It rewards correct matching of predicted and ground-truth segments and penalizes false positives and false negatives.</p>
-            <div class="formula-box">PQ = SQ x RQ</div>
-            <div class="formula-box">SQ = average IoU of matched segments<br>RQ = TP / (TP + 0.5 FP + 0.5 FN)</div>
-            <div class="callout exam"><strong>Exam note:</strong> PQ is not just IoU. It combines mask overlap with the model's ability to detect the correct set of segments.</div>
+            <p>Panoptic Quality evaluates recognition and mask quality together. It matches predicted and ground-truth segments, measures overlap for matched pairs, and penalizes missed or extra segments.</p>
+            <div class="formula-box math-panel" aria-label="Panoptic Quality formula">
+              <span class="math-label">Panoptic Quality</span>
+              <span class="math-line">PQ = SQ &times; RQ</span>
+              <span class="math-label">Segmentation Quality</span>
+              <span class="math-line">SQ = average IoU over matched segments</span>
+              <span class="math-label">Recognition Quality</span>
+              <span class="math-line">RQ = TP / (TP + 0.5 FP + 0.5 FN)</span>
+            </div>
+            <div class="callout exam"><strong>Exam note:</strong> PQ is not just IoU. It combines the quality of predicted masks with the model's ability to find the correct set of segments.</div>
           </section>
 
           <section id="applications">
             <h2>Applications</h2>
             <div class="grid two">
-              <div class="card"><h3>Autonomous Driving</h3><p>Unify lane, road, sky, person, vehicle, and sign understanding in one scene representation.</p></div>
-              <div class="card"><h3>Robotics</h3><p>Support manipulation and navigation by separating objects while retaining background layout.</p></div>
+              <div class="card"><h3>Autonomous Driving</h3><p>Unify lane, road, sky, person, vehicle, sign, and sidewalk understanding in one scene representation.</p></div>
+              <div class="card"><h3>Robotics</h3><p>Support navigation and manipulation by separating objects while retaining layout and background context.</p></div>
               <div class="card"><h3>Agriculture</h3><p>Distinguish crop rows, soil, weeds, fruits, leaves, and individual plants for field analytics.</p></div>
-              <div class="card"><h3>Medical Imaging</h3><p>Represent tissue regions and countable anatomical or cellular instances in one prediction.</p></div>
+              <div class="card"><h3>Medical Imaging</h3><p>Represent tissue regions and countable anatomical or cellular instances in a single prediction map.</p></div>
             </div>
           </section>
 
-          <section id="tutorials">
-            <h2>Tutorial Cards</h2>
-            <div class="grid two">
-              <article class="tutorial-card"><h3>Panoptic Segmentation Basics</h3><p>Learn the output format, class taxonomy, and non-overlap constraint.</p></article>
-              <article class="tutorial-card"><h3>Panoptic Quality Explained</h3><p>Work through SQ, RQ, and matched segment calculations.</p></article>
-              <article class="tutorial-card"><h3>Mask2Former Overview</h3><p>Study how mask classification can address multiple segmentation tasks.</p></article>
-              <article class="tutorial-card"><h3>Panoptic Dataset Preparation</h3><p>Convert class masks and instance annotations into panoptic labels.</p></article>
+          <section id="pytorch-lab">
+            <h2>PyTorch Tutorial Lab</h2>
+            <p>These examples show how panoptic labels are prepared, how a universal segmentation model can be loaded, and how Panoptic Quality logic is implemented.</p>
+
+            <div class="code-tabs" data-code-tabs>
+              <div class="code-tab-list" role="tablist" aria-label="Panoptic segmentation code tabs">
+                <button class="code-tab active" id="tab-panoptic-format" type="button" role="tab" aria-selected="true" aria-controls="panel-panoptic-format" data-tab-target="panel-panoptic-format">Label Format</button>
+                <button class="code-tab" id="tab-mask2former-panoptic" type="button" role="tab" aria-selected="false" aria-controls="panel-mask2former-panoptic" data-tab-target="panel-mask2former-panoptic">Mask2Former</button>
+                <button class="code-tab" id="tab-pq-code" type="button" role="tab" aria-selected="false" aria-controls="panel-pq-code" data-tab-target="panel-pq-code">PQ Metric</button>
+                <button class="code-tab" id="tab-panoptic-training" type="button" role="tab" aria-selected="false" aria-controls="panel-panoptic-training" data-tab-target="panel-panoptic-training">Training Loop</button>
+              </div>
+
+              <div class="code-panel active" id="panel-panoptic-format" role="tabpanel" aria-labelledby="tab-panoptic-format">
+                <article class="tutorial-card code-tutorial">
+                  <h3>Preparing Panoptic Targets</h3>
+                  <p><strong>Libraries:</strong> PyTorch, NumPy. A panoptic target stores a semantic class and an instance id for each segment.</p>
+                  <pre><code>import torch
+
+height, width = 512, 512
+
+# Example target tensors for one image.
+semantic_map = torch.zeros((height, width), dtype=torch.long)
+instance_map = torch.zeros((height, width), dtype=torch.long)
+
+# Segment 1: road as stuff class.
+road_pixels = semantic_map == 0
+semantic_map[road_pixels] = 7       # class id for road
+instance_map[road_pixels] = 0       # stuff has no instance id
+
+# Segment 2: first car as thing class.
+car_1_mask = torch.zeros((height, width), dtype=torch.bool)
+car_1_mask[220:300, 140:240] = True
+semantic_map[car_1_mask] = 2        # class id for car
+instance_map[car_1_mask] = 1        # first car instance
+
+target = {
+    "semantic_map": semantic_map,
+    "instance_map": instance_map
+}</code></pre>
+                  <p><strong>Explanation:</strong> Panoptic labels must avoid overlapping assignments. Every pixel should have exactly one semantic class, and thing pixels should also have an instance id.</p>
+                </article>
+              </div>
+
+              <div class="code-panel" id="panel-mask2former-panoptic" role="tabpanel" aria-labelledby="tab-mask2former-panoptic" hidden>
+                <article class="tutorial-card code-tutorial">
+                  <h3>Mask2Former Panoptic Inference</h3>
+                  <p><strong>Libraries:</strong> Transformers, PyTorch, Pillow. Mask2Former predicts masks and classes through a mask classification formulation.</p>
+                  <pre><code>from PIL import Image
+import torch
+from transformers import Mask2FormerImageProcessor, Mask2FormerForUniversalSegmentation
+
+image = Image.open("street_scene.jpg").convert("RGB")
+
+processor = Mask2FormerImageProcessor.from_pretrained(
+    "facebook/mask2former-swin-small-coco-panoptic"
+)
+model = Mask2FormerForUniversalSegmentation.from_pretrained(
+    "facebook/mask2former-swin-small-coco-panoptic"
+)
+
+inputs = processor(images=image, return_tensors="pt")
+
+with torch.no_grad():
+    outputs = model(**inputs)
+
+panoptic = processor.post_process_panoptic_segmentation(
+    outputs,
+    target_sizes=[image.size[::-1]]
+)[0]
+
+segmentation_map = panoptic["segmentation"]
+segments_info = panoptic["segments_info"]
+print(segments_info[:3])</code></pre>
+                  <p><strong>Explanation:</strong> Post-processing converts model logits into a panoptic map and metadata for each segment, including class labels and instance ids.</p>
+                </article>
+              </div>
+
+              <div class="code-panel" id="panel-pq-code" role="tabpanel" aria-labelledby="tab-pq-code" hidden>
+                <article class="tutorial-card code-tutorial">
+                  <h3>Core Panoptic Quality Calculation</h3>
+                  <p><strong>Libraries:</strong> PyTorch. Real benchmarks include category matching and ignore labels; this compact version shows the core idea.</p>
+                  <pre><code>import torch
+
+def segment_iou(pred_segment, gt_segment, eps=1e-7):
+    intersection = (pred_segment &amp; gt_segment).sum().float()
+    union = (pred_segment | gt_segment).sum().float()
+    return intersection / (union + eps)
+
+matched_ious = []
+tp, fp, fn = 0, 0, 0
+used_gt = set()
+
+for pred_id, pred_mask in predicted_segments.items():
+    best_gt_id, best_iou = None, 0.0
+
+    for gt_id, gt_mask in ground_truth_segments.items():
+        if gt_id in used_gt:
+            continue
+        iou = segment_iou(pred_mask, gt_mask)
+        if iou &gt; best_iou:
+            best_gt_id, best_iou = gt_id, iou
+
+    if best_iou &gt; 0.50:
+        tp += 1
+        used_gt.add(best_gt_id)
+        matched_ious.append(best_iou)
+    else:
+        fp += 1
+
+fn = len(ground_truth_segments) - len(used_gt)
+sq = torch.stack(matched_ious).mean() if matched_ious else torch.tensor(0.0)
+rq = tp / (tp + 0.5 * fp + 0.5 * fn + 1e-7)
+pq = sq * rq</code></pre>
+                  <p><strong>Explanation:</strong> PQ rewards good masks and correct recognition. False positives and false negatives reduce RQ even when matched masks have high IoU.</p>
+                </article>
+              </div>
+
+              <div class="code-panel" id="panel-panoptic-training" role="tabpanel" aria-labelledby="tab-panoptic-training" hidden>
+                <article class="tutorial-card code-tutorial">
+                  <h3>Panoptic Training Skeleton</h3>
+                  <p><strong>Libraries:</strong> PyTorch. Universal segmentation models often combine classification, mask, and matching losses.</p>
+                  <pre><code>import torch
+
+model.train()
+
+for batch in train_loader:
+    images = batch["images"].to(device)
+    targets = batch["targets"]
+
+    # The model returns losses for masks, classes, and matching.
+    outputs = model(images, targets=targets)
+    loss_dict = outputs.losses
+
+    total_loss = (
+        loss_dict["loss_ce"]
+        + loss_dict["loss_mask"]
+        + loss_dict["loss_dice"]
+    )
+
+    optimizer.zero_grad()
+    total_loss.backward()
+    optimizer.step()
+
+    print({
+        "class": float(loss_dict["loss_ce"]),
+        "mask": float(loss_dict["loss_mask"]),
+        "dice": float(loss_dict["loss_dice"])
+    })</code></pre>
+                  <p><strong>Explanation:</strong> A panoptic model must learn what each mask represents and where the mask is located. Matching losses help assign predicted masks to ground-truth segments during training.</p>
+                </article>
+              </div>
             </div>
           </section>
         </article>
-
-        <aside class="sidebar" aria-label="Panoptic segmentation sidebar">
-          <div class="sidebar-card">
-            <h2>On this page</h2>
-            <ul class="toc">
-              <li><a href="#definition">Definition</a></li>
-              <li><a href="#things-stuff">Things vs stuff</a></li>
-              <li><a href="#relationship">Task relationship</a></li>
-              <li><a href="#pq">Panoptic Quality</a></li>
-              <li><a href="#applications">Applications</a></li>
-            </ul>
-          </div>
-        </aside>
       </div>
     </div>
   </main>
