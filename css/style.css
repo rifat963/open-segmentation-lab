@@ -553,6 +553,31 @@ tr:last-child td {
   font-weight: 750;
 }
 
+.paper-summary {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: 0.94rem;
+}
+
+.profile-strip {
+  margin-bottom: 28px;
+  padding: 26px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 22px rgba(18, 58, 99, 0.04);
+}
+
+.profile-strip h2 {
+  margin: 0 0 8px;
+}
+
+.profile-strip p {
+  margin: 8px 0;
+}
+
 .dataset-meta {
   display: grid;
   gap: 8px;
@@ -876,6 +901,12 @@ tr:last-child td {
 
 .site-footer a {
   color: #dff2f0;
+}
+
+.footer-contact {
+  margin-top: 16px;
+  color: #d8e5ee;
+  font-style: normal;
 }
 
 .footer-note {

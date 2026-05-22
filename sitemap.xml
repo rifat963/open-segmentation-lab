@@ -5,9 +5,7 @@
   <url><loc>https://example.com/instance.html</loc></url>
   <url><loc>https://example.com/panoptic.html</loc></url>
   <url><loc>https://example.com/ssl-segmentation.html</loc></url>
-  <url><loc>https://example.com/datasets.html</loc></url>
   <url><loc>https://example.com/metrics.html</loc></url>
-  <url><loc>https://example.com/playground.html</loc></url>
   <url><loc>https://example.com/papers.html</loc></url>
   <url><loc>https://example.com/about.html</loc></url>
 </urlset>
