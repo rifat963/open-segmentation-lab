@@ -182,9 +182,13 @@ main {
   display: grid;
   align-items: center;
   color: #ffffff;
-  background:
-    linear-gradient(90deg, rgba(8, 24, 42, 0.92) 0%, rgba(18, 58, 99, 0.76) 45%, rgba(18, 58, 99, 0.28) 100%),
-    url("../images/Homepage_hero_banner2.png") center right / cover no-repeat;
+  background-color: #0b2744;
+  background-image:
+    linear-gradient(90deg, rgba(8, 24, 42, 0.94) 0%, rgba(18, 58, 99, 0.80) 50%, rgba(18, 58, 99, 0.32) 100%),
+    url("../images/Homepage_hero_banner2.png");
+  background-position: center right;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .hero-content {
@@ -248,8 +252,13 @@ h3 {
 
 .btn-secondary {
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.58);
-  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(4px);
+}
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.24);
+  border-color: #ffffff;
 }
 
 .btn-outline {
@@ -1879,85 +1888,114 @@ tr:last-child td {
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   overflow: hidden;
+  box-shadow: var(--shadow-soft);
 }
 
+/* Step header — grid of equal-width step buttons */
 .wizard-header {
-  display: flex;
-  border-bottom: 2px solid var(--color-border);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   background: var(--color-bg);
-  overflow-x: auto;
-  scrollbar-width: none;
+  border-bottom: 2px solid var(--color-border);
 }
-.wizard-header::-webkit-scrollbar { display: none; }
 
 .wizard-step-btn {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  background: none;
+  gap: 8px;
+  padding: 18px 12px 14px;
+  background: transparent;
   border: none;
   border-bottom: 3px solid transparent;
-  margin-bottom: -2px;
+  border-right: 1px solid var(--color-border);
   cursor: pointer;
   color: var(--color-muted);
-  font-size: 0.9rem;
-  font-weight: 500;
-  white-space: nowrap;
-  transition: color var(--transition), border-color var(--transition), background var(--transition);
-  text-align: left;
-  flex-shrink: 0;
+  text-align: center;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  position: relative;
+  min-width: 0;
 }
-.wizard-step-btn:hover { color: var(--color-primary); }
+.wizard-step-btn:last-child { border-right: none; }
+.wizard-step-btn:hover {
+  background: var(--color-callout);
+  color: var(--color-primary);
+}
+.wizard-step-btn:hover .step-num {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
 .wizard-step-btn.active {
+  background: var(--color-surface);
   color: var(--color-primary);
   border-bottom-color: var(--color-accent);
-  font-weight: 700;
-  background: var(--color-surface);
-}
-.wizard-step-btn.completed .step-num {
-  background: var(--color-accent);
-  color: #fff;
-}
-
-.step-num {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: var(--color-border);
-  color: var(--color-muted);
-  font-size: 0.78rem;
-  font-weight: 700;
-  flex-shrink: 0;
-  transition: background var(--transition), color var(--transition);
 }
 .wizard-step-btn.active .step-num {
   background: var(--color-primary);
   color: #fff;
+  border-color: var(--color-primary);
+}
+.wizard-step-btn.completed .step-num {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+  font-size: 0;
+  position: relative;
+}
+.wizard-step-btn.completed .step-num::after {
+  content: "\2713";
+  font-size: 0.9rem;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Circular step number badge */
+.step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-muted);
+  font-size: 0.84rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
 }
 
 .step-info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
+  min-width: 0;
+  width: 100%;
 }
 .step-title {
-  font-weight: 600;
-  font-size: 0.88rem;
+  font-weight: 700;
+  font-size: 0.82rem;
   color: inherit;
+  line-height: 1.3;
+  white-space: normal;
+  word-break: break-word;
 }
 .step-sub {
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   color: var(--color-muted);
   font-weight: 400;
+  line-height: 1.3;
+  white-space: normal;
 }
 
 .wizard-body {
   background: var(--color-surface);
-  padding: 32px;
+  padding: 36px;
 }
 
 .wizard-panel { display: none; }
@@ -2094,23 +2132,17 @@ tr:last-child td {
 
 @media (max-width: 760px) {
   .wizard-body { padding: 20px 16px; }
-  .wizard-step-btn { padding: 14px 14px; gap: 10px; }
+  .wizard-header { grid-template-columns: repeat(2, 1fr); }
+  .wizard-step-btn:nth-child(2) { border-right: none; }
+  .wizard-step-btn:nth-child(3) { border-right: 1px solid var(--color-border); border-top: 1px solid var(--color-border); }
+  .wizard-step-btn:nth-child(4) { border-right: none; border-top: 1px solid var(--color-border); }
   .step-sub { display: none; }
 }
 
-@media (max-width: 540px) {
-  .wizard-header { flex-direction: column; border-bottom: none; }
-  .wizard-step-btn {
-    border-bottom: none;
-    border-left: 3px solid transparent;
-    margin-bottom: 0;
-    padding: 12px 16px;
-    white-space: normal;
-  }
-  .wizard-step-btn.active {
-    border-left-color: var(--color-accent);
-    background: var(--color-callout);
-  }
-  .wizard-body { border-top: 1px solid var(--color-border); }
-  .model-tab-btn { font-size: 0.8rem; padding: 7px 12px; }
+@media (max-width: 480px) {
+  .wizard-header { grid-template-columns: 1fr 1fr; }
+  .wizard-step-btn { padding: 12px 8px 10px; gap: 6px; }
+  .step-num { width: 28px; height: 28px; font-size: 0.76rem; }
+  .step-title { font-size: 0.74rem; }
+  .model-tab-btn { font-size: 0.78rem; padding: 6px 10px; }
 }
