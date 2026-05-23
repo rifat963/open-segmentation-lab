@@ -17,12 +17,50 @@
     });
   }
 
+  // Dropdown menus
+  const dropdowns = document.querySelectorAll(".nav-dropdown");
+  dropdowns.forEach(function (dropdown) {
+    const toggle = dropdown.querySelector(".dropdown-toggle");
+    if (!toggle) { return; }
+
+    toggle.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const isOpen = dropdown.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", String(isOpen));
+      dropdowns.forEach(function (other) {
+        if (other !== dropdown && other.classList.contains("open")) {
+          other.classList.remove("open");
+          const otherToggle = other.querySelector(".dropdown-toggle");
+          if (otherToggle) { otherToggle.setAttribute("aria-expanded", "false"); }
+        }
+      });
+    });
+  });
+
+  document.addEventListener("click", function () {
+    dropdowns.forEach(function (dropdown) {
+      if (dropdown.classList.contains("open")) {
+        dropdown.classList.remove("open");
+        const toggle = dropdown.querySelector(".dropdown-toggle");
+        if (toggle) { toggle.setAttribute("aria-expanded", "false"); }
+      }
+    });
+  });
+
   const currentPage = window.location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll(".nav-links a").forEach(function (link) {
     const href = link.getAttribute("href");
     if (href === currentPage || (currentPage === "" && href === "index.html")) {
       link.classList.add("active");
       link.setAttribute("aria-current", "page");
+    }
+  });
+
+  // Mark dropdown toggle as active when it contains the current page link
+  document.querySelectorAll(".nav-dropdown").forEach(function (dropdown) {
+    if (dropdown.querySelector(".dropdown-menu a.active")) {
+      const toggle = dropdown.querySelector(".dropdown-toggle");
+      if (toggle) { toggle.classList.add("active"); }
     }
   });
 

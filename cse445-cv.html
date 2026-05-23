@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSE445 Computer Vision | Open Segmentation Lab</title>
+  <meta name="description" content="CSE445 Computer Vision course materials — feature extraction, deep learning for vision, object detection, segmentation, and modern CNN and transformer architectures.">
+  <meta property="og:title" content="CSE445 Computer Vision">
+  <meta property="og:description" content="Course page for CSE445 Computer Vision at East West University.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Open Segmentation Lab">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Computer Vision Tasks <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="semantic.html">Semantic Segmentation</a></li>
+            <li><a href="instance.html">Instance Segmentation</a></li>
+            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
+            <li><a href="object-detection.html">Object Detection</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Learning</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Courses <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="cse438-dip.html">CSE438 DIP</a></li>
+            <li><a href="cse445-cv.html">CSE445 CV</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Resources <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="datasets.html">Datasets</a></li>
+            <li><a href="playground.html">Interactive Playground</a></li>
+          </ul>
+        </li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="page-hero">
+      <div class="container">
+        <p class="eyebrow" style="color: var(--color-accent);">Courses</p>
+        <h1>CSE445 Computer Vision</h1>
+        <p>An advanced undergraduate course on deep learning for visual understanding — covering classification, detection, segmentation, and self-supervised representation learning.</p>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Course Overview</h2>
+          <p>CSE445 builds on the fundamentals of image processing to study how modern neural networks interpret visual data. Students learn to design, train, and evaluate deep learning pipelines for real-world vision tasks.</p>
+        </div>
+
+        <div class="grid two" style="margin-top: 24px;">
+          <div class="card">
+            <h3>Course Code</h3>
+            <p><strong>CSE445</strong> — Computer Vision<br>Department of Computer Science and Engineering<br>East West University, Dhaka</p>
+          </div>
+          <div class="card">
+            <h3>Prerequisites</h3>
+            <p>CSE438 Digital Image Processing, introductory deep learning or machine learning, Python with NumPy and PyTorch.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section compact section-teal">
+      <div class="container">
+        <div class="section-title">
+          <h2>Topics Covered</h2>
+        </div>
+        <div class="grid two">
+          <div class="card">
+            <h3>Module 1 — CNN Foundations</h3>
+            <ul class="topic-list">
+              <li>Convolution, pooling, and receptive fields</li>
+              <li>AlexNet, VGG, ResNet, EfficientNet architectures</li>
+              <li>Transfer learning and fine-tuning strategies</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Module 2 — Image Classification</h3>
+            <ul class="topic-list">
+              <li>Softmax classifier and cross-entropy loss</li>
+              <li>Data augmentation and regularization</li>
+              <li>Top-1 and Top-5 accuracy on ImageNet</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Module 3 — Object Detection</h3>
+            <ul class="topic-list">
+              <li>Region proposal networks and RoI pooling</li>
+              <li>Anchor-free detection: FCOS, CenterNet</li>
+              <li>mAP evaluation and NMS</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Module 4 — Image Segmentation</h3>
+            <ul class="topic-list">
+              <li>Semantic segmentation: FCN, DeepLab, SegFormer</li>
+              <li>Instance segmentation: Mask R-CNN, YOLACT</li>
+              <li>Panoptic segmentation and Panoptic Quality</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Module 5 — Vision Transformers</h3>
+            <ul class="topic-list">
+              <li>Attention mechanism and self-attention</li>
+              <li>ViT, DeiT, Swin Transformer</li>
+              <li>Hybrid CNN-Transformer designs</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Module 6 — Self-Supervised Learning</h3>
+            <ul class="topic-list">
+              <li>Contrastive learning: SimCLR, MoCo</li>
+              <li>Masked image modeling: MAE, BEiT</li>
+              <li>DINO and DINOv2 for dense prediction</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Recommended Resources</h2>
+        </div>
+        <div class="grid two" style="margin-top: 24px;">
+          <div class="card">
+            <h3>Primary References</h3>
+            <p>Goodfellow, I., Bengio, Y., &amp; Courville, A. (2016). <em>Deep Learning</em>. MIT Press. Supplemented by course lecture notes and selected ArXiv papers.</p>
+          </div>
+          <div class="card">
+            <h3>Lab Environment</h3>
+            <p>PyTorch with torchvision. Lab assignments use COCO and Cityscapes datasets. Students are expected to use Google Colab or a local GPU.</p>
+          </div>
+        </div>
+        <div class="button-row compact-actions">
+          <a class="btn btn-outline" href="semantic.html">Classification Segmentation</a>
+          <a class="btn btn-outline" href="object-detection.html">Object Detection</a>
+          <a class="btn btn-outline" href="ssl-segmentation.html">Self Supervised Learning</a>
+          <a class="btn btn-outline" href="cse438-dip.html">CSE438 DIP</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <p class="footer-heading" style="font-size: 1.1rem; font-weight: 800; color:#fff; margin: 0 0 8px;">Open Segmentation Lab</p>
+          <p class="footer-tagline">Free academic tutorials for image segmentation, evaluation metrics, and research paper reading — no login or database required.</p>
+          <address class="footer-contact">
+            <strong>Mohammad Rifat Ahmmad Rashid</strong><br>
+            Computer Vision Researcher | Associate Professor<br>
+            Dept. of Computer Science and Engineering<br>
+            East West University, Dhaka 1212, Bangladesh<br>
+            <a href="mailto:rifat.rashid@ewubd.edu">rifat.rashid@ewubd.edu</a>
+          </address>
+        </div>
+        <div style="padding-top: 6px;">
+          <p class="footer-heading">Courses</p>
+          <ul class="footer-nav-list">
+            <li><a href="cse438-dip.html">CSE438 Digital Image Processing</a></li>
+            <li><a href="cse445-cv.html">CSE445 Computer Vision</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-note">Educational content is free for students and researchers. No login, backend, or tracking database is required.</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

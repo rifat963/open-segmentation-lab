@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSE438 Digital Image Processing | Open Segmentation Lab</title>
+  <meta name="description" content="CSE438 Digital Image Processing course materials — spatial filtering, frequency domain processing, image enhancement, morphological operations, and segmentation.">
+  <meta property="og:title" content="CSE438 Digital Image Processing">
+  <meta property="og:description" content="Course page for CSE438 Digital Image Processing at East West University.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Open Segmentation Lab">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Computer Vision Tasks <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="semantic.html">Semantic Segmentation</a></li>
+            <li><a href="instance.html">Instance Segmentation</a></li>
+            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
+            <li><a href="object-detection.html">Object Detection</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Learning</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Courses <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="cse438-dip.html">CSE438 DIP</a></li>
+            <li><a href="cse445-cv.html">CSE445 CV</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Resources <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="datasets.html">Datasets</a></li>
+            <li><a href="playground.html">Interactive Playground</a></li>
+          </ul>
+        </li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="page-hero">
+      <div class="container">
+        <p class="eyebrow" style="color: var(--color-accent);">Courses</p>
+        <h1>CSE438 Digital Image Processing</h1>
+        <p>An undergraduate course covering the fundamentals of image processing — from spatial and frequency domain techniques to morphological operations and basic segmentation.</p>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Course Overview</h2>
+          <p>CSE438 introduces students to the theory and practice of digital image processing. The course builds from pixel-level operations to system-level pipelines used in medical imaging, remote sensing, and computer vision pre-processing.</p>
+        </div>
+
+        <div class="grid two" style="margin-top: 24px;">
+          <div class="card">
+            <h3>Course Code</h3>
+            <p><strong>CSE438</strong> — Digital Image Processing<br>Department of Computer Science and Engineering<br>East West University, Dhaka</p>
+          </div>
+          <div class="card">
+            <h3>Prerequisites</h3>
+            <p>Linear algebra, probability, introductory programming (Python or MATLAB). Familiarity with NumPy is beneficial.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section compact section-teal">
+      <div class="container">
+        <div class="section-title">
+          <h2>Topics Covered</h2>
+        </div>
+        <div class="grid two">
+          <div class="card">
+            <h3>Module 1 — Image Fundamentals</h3>
+            <ul class="topic-list">
+              <li>Digital image representation and sampling</li>
+              <li>Pixel relationships, connectivity, and regions</li>
+              <li>Intensity transformations and histogram operations</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Module 2 — Spatial Filtering</h3>
+            <ul class="topic-list">
+              <li>Linear convolution and correlation</li>
+              <li>Smoothing filters: mean, Gaussian</li>
+              <li>Sharpening filters: Laplacian, unsharp masking</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Module 3 — Frequency Domain</h3>
+            <ul class="topic-list">
+              <li>Discrete Fourier Transform (DFT) and its properties</li>
+              <li>Low-pass, high-pass, and band-pass filtering</li>
+              <li>Butterworth and Gaussian frequency filters</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Module 4 — Morphological Processing</h3>
+            <ul class="topic-list">
+              <li>Erosion, dilation, opening, and closing</li>
+              <li>Hit-or-miss transform and boundary extraction</li>
+              <li>Connected components and region labeling</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Module 5 — Image Segmentation</h3>
+            <ul class="topic-list">
+              <li>Edge detection: Sobel, Canny</li>
+              <li>Thresholding: Otsu's method, adaptive thresholding</li>
+              <li>Region growing and watershed</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Module 6 — Image Restoration</h3>
+            <ul class="topic-list">
+              <li>Noise models: Gaussian, salt-and-pepper, Poisson</li>
+              <li>Mean and order-statistic filters</li>
+              <li>Wiener filter and inverse filtering concepts</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Recommended Resources</h2>
+        </div>
+        <div class="grid two" style="margin-top: 24px;">
+          <div class="card">
+            <h3>Primary Textbook</h3>
+            <p>Gonzalez, R. C., &amp; Woods, R. E. (2018). <em>Digital Image Processing</em> (4th ed.). Pearson. Chapters 2–10 map directly to the course modules.</p>
+          </div>
+          <div class="card">
+            <h3>Software Tools</h3>
+            <p>Python with OpenCV and scikit-image for lab assignments. MATLAB Image Processing Toolbox is accepted as an alternative.</p>
+          </div>
+        </div>
+        <div class="button-row compact-actions">
+          <a class="btn btn-outline" href="cse445-cv.html">CSE445 Computer Vision</a>
+          <a class="btn btn-outline" href="semantic.html">Classification Segmentation</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <p class="footer-heading" style="font-size: 1.1rem; font-weight: 800; color:#fff; margin: 0 0 8px;">Open Segmentation Lab</p>
+          <p class="footer-tagline">Free academic tutorials for image segmentation, evaluation metrics, and research paper reading — no login or database required.</p>
+          <address class="footer-contact">
+            <strong>Mohammad Rifat Ahmmad Rashid</strong><br>
+            Computer Vision Researcher | Associate Professor<br>
+            Dept. of Computer Science and Engineering<br>
+            East West University, Dhaka 1212, Bangladesh<br>
+            <a href="mailto:rifat.rashid@ewubd.edu">rifat.rashid@ewubd.edu</a>
+          </address>
+        </div>
+        <div style="padding-top: 6px;">
+          <p class="footer-heading">Courses</p>
+          <ul class="footer-nav-list">
+            <li><a href="cse438-dip.html">CSE438 Digital Image Processing</a></li>
+            <li><a href="cse445-cv.html">CSE445 Computer Vision</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-note">Educational content is free for students and researchers. No login, backend, or tracking database is required.</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

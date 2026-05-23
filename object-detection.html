@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Object Detection | Open Segmentation Lab</title>
+  <meta name="description" content="Learn object detection — bounding box prediction, anchor-based and anchor-free detectors, YOLO, Faster R-CNN, DETR, and evaluation with mAP.">
+  <meta property="og:title" content="Object Detection Tutorial">
+  <meta property="og:description" content="A free academic tutorial on object detection models, localization, and evaluation metrics.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Open Segmentation Lab">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Computer Vision Tasks <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="semantic.html">Semantic Segmentation</a></li>
+            <li><a href="instance.html">Instance Segmentation</a></li>
+            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
+            <li><a href="object-detection.html">Object Detection</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Learning</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Courses <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="cse438-dip.html">CSE438 DIP</a></li>
+            <li><a href="cse445-cv.html">CSE445 CV</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Resources <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="datasets.html">Datasets</a></li>
+            <li><a href="playground.html">Interactive Playground</a></li>
+          </ul>
+        </li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="page-hero">
+      <div class="container">
+        <p class="eyebrow" style="color: var(--color-accent);">Computer Vision</p>
+        <h1>Object Detection</h1>
+        <p>Detect and localize multiple objects in an image using bounding boxes — the bridge between image classification and pixel-level segmentation.</p>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>What is Object Detection?</h2>
+          <p>Object detection combines localization and classification: given an image, predict <em>what</em> objects are present and <em>where</em> each one is, expressed as an axis-aligned bounding box with a class label and confidence score.</p>
+        </div>
+
+        <div class="callout definition">
+          <strong>Definition:</strong> An object detector outputs a set of tuples <em>(class, confidence, x, y, w, h)</em> — one per detected object. Unlike segmentation, the spatial output is a rectangle, not a pixel mask.
+        </div>
+
+        <div class="grid two" style="margin-top: 24px;">
+          <div class="card">
+            <h3>Two-stage detectors</h3>
+            <p>Generate region proposals first, then classify each proposal. Examples: R-CNN, Fast R-CNN, Faster R-CNN. Higher accuracy at the cost of slower inference.</p>
+          </div>
+          <div class="card">
+            <h3>One-stage detectors</h3>
+            <p>Predict boxes and class scores directly from the full image in a single forward pass. Examples: YOLO family, SSD, RetinaNet. Faster inference, suitable for real-time use.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section compact section-teal">
+      <div class="container">
+        <div class="section-title">
+          <h2>Key Model Families</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Year</th>
+                <th>Approach</th>
+                <th>Strength</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Faster R-CNN</strong></td>
+                <td>2015</td>
+                <td>Two-stage, RPN + RoI head</td>
+                <td>High accuracy, flexible backbone</td>
+              </tr>
+              <tr>
+                <td><strong>YOLOv5 / YOLOv8</strong></td>
+                <td>2020–2023</td>
+                <td>One-stage, anchor-based / anchor-free</td>
+                <td>Real-time, easy to deploy</td>
+              </tr>
+              <tr>
+                <td><strong>RetinaNet</strong></td>
+                <td>2017</td>
+                <td>One-stage, focal loss</td>
+                <td>Handles class imbalance well</td>
+              </tr>
+              <tr>
+                <td><strong>DETR</strong></td>
+                <td>2020</td>
+                <td>Transformer encoder-decoder</td>
+                <td>No hand-crafted anchors or NMS</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Evaluation: mAP</h2>
+          <p>Mean Average Precision (mAP) is the standard detection metric. It averages the area under the precision–recall curve across all classes and IoU thresholds.</p>
+        </div>
+        <div class="callout intuition">
+          <strong>IoU threshold:</strong> A predicted box is a true positive only if its overlap with the ground-truth box exceeds a threshold (e.g., 0.5 for PASCAL VOC, 0.5–0.95 for COCO). Lower thresholds are more lenient on localization.
+        </div>
+        <div class="grid two" style="margin-top: 24px;">
+          <div class="card">
+            <h3>PASCAL VOC metric</h3>
+            <p>mAP@0.5 — a single IoU threshold of 0.5. Easier to achieve but less sensitive to precise localization.</p>
+          </div>
+          <div class="card">
+            <h3>COCO metric</h3>
+            <p>mAP@[0.5:0.95] — averaged over ten IoU thresholds from 0.5 to 0.95 in steps of 0.05. Rewards tighter boxes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section compact section-teal">
+      <div class="container">
+        <div class="section-title">
+          <h2>Object Detection vs Segmentation</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Spatial Output</th>
+                <th>Precision</th>
+                <th>Typical Use Case</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Object detection</strong></td>
+                <td>Bounding box (x, y, w, h)</td>
+                <td>Rectangle approximation</td>
+                <td>Counting, coarse localization, real-time systems</td>
+              </tr>
+              <tr>
+                <td><strong>Instance segmentation</strong></td>
+                <td>Pixel-level binary mask per object</td>
+                <td>Exact object boundary</td>
+                <td>Shape analysis, compositing, medical imaging</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="button-row compact-actions">
+          <a class="btn btn-outline" href="semantic.html">Classification Segmentation</a>
+          <a class="btn btn-outline" href="ssl-segmentation.html">Self Supervised Learning</a>
+          <a class="btn btn-outline" href="papers.html">Research Papers</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <p class="footer-heading" style="font-size: 1.1rem; font-weight: 800; color:#fff; margin: 0 0 8px;">Open Segmentation Lab</p>
+          <p class="footer-tagline">Free academic tutorials for image segmentation, evaluation metrics, and research paper reading — no login or database required.</p>
+          <address class="footer-contact">
+            <strong>Mohammad Rifat Ahmmad Rashid</strong><br>
+            Computer Vision Researcher | Associate Professor<br>
+            Dept. of Computer Science and Engineering<br>
+            East West University, Dhaka 1212, Bangladesh<br>
+            <a href="mailto:rifat.rashid@ewubd.edu">rifat.rashid@ewubd.edu</a>
+          </address>
+        </div>
+        <div style="padding-top: 6px;">
+          <p class="footer-heading">Topics</p>
+          <ul class="footer-nav-list">
+            <li><a href="semantic.html">Classification Segmentation</a></li>
+            <li><a href="object-detection.html">Object Detection</a></li>
+            <li><a href="ssl-segmentation.html">Self Supervised Learning</a></li>
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-note">Educational content is free for students and researchers. No login, backend, or tracking database is required.</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

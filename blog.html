@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog | Open Segmentation Lab</title>
+  <meta name="description" content="Articles on computer vision, image segmentation, deep learning, and teaching resources from the Open Segmentation Lab.">
+  <meta property="og:title" content="Blog | Open Segmentation Lab">
+  <meta property="og:description" content="Tutorials, research notes, and course insights on computer vision and image segmentation.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Open Segmentation Lab">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Computer Vision Tasks <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="semantic.html">Semantic Segmentation</a></li>
+            <li><a href="instance.html">Instance Segmentation</a></li>
+            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
+            <li><a href="object-detection.html">Object Detection</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Learning</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Courses <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="cse438-dip.html">CSE438 DIP</a></li>
+            <li><a href="cse445-cv.html">CSE445 CV</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Resources <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="datasets.html">Datasets</a></li>
+            <li><a href="playground.html">Interactive Playground</a></li>
+          </ul>
+        </li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="page-hero">
+      <div class="container">
+        <p class="eyebrow" style="color: var(--color-accent);">Open Segmentation Lab</p>
+        <h1>Blog</h1>
+        <p>Tutorials, research notes, course insights, and practical guides on computer vision and image segmentation — written for students, researchers, and practitioners.</p>
+      </div>
+    </div>
+
+    <!-- Featured post -->
+    <section class="section compact">
+      <div class="container">
+        <div class="section-title">
+          <h2>Featured Article</h2>
+        </div>
+
+        <article class="blog-featured">
+          <div class="blog-featured-img"></div>
+          <div class="blog-featured-body">
+            <span class="blog-cat cat-tutorial">Tutorial</span>
+            <h2>A Visual Guide to Image Segmentation: Semantic, Instance, and Panoptic</h2>
+            <p>A comprehensive walkthrough of the three main segmentation paradigms — what each one outputs, when to use it, and how the evaluation metrics differ. Includes side-by-side visual comparisons and PyTorch code sketches.</p>
+            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+              <span style="font-size: 0.84rem; color: var(--color-muted);">May 2026 &middot; 12 min read</span>
+              <a class="blog-read-link" href="semantic.html">Read article</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Filter + article grid -->
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>All Articles</h2>
+          <p>Browse by topic or scroll through the full archive.</p>
+        </div>
+
+        <div class="blog-filter" role="group" aria-label="Filter articles by category">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="tutorial">Tutorials</button>
+          <button class="filter-btn" data-filter="research">Research</button>
+          <button class="filter-btn" data-filter="tools">Tools &amp; Metrics</button>
+          <button class="filter-btn" data-filter="courses">Courses</button>
+        </div>
+
+        <div class="blog-grid" id="blog-grid">
+
+          <!-- Article 1 -->
+          <article class="blog-card" data-cat="tutorial">
+            <div class="blog-card-body">
+              <span class="blog-cat cat-tutorial">Tutorial</span>
+              <h3>Getting Started with Semantic Segmentation in PyTorch</h3>
+              <p>Step-by-step guide to building a U-Net segmentation pipeline from scratch — data loading, loss functions, mIoU evaluation, and model export.</p>
+              <div class="blog-card-meta">
+                <span>May 2026 &middot; 10 min</span>
+                <a class="blog-read-link" href="semantic.html">Read</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article 2 -->
+          <article class="blog-card" data-cat="tools">
+            <div class="blog-card-body">
+              <span class="blog-cat cat-tools">Tools &amp; Metrics</span>
+              <h3>Understanding mIoU, Dice Score, and When to Use Each</h3>
+              <p>A practical comparison of the most common segmentation evaluation metrics, with worked examples, edge cases, and a guide for choosing the right metric for your task.</p>
+              <div class="blog-card-meta">
+                <span>Apr 2026 &middot; 8 min</span>
+                <a class="blog-read-link" href="metrics.html">Read</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article 3 -->
+          <article class="blog-card" data-cat="research">
+            <div class="blog-card-body">
+              <span class="blog-cat cat-research">Research</span>
+              <h3>DINO and DINOv2 Explained: Self-Supervised Vision Features</h3>
+              <p>How DINO uses self-distillation with no labels to produce remarkably rich patch features — and why DINOv2 extended this into a foundation model for dense prediction tasks.</p>
+              <div class="blog-card-meta">
+                <span>Apr 2026 &middot; 9 min</span>
+                <a class="blog-read-link" href="ssl-segmentation.html">Read</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article 4 -->
+          <article class="blog-card" data-cat="tutorial">
+            <div class="blog-card-body">
+              <span class="blog-cat cat-tutorial">Tutorial</span>
+              <h3>Mask R-CNN Step by Step: From Region Proposals to Instance Masks</h3>
+              <p>A detailed walkthrough of the Mask R-CNN architecture — the RPN, RoIAlign layer, mask head, and how to evaluate with Mask AP on COCO-style annotations.</p>
+              <div class="blog-card-meta">
+                <span>Mar 2026 &middot; 14 min</span>
+                <a class="blog-read-link" href="instance.html">Read</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article 5 -->
+          <article class="blog-card" data-cat="courses">
+            <div class="blog-card-body">
+              <span class="blog-cat cat-courses">Courses</span>
+              <h3>From Pixels to Deep Networks: What CSE438 Covers and Why It Matters</h3>
+              <p>An overview of how classical digital image processing — convolution, the Fourier transform, morphology — connects directly to modern deep learning architectures.</p>
+              <div class="blog-card-meta">
+                <span>Mar 2026 &middot; 6 min</span>
+                <a class="blog-read-link" href="cse438-dip.html">Read</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article 6 -->
+          <article class="blog-card" data-cat="research">
+            <div class="blog-card-body">
+              <span class="blog-cat cat-research">Research</span>
+              <h3>How to Read a Segmentation Paper Effectively</h3>
+              <p>A practical framework for reading dense prediction papers — which sections to read first, how to decode architecture diagrams, and what ablation tables actually tell you.</p>
+              <div class="blog-card-meta">
+                <span>Feb 2026 &middot; 7 min</span>
+                <a class="blog-read-link" href="papers.html">Read</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article 7 -->
+          <article class="blog-card" data-cat="tutorial">
+            <div class="blog-card-body">
+              <span class="blog-cat cat-tutorial">Tutorial</span>
+              <h3>Panoptic Segmentation: Things, Stuff, and Panoptic Quality</h3>
+              <p>What makes panoptic segmentation different from semantic and instance approaches, and how the Panoptic Quality metric decomposes into Segmentation Quality and Recognition Quality.</p>
+              <div class="blog-card-meta">
+                <span>Feb 2026 &middot; 8 min</span>
+                <a class="blog-read-link" href="panoptic.html">Read</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article 8 -->
+          <article class="blog-card" data-cat="tools">
+            <div class="blog-card-body">
+              <span class="blog-cat cat-tools">Tools &amp; Metrics</span>
+              <h3>Choosing the Right Segmentation Dataset for Your Project</h3>
+              <p>A practical guide to COCO, Cityscapes, ADE20K, Pascal VOC, and medical imaging datasets — what each covers, annotation format, and which to use for benchmarking vs. application work.</p>
+              <div class="blog-card-meta">
+                <span>Jan 2026 &middot; 7 min</span>
+                <a class="blog-read-link" href="datasets.html">Read</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article 9 -->
+          <article class="blog-card" data-cat="courses">
+            <div class="blog-card-body">
+              <span class="blog-cat cat-courses">Courses</span>
+              <h3>Object Detection vs Instance Segmentation: Where CSE445 Draws the Line</h3>
+              <p>A course-aligned comparison of bounding box prediction and mask-level detection, with practical assignment examples from the CSE445 Computer Vision curriculum.</p>
+              <div class="blog-card-meta">
+                <span>Jan 2026 &middot; 5 min</span>
+                <a class="blog-read-link" href="cse445-cv.html">Read</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Write for the blog CTA -->
+    <section class="section compact section-teal">
+      <div class="container">
+        <div class="section-title">
+          <h2>Contribute an Article</h2>
+          <p>This blog is a living resource. If you are a student, colleague, or researcher who wants to contribute a tutorial, explainer, or research note, get in touch.</p>
+        </div>
+        <div class="button-row">
+          <a class="btn btn-primary" href="about.html">Contact &amp; About</a>
+          <a class="btn btn-outline" href="papers.html">Browse Research Papers</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <p class="footer-heading" style="font-size: 1.1rem; font-weight: 800; color:#fff; margin: 0 0 8px;">Open Segmentation Lab</p>
+          <p class="footer-tagline">Free academic tutorials for image segmentation, evaluation metrics, and research paper reading — no login or database required.</p>
+          <address class="footer-contact">
+            <strong>Mohammad Rifat Ahmmad Rashid</strong><br>
+            Computer Vision Researcher | Associate Professor<br>
+            Dept. of Computer Science and Engineering<br>
+            East West University, Dhaka 1212, Bangladesh<br>
+            <a href="mailto:rifat.rashid@ewubd.edu">rifat.rashid@ewubd.edu</a>
+          </address>
+        </div>
+        <div style="padding-top: 6px;">
+          <p class="footer-heading">Explore</p>
+          <ul class="footer-nav-list">
+            <li><a href="semantic.html">Semantic Segmentation</a></li>
+            <li><a href="instance.html">Instance Segmentation</a></li>
+            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
+            <li><a href="object-detection.html">Object Detection</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Learning</a></li>
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="datasets.html">Datasets</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-note">Educational content is free for students and researchers. No login, backend, or tracking database is required.</p>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+  <script>
+    // Blog category filter
+    var filterBtns = document.querySelectorAll(".filter-btn");
+    var blogCards = document.querySelectorAll("#blog-grid .blog-card");
+
+    filterBtns.forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var filter = btn.getAttribute("data-filter");
+        filterBtns.forEach(function(b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        blogCards.forEach(function(card) {
+          var match = filter === "all" || card.getAttribute("data-cat") === filter;
+          card.style.display = match ? "" : "none";
+        });
+      });
+    });
+  </script>
+</body>
+</html>

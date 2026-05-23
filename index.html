@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Open Segmentation Lab | Free Image Segmentation Tutorials</title>
-  <meta name="description" content="Open Segmentation Lab is a free academic platform for learning semantic, instance, panoptic, and self-supervised image segmentation — no login or tracking required.">
-  <meta property="og:title" content="Open Segmentation Lab">
-  <meta property="og:description" content="A free academic platform for image segmentation tutorials, metrics, datasets, papers, and interactive calculators.">
+  <title>Open Segmentation Lab | Computer Vision Learning Platform</title>
+  <meta name="description" content="A free computer vision learning platform — in-depth tutorials on image segmentation and object detection, plus course materials for CSE438 Digital Image Processing and CSE445 Computer Vision at East West University, with lecture PDFs and Kaggle notebooks.">
+  <meta property="og:title" content="Open Segmentation Lab — Computer Vision Learning Platform">
+  <meta property="og:description" content="Free tutorials, EWU course pages (CSE438, CSE445), lecture notes, Kaggle notebooks, and interactive tools for image segmentation and computer vision.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://example.com/">
   <meta property="og:site_name" content="Open Segmentation Lab">
@@ -20,33 +20,138 @@
       <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
       <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
       <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="semantic.html">Semantic</a></li>
-        <li><a href="instance.html">Instance</a></li>
-        <li><a href="panoptic.html">Panoptic</a></li>
-        <li><a href="ssl-segmentation.html">SSL Segmentation</a></li>
-        <li><a href="metrics.html">Metrics</a></li>
-        <li><a href="papers.html">Papers</a></li>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Computer Vision Tasks <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="semantic.html">Semantic Segmentation</a></li>
+            <li><a href="instance.html">Instance Segmentation</a></li>
+            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
+            <li><a href="object-detection.html">Object Detection</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Learning</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Courses <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="cse438-dip.html">CSE438 DIP</a></li>
+            <li><a href="cse445-cv.html">CSE445 CV</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Resources <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="datasets.html">Datasets</a></li>
+            <li><a href="playground.html">Interactive Playground</a></li>
+          </ul>
+        </li>
+        <li><a href="blog.html">Blog</a></li>
         <li><a href="about.html">About</a></li>
       </ul>
     </nav>
   </header>
 
   <main id="main">
-    <!-- Hero -->
+
+    <!-- ─── Hero ──────────────────────────────────────────── -->
     <section class="hero">
       <div class="container hero-content">
-        <p class="eyebrow">Free computer vision tutorials</p>
+        <p class="eyebrow">Computer Vision Learning Platform </p>
         <h1>Open Segmentation Lab</h1>
-        <p>A free academic platform for learning semantic, instance, panoptic, and self-supervised image segmentation — with formulas, code, papers, datasets, and interactive tools.</p>
+        <p>Free tutorials and course materials for computer vision — covering image segmentation, object detection, and self-supervised learning. Home to the course pages for <strong style="color:#dff2f0;">CSE438 Digital Image Processing</strong> and <strong style="color:#dff2f0;">CSE445 Computer Vision</strong> at EWU, Dhaka, with lecture notes and Kaggle notebooks on the way.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="semantic.html">Start Learning</a>
-          <a class="btn btn-secondary" href="metrics.html">Explore Metrics</a>
+          <a class="btn btn-primary" href="semantic.html">Start with Segmentation</a>
+          <a class="btn btn-secondary" href="cse438-dip.html">View Courses</a>
         </div>
       </div>
     </section>
 
-    <!-- What is Image Segmentation? -->
+    <!-- ─── Courses at EWU ────────────────────────────────── -->
+    <section class="section" id="courses">
+      <div class="container">
+        <div class="section-title">
+          <h2>Courses at East West University</h2>
+          <p>Course pages for the undergraduate programs taught in the Department of Computer Science and Engineering, EWU, Dhaka. Each page lists modules, prerequisites, textbook references, and the lab environment. Lecture note PDFs and interactive Kaggle notebooks will be linked here module by module as they are released.</p>
+        </div>
+
+        <div class="grid two">
+
+          <div class="course-feature-card">
+            <span class="course-code-badge">CSE438</span>
+            <h3>Digital Image Processing</h3>
+            <p>An undergraduate course covering the fundamentals of image processing — from pixel-level operations and spatial filtering to frequency domain analysis, morphological processing, and classical segmentation techniques.</p>
+            <ul class="topic-list">
+              <li>Image fundamentals: representation, sampling, histograms</li>
+              <li>Spatial filtering: mean, Gaussian, Laplacian, unsharp masking</li>
+              <li>Frequency domain: DFT, Butterworth and Gaussian filters</li>
+              <li>Morphological operations: erosion, dilation, opening, closing</li>
+              <li>Segmentation: Canny edges, Otsu thresholding, watershed</li>
+              <li>Image restoration: noise models and Wiener filtering</li>
+            </ul>
+            <div class="resource-badge-row">
+              <span class="resource-badge badge-soon">Lecture PDFs &mdash; Coming Soon</span>
+              <span class="resource-badge badge-soon">Kaggle Notebooks &mdash; Coming Soon</span>
+            </div>
+            <a class="btn btn-outline" href="cse438-dip.html">View Course Page</a>
+          </div>
+
+          <div class="course-feature-card">
+            <span class="course-code-badge cse445">CSE445</span>
+            <h3>Computer Vision</h3>
+            <p>An advanced course on deep learning for visual understanding — classification, detection, segmentation, vision transformers, and self-supervised representation learning using PyTorch and torchvision.</p>
+            <ul class="topic-list">
+              <li>CNN foundations: AlexNet, VGG, ResNet, EfficientNet</li>
+              <li>Object detection: Faster R-CNN, YOLO, RetinaNet, DETR</li>
+              <li>Semantic segmentation: FCN, DeepLab, SegFormer</li>
+              <li>Instance &amp; panoptic: Mask R-CNN, Mask2Former</li>
+              <li>Vision Transformers: ViT, DeiT, Swin Transformer</li>
+              <li>Self-supervised learning: SimCLR, MAE, DINO, DINOv2</li>
+            </ul>
+            <div class="resource-badge-row">
+              <span class="resource-badge badge-soon">Lecture PDFs &mdash; Coming Soon</span>
+              <span class="resource-badge badge-soon">Kaggle Notebooks &mdash; Coming Soon</span>
+            </div>
+            <a class="btn btn-outline" href="cse445-cv.html">View Course Page</a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Course Materials ──────────────────────────────── -->
+    <section class="section compact section-teal" id="materials">
+      <div class="container">
+        <div class="section-title">
+          <h2>Lecture Notes &amp; Kaggle Notebooks</h2>
+          <p>Supplementary materials for CSE438 and CSE445 will be published here as they are prepared. All resources are free — no account is required to download PDFs, and Kaggle notebooks can be run in the cloud for free.</p>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <h3>Lecture Note PDFs</h3>
+            <p>Slide decks and written lecture notes organised by module. Students can download PDFs directly from this site without logging in. Files will appear on each course page as individual modules are completed.</p>
+            <div class="resource-badge-row">
+              <span class="resource-badge badge-soon">CSE438 Modules &mdash; Coming Soon</span>
+              <span class="resource-badge badge-soon">CSE445 Modules &mdash; Coming Soon</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Interactive Kaggle Notebooks</h3>
+            <p>Each major topic or lab assignment will have a companion iPython notebook hosted on Kaggle. Students can fork and run notebooks in the cloud using free GPU instances — no local setup required. Notebooks are also exported to HTML and embedded in this site for read-only preview.</p>
+            <div class="resource-badge-row">
+              <span class="resource-badge badge-notebook">Kaggle &mdash; Notebooks</span>
+              <span class="resource-badge badge-soon">HTML Preview &mdash; Coming Soon</span>
+            </div>
+            <!-- UPDATE: Replace href with your Kaggle profile URL when ready -->
+            <a class="btn btn-outline" href="https://www.kaggle.com/" target="_blank" rel="noopener noreferrer" style="margin-top: 4px;">Visit Kaggle</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── What is Image Segmentation? ──────────────────── -->
     <section class="section">
       <div class="container">
         <div class="section-title">
@@ -71,12 +176,12 @@
       </div>
     </section>
 
-    <!-- Real-World Applications -->
+    <!-- ─── Where Segmentation Is Used ───────────────────── -->
     <section class="section compact section-teal">
       <div class="container">
         <div class="section-title">
-          <h2>Where Segmentation Is Used</h2>
-          <p>Pixel-level understanding is essential across medicine, agriculture, autonomous systems, and earth observation.</p>
+          <h2>Where Computer Vision Is Applied</h2>
+          <p>Pixel-level and object-level understanding is essential across medicine, agriculture, autonomous systems, and earth observation.</p>
         </div>
         <div class="app-grid">
           <div class="app-card">
@@ -85,31 +190,27 @@
           </div>
           <div class="app-card">
             <h3>Precision Agriculture</h3>
-            <p>Crop-versus-weed separation, canopy area measurement, disease symptom detection, and yield estimation from drone imagery.</p>
+            <p>Crop-versus-weed separation, canopy area measurement, disease detection, and yield estimation from drone imagery.</p>
           </div>
           <div class="app-card">
             <h3>Autonomous Driving</h3>
-            <p>Road, lane, sidewalk, pedestrian, and obstacle region labeling to enable real-time planning decisions in self-driving stacks.</p>
+            <p>Road, lane, sidewalk, pedestrian, and obstacle labeling to enable real-time planning decisions in self-driving stacks.</p>
           </div>
           <div class="app-card">
             <h3>Remote Sensing</h3>
-            <p>Land-cover mapping, building and road extraction, flood detection, and deforestation monitoring from satellite and aerial images.</p>
+            <p>Land-cover mapping, building and road extraction, flood detection, and deforestation monitoring from satellite imagery.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Semantic vs Instance vs Panoptic -->
+    <!-- ─── Semantic vs Instance vs Panoptic ─────────────── -->
     <section class="section compact">
       <div class="container">
         <div class="section-title">
           <h2>Semantic vs Instance vs Panoptic Segmentation</h2>
           <p>These tasks share the goal of pixel-level understanding but answer different questions. Choosing the right task frames the annotation strategy, model architecture, and evaluation metric.</p>
         </div>
-        <figure class="visual-card wide">
-          <img src="images/semantic-instance-panoptic-comparison.png" alt="Comparison of semantic, instance, and panoptic segmentation outputs showing the same urban scene labeled three different ways">
-          <figcaption>Visual comparison of the three major segmentation tasks: class-level masks (semantic), object-level masks (instance), and unified panoptic maps that cover both stuff and things.</figcaption>
-        </figure>
         <div class="table-wrap">
           <table>
             <thead>
@@ -135,8 +236,8 @@
               </tr>
               <tr>
                 <td><strong>Panoptic segmentation</strong></td>
-                <td>How can every pixel be assigned both a semantic class and instance identity when needed?</td>
-                <td>Unified scene map with class and instance IDs; no pixel is left unlabeled</td>
+                <td>How can every pixel be assigned both a semantic class and instance identity?</td>
+                <td>Unified scene map with class and instance IDs; no unlabeled pixels</td>
                 <td>Panoptic Quality (PQ)</td>
               </tr>
             </tbody>
@@ -148,12 +249,12 @@
       </div>
     </section>
 
-    <!-- Core Topics -->
+    <!-- ─── Computer Vision Topics ───────────────────────── -->
     <section class="section">
       <div class="container">
         <div class="section-title">
-          <h2>Core Topics</h2>
-          <p>Each topic page is a concise tutorial with definitions, intuition, formulas, PyTorch code templates, and reading guidance. Start with Semantic Segmentation if you are new to the field.</p>
+          <h2>Computer Vision Topics</h2>
+          <p>Each topic page is a self-contained tutorial with definitions, intuition, formulas, PyTorch code templates, and model comparison tables. Start with Semantic Segmentation if you are new to the field.</p>
         </div>
         <div class="topic-grid">
           <article class="topic-card topic-card-featured">
@@ -201,16 +302,29 @@
             </ul>
             <a class="topic-link" href="ssl-segmentation.html">Open tutorial</a>
           </article>
+          <!-- Object Detection spans both columns -->
+          <article class="topic-card" style="grid-column: 1 / -1;">
+            <span class="topic-kicker">Localization</span>
+            <h3>Object Detection</h3>
+            <p>Detect and localize multiple objects in a single image using bounding boxes. The bridge between image classification and pixel-level segmentation — covering two-stage detectors, one-stage detectors, anchor-free methods, and transformer-based detectors.</p>
+            <ul class="topic-list" style="columns: 2; column-gap: 32px;">
+              <li>Two-stage: Faster R-CNN with RPN and RoI head</li>
+              <li>One-stage: YOLO family, SSD, RetinaNet</li>
+              <li>Transformer: DETR — no anchors, no NMS</li>
+              <li>Evaluation: mAP@0.5, mAP@[0.5:0.95]</li>
+            </ul>
+            <a class="topic-link" href="object-detection.html">Open tutorial</a>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- Learning Path -->
+    <!-- ─── Suggested Learning Path ──────────────────────── -->
     <section class="section compact section-teal">
       <div class="container">
         <div class="section-title">
           <h2>Suggested Learning Path</h2>
-          <p>If you are new to image segmentation, this sequence builds concepts in the right order.</p>
+          <p>New to image segmentation? This sequence builds concepts in the right order — from pixel labeling to advanced evaluation and paper reading.</p>
         </div>
         <div class="learning-steps">
           <a class="step-card" href="semantic.html">
@@ -227,53 +341,60 @@
               <p>Learn IoU, Dice, pixel accuracy, and mIoU. Use the interactive calculators to build intuition before reading benchmark papers.</p>
             </div>
           </a>
-          <a class="step-card" href="instance.html">
+          <a class="step-card" href="object-detection.html">
             <div class="step-number">3</div>
+            <div class="step-content">
+              <h4>Object Detection</h4>
+              <p>Study bounding box prediction, anchor-based vs anchor-free approaches, and mAP evaluation. Core topic in CSE445 Computer Vision.</p>
+            </div>
+          </a>
+          <a class="step-card" href="instance.html">
+            <div class="step-number">4</div>
             <div class="step-content">
               <h4>Instance Segmentation</h4>
               <p>Move to per-object masks. Study Mask R-CNN's proposal pipeline, RoIAlign, and Mask AP evaluation.</p>
             </div>
           </a>
           <a class="step-card" href="panoptic.html">
-            <div class="step-number">4</div>
+            <div class="step-number">5</div>
             <div class="step-content">
               <h4>Panoptic Segmentation</h4>
               <p>Combine semantic and instance understanding. Learn about things vs. stuff and the Panoptic Quality metric.</p>
             </div>
           </a>
           <a class="step-card" href="papers.html">
-            <div class="step-number">5</div>
+            <div class="step-number">6</div>
             <div class="step-content">
               <h4>Key Research Papers</h4>
-              <p>Read FCN, U-Net, Mask R-CNN, SegFormer, and Mask2Former. The reading list includes summaries and what to focus on.</p>
+              <p>Read FCN, U-Net, Mask R-CNN, SegFormer, and Mask2Former. The reading list includes summaries and what to focus on in each paper.</p>
             </div>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- Featured Papers -->
+    <!-- ─── Featured Papers ───────────────────────────────── -->
     <section class="section featured-papers">
       <div class="container">
         <div class="section-title">
           <h2>Featured Papers</h2>
-          <p>A short reading path from end-to-end dense prediction to instance masks and universal segmentation models. Each paper introduced a lasting architectural idea that is still referenced today.</p>
+          <p>A short reading path from end-to-end dense prediction to instance masks and universal segmentation models. Each paper introduced a lasting architectural idea still referenced today.</p>
         </div>
         <div class="featured-paper-grid">
           <article class="featured-paper-card">
-            <p class="paper-meta">2015 | Semantic segmentation</p>
+            <p class="paper-meta">2015 &middot; Semantic segmentation</p>
             <h3>Fully Convolutional Networks for Semantic Segmentation</h3>
             <p>Introduced end-to-end pixel-level prediction by converting classification CNNs into fully convolutional networks. Established upsampling, skip connections, and dense labeling as the core recipe.</p>
             <a class="paper-link" href="https://arxiv.org/abs/1411.4038" target="_blank" rel="noopener noreferrer">Read paper</a>
           </article>
           <article class="featured-paper-card">
-            <p class="paper-meta">2017 | Instance segmentation</p>
+            <p class="paper-meta">2017 &middot; Instance segmentation</p>
             <h3>Mask R-CNN</h3>
             <p>Extended Faster R-CNN with a parallel mask branch and RoIAlign for precise spatial alignment. Made instance-level masks practical and set the Mask AP evaluation standard.</p>
             <a class="paper-link" href="https://arxiv.org/abs/1703.06870" target="_blank" rel="noopener noreferrer">Read paper</a>
           </article>
           <article class="featured-paper-card">
-            <p class="paper-meta">2022 | Universal segmentation</p>
+            <p class="paper-meta">2022 &middot; Universal segmentation</p>
             <h3>Mask2Former</h3>
             <p>Unified semantic, instance, and panoptic segmentation using masked attention transformers and a shared mask classification formulation — one model, three tasks.</p>
             <a class="paper-link" href="https://arxiv.org/abs/2112.01527" target="_blank" rel="noopener noreferrer">Read paper</a>
@@ -282,17 +403,19 @@
         <div class="button-row compact-actions">
           <a class="btn btn-outline" href="papers.html">View full reading list</a>
           <a class="btn btn-outline" href="datasets.html">Browse datasets</a>
+          <a class="btn btn-outline" href="playground.html">Open playground</a>
         </div>
       </div>
     </section>
+
   </main>
 
   <footer class="site-footer">
     <div class="container">
-      <div class="footer-grid">
+      <div class="footer-grid footer-grid-3">
         <div>
           <p class="footer-heading" style="font-size: 1.1rem; font-weight: 800; color:#fff; margin: 0 0 8px;">Open Segmentation Lab</p>
-          <p class="footer-tagline">Free academic tutorials for image segmentation, evaluation metrics, and research paper reading — no login or database required.</p>
+          <p class="footer-tagline">Free computer vision tutorials and EWU course materials — no login or database required.</p>
           <address class="footer-contact">
             <strong>Mohammad Rifat Ahmmad Rashid</strong><br>
             Computer Vision Researcher | Associate Professor<br>
@@ -302,15 +425,28 @@
           </address>
         </div>
         <div style="padding-top: 6px;">
-          <p class="footer-heading">Topics</p>
+          <p class="footer-heading">Computer Vision Topics</p>
           <ul class="footer-nav-list">
             <li><a href="semantic.html">Semantic Segmentation</a></li>
             <li><a href="instance.html">Instance Segmentation</a></li>
             <li><a href="panoptic.html">Panoptic Segmentation</a></li>
-            <li><a href="ssl-segmentation.html">Self-Supervised Segmentation</a></li>
+            <li><a href="object-detection.html">Object Detection</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Learning</a></li>
+          </ul>
+        </div>
+        <div style="padding-top: 6px;">
+          <p class="footer-heading">Courses</p>
+          <ul class="footer-nav-list">
+            <li><a href="cse438-dip.html">CSE438 Digital Image Processing</a></li>
+            <li><a href="cse445-cv.html">CSE445 Computer Vision</a></li>
+          </ul>
+          <p class="footer-heading" style="margin-top: 18px;">Resources</p>
+          <ul class="footer-nav-list">
             <li><a href="metrics.html">Evaluation Metrics</a></li>
             <li><a href="papers.html">Research Papers</a></li>
             <li><a href="datasets.html">Datasets</a></li>
+            <li><a href="playground.html">Interactive Playground</a></li>
+            <li><a href="blog.html">Blog</a></li>
             <li><a href="about.html">About</a></li>
           </ul>
         </div>
@@ -318,6 +454,7 @@
       <p class="footer-note">Educational content is free for students and researchers. No login, backend, or tracking database is required.</p>
     </div>
   </footer>
+
   <script src="js/main.js"></script>
 </body>
 </html>
