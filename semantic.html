@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -28,6 +28,7 @@
             <li><a href="instance.html">Instance Segmentation</a></li>
             <li><a href="panoptic.html">Panoptic Segmentation</a></li>
             <li><a href="object-detection.html">Object Detection</a></li>
+            <li><a href="tracking.html">Object Tracking</a></li>
             <li><a href="ssl-segmentation.html">Self-Supervised Learning</a></li>
           </ul>
         </li>
@@ -727,10 +728,22 @@ for cls, iou in enumerate(per_class_iou):
 
   <footer class="site-footer">
     <div class="container">
-      <div class="footer-grid">
-        <div>
-          <p class="footer-heading" style="font-size: 1.1rem; font-weight: 800; color:#fff; margin: 0 0 8px;">Open Segmentation Lab</p>
-          <p class="footer-tagline">Free academic tutorials for image segmentation, metrics, and research reading.</p>
+
+            <nav class="footer-trail" aria-label="Footer quick navigation">
+        <a class="footer-trail-brand" href="index.html"><span class="footer-trail-mark">OSL</span><span>Open Segmentation Lab</span></a>
+        <span class="footer-trail-separator">&gt;</span>
+        <a class="footer-trail-link" href="cse438-dip.html">CSE438 DIP</a>
+        <span class="footer-trail-separator">&gt;</span>
+        <a class="footer-trail-link" href="cse445-cv.html">CSE445 CV</a>
+        <span class="footer-trail-spacer"></span>
+        <a class="footer-trail-badge" href="semantic.html">Segmentation</a>
+        <a class="footer-trail-badge" href="object-detection.html">Detection</a>
+        <a class="footer-trail-badge" href="tracking.html">Tracking</a>
+      </nav>
+<div class="footer-grid">
+        <div class="footer-brand-block">
+          <p class="footer-brand-title">Open Segmentation Lab</p>
+          <p class="footer-tagline">Free computer vision tutorials and EWU course materials for segmentation, detection, tracking, metrics, datasets, and research reading.</p>
           <address class="footer-contact">
             <strong>Mohammad Rifat Ahmmad Rashid</strong><br>
             Computer Vision Researcher | Associate Professor<br>
@@ -739,20 +752,44 @@ for cls, iou in enumerate(per_class_iou):
             <a href="mailto:rifat.rashid@ewubd.edu">rifat.rashid@ewubd.edu</a>
           </address>
         </div>
-        <div style="padding-top: 6px;">
-          <p class="footer-heading">Topics</p>
+
+        <nav class="footer-nav-section" aria-label="Computer vision topics">
+          <p class="footer-heading">Computer Vision</p>
           <ul class="footer-nav-list">
             <li><a href="semantic.html">Semantic Segmentation</a></li>
             <li><a href="instance.html">Instance Segmentation</a></li>
             <li><a href="panoptic.html">Panoptic Segmentation</a></li>
-            <li><a href="ssl-segmentation.html">Self-Supervised Segmentation</a></li>
+            <li><a href="object-detection.html">Object Detection</a></li>
+            <li><a href="tracking.html">Object Tracking</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Learning</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-nav-section" aria-label="Courses">
+          <p class="footer-heading">Courses</p>
+          <ul class="footer-nav-list">
+            <li><a href="cse438-dip.html">CSE438 Digital Image Processing</a></li>
+            <li><a href="cse445-cv.html">CSE445 Computer Vision</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-nav-section" aria-label="Resources">
+          <p class="footer-heading">Resources</p>
+          <ul class="footer-nav-list">
             <li><a href="metrics.html">Evaluation Metrics</a></li>
             <li><a href="papers.html">Research Papers</a></li>
             <li><a href="datasets.html">Datasets</a></li>
+            <li><a href="playground.html">Interactive Playground</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="about.html">About</a></li>
           </ul>
-        </div>
+        </nav>
       </div>
-      <p class="footer-note">Educational content is free for students and researchers.</p>
+
+      <div class="footer-bottom">
+        <p>Educational content is free for students and researchers. No login, backend, or tracking database is required.</p>
+        <a class="footer-back-top" href="#main">Back to top</a>
+      </div>
     </div>
   </footer>
   <script src="js/main.js"></script>

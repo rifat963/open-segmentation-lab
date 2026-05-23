@@ -1,0 +1,271 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Object Tracking | Open Segmentation Lab</title>
+  <meta name="description" content="Learn object tracking in computer vision: single-object tracking, multi-object tracking, detection association, SORT, DeepSORT, ByteTrack, and tracking metrics.">
+  <meta property="og:title" content="Object Tracking Tutorial">
+  <meta property="og:description" content="A free academic tutorial on video object tracking, motion association, identity preservation, and evaluation metrics.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Open Segmentation Lab">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Computer Vision Tasks <span class="dropdown-arrow" aria-hidden="true">&#9662;</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="semantic.html">Semantic Segmentation</a></li>
+            <li><a href="instance.html">Instance Segmentation</a></li>
+            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
+            <li><a href="object-detection.html">Object Detection</a></li>
+            <li><a href="tracking.html">Object Tracking</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Learning</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Courses <span class="dropdown-arrow" aria-hidden="true">&#9662;</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="cse438-dip.html">CSE438 DIP</a></li>
+            <li><a href="cse445-cv.html">CSE445 CV</a></li>
+          </ul>
+        </li>
+        <li class="nav-dropdown">
+          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Resources <span class="dropdown-arrow" aria-hidden="true">&#9662;</span></button>
+          <ul class="dropdown-menu">
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="datasets.html">Datasets</a></li>
+            <li><a href="playground.html">Interactive Playground</a></li>
+          </ul>
+        </li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="page-hero">
+      <div class="container">
+        <p class="eyebrow" style="color: var(--color-accent);">Computer Vision</p>
+        <h1>Object Tracking</h1>
+        <p>Track objects through video by preserving identity across frames. Tracking connects object detection with temporal reasoning, motion prediction, and data association.</p>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>What is Object Tracking?</h2>
+          <p>Object tracking estimates the location of one or more targets over time. A tracker receives a video stream and maintains object identities even as targets move, overlap, disappear briefly, or change appearance.</p>
+        </div>
+
+        <div class="callout definition">
+          <strong>Definition:</strong> A tracking output is a sequence of object states, usually bounding boxes or masks with persistent track IDs. The key challenge is not only where the object is, but whether it is still the same object across frames.
+        </div>
+
+        <div class="grid two" style="margin-top: 24px;">
+          <div class="card">
+            <h3>Single-object tracking</h3>
+            <p>Starts with one target selected in the first frame, then follows that target through the video. Classical examples include correlation filters and Siamese-network trackers.</p>
+          </div>
+          <div class="card">
+            <h3>Multi-object tracking</h3>
+            <p>Tracks many objects at once, usually by detecting objects in each frame and associating detections with existing tracks using motion and appearance cues.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section compact section-teal">
+      <div class="container">
+        <div class="section-title">
+          <h2>Tracking Pipeline</h2>
+          <p>A practical multi-object tracker is often a loop of detection, prediction, association, update, and track management.</p>
+        </div>
+        <div class="grid auto">
+          <div class="card">
+            <h3>1. Detect</h3>
+            <p>Run an object detector such as YOLO, Faster R-CNN, or DETR to produce candidate boxes for each frame.</p>
+          </div>
+          <div class="card">
+            <h3>2. Predict</h3>
+            <p>Use a motion model such as a Kalman filter to estimate where each active track should appear next.</p>
+          </div>
+          <div class="card">
+            <h3>3. Associate</h3>
+            <p>Match new detections to existing tracks using IoU, appearance embeddings, or a combined cost matrix.</p>
+          </div>
+          <div class="card">
+            <h3>4. Update</h3>
+            <p>Refresh matched tracks, create new tracks for unmatched detections, and retire stale tracks after missed frames.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Tracker Families</h2>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Family</th>
+                <th>Core Idea</th>
+                <th>Examples</th>
+                <th>Best Use</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Correlation filters</strong></td>
+                <td>Learn a fast template-like filter around the selected object.</td>
+                <td>KCF, CSRT, MOSSE</td>
+                <td>Fast single-object tracking</td>
+              </tr>
+              <tr>
+                <td><strong>Tracking-by-detection</strong></td>
+                <td>Detect objects per frame, then associate detections over time.</td>
+                <td>SORT, DeepSORT, ByteTrack</td>
+                <td>Multi-object tracking in surveillance, traffic, sports</td>
+              </tr>
+              <tr>
+                <td><strong>Siamese trackers</strong></td>
+                <td>Compare the target template with search regions in later frames.</td>
+                <td>SiamFC, SiamRPN, SiamMask</td>
+                <td>Robust single-object tracking with deep features</td>
+              </tr>
+              <tr>
+                <td><strong>Joint detection and tracking</strong></td>
+                <td>Predict detections and track identities inside one learned model.</td>
+                <td>CenterTrack, TrackFormer</td>
+                <td>End-to-end research systems</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section compact section-teal">
+      <div class="container">
+        <div class="section-title">
+          <h2>Evaluation Metrics</h2>
+          <p>Tracking metrics measure localization quality and identity consistency over time.</p>
+        </div>
+        <div class="grid three">
+          <div class="card">
+            <h3>MOTA</h3>
+            <p>Multi-Object Tracking Accuracy combines false positives, missed detections, and identity switches into one score.</p>
+          </div>
+          <div class="card">
+            <h3>IDF1</h3>
+            <p>Measures how well predicted identities match ground-truth identities across the full video sequence.</p>
+          </div>
+          <div class="card">
+            <h3>HOTA</h3>
+            <p>Balances detection quality and association quality, making identity errors easier to diagnose.</p>
+          </div>
+        </div>
+        <div class="callout intuition" style="margin-top: 22px;">
+          <strong>Practical warning:</strong> A tracker can have good boxes but poor identities. Always inspect identity switches, fragmented tracks, and long occlusions instead of relying on one aggregate score.
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-title">
+          <h2>How Tracking Connects to CSE445</h2>
+          <p>Tracking extends object detection from images to video. Students should first understand bounding boxes and mAP, then move to temporal association, Kalman filtering, and identity metrics.</p>
+        </div>
+        <div class="button-row compact-actions">
+          <a class="btn btn-outline" href="object-detection.html">Object Detection</a>
+          <a class="btn btn-outline" href="cse445-cv.html">CSE445 Computer Vision</a>
+          <a class="btn btn-outline" href="metrics.html">Evaluation Metrics</a>
+          <a class="btn btn-outline" href="datasets.html">Datasets</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+
+            <nav class="footer-trail" aria-label="Footer quick navigation">
+        <a class="footer-trail-brand" href="index.html"><span class="footer-trail-mark">OSL</span><span>Open Segmentation Lab</span></a>
+        <span class="footer-trail-separator">&gt;</span>
+        <a class="footer-trail-link" href="cse438-dip.html">CSE438 DIP</a>
+        <span class="footer-trail-separator">&gt;</span>
+        <a class="footer-trail-link" href="cse445-cv.html">CSE445 CV</a>
+        <span class="footer-trail-spacer"></span>
+        <a class="footer-trail-badge" href="semantic.html">Segmentation</a>
+        <a class="footer-trail-badge" href="object-detection.html">Detection</a>
+        <a class="footer-trail-badge" href="tracking.html">Tracking</a>
+      </nav>
+<div class="footer-grid">
+        <div class="footer-brand-block">
+          <p class="footer-brand-title">Open Segmentation Lab</p>
+          <p class="footer-tagline">Free computer vision tutorials and EWU course materials for segmentation, detection, tracking, metrics, datasets, and research reading.</p>
+          <address class="footer-contact">
+            <strong>Mohammad Rifat Ahmmad Rashid</strong><br>
+            Computer Vision Researcher | Associate Professor<br>
+            Dept. of Computer Science and Engineering<br>
+            East West University, Dhaka 1212, Bangladesh<br>
+            <a href="mailto:rifat.rashid@ewubd.edu">rifat.rashid@ewubd.edu</a>
+          </address>
+        </div>
+
+        <nav class="footer-nav-section" aria-label="Computer vision topics">
+          <p class="footer-heading">Computer Vision</p>
+          <ul class="footer-nav-list">
+            <li><a href="semantic.html">Semantic Segmentation</a></li>
+            <li><a href="instance.html">Instance Segmentation</a></li>
+            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
+            <li><a href="object-detection.html">Object Detection</a></li>
+            <li><a href="tracking.html">Object Tracking</a></li>
+            <li><a href="ssl-segmentation.html">Self-Supervised Learning</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-nav-section" aria-label="Courses">
+          <p class="footer-heading">Courses</p>
+          <ul class="footer-nav-list">
+            <li><a href="cse438-dip.html">CSE438 Digital Image Processing</a></li>
+            <li><a href="cse445-cv.html">CSE445 Computer Vision</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-nav-section" aria-label="Resources">
+          <p class="footer-heading">Resources</p>
+          <ul class="footer-nav-list">
+            <li><a href="metrics.html">Evaluation Metrics</a></li>
+            <li><a href="papers.html">Research Papers</a></li>
+            <li><a href="datasets.html">Datasets</a></li>
+            <li><a href="playground.html">Interactive Playground</a></li>
+            <li><a href="blog.html">Blog</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="footer-bottom">
+        <p>Educational content is free for students and researchers. No login, backend, or tracking database is required.</p>
+        <a class="footer-back-top" href="#main">Back to top</a>
+      </div>
+    </div>
+  </footer>
+  <script src="js/main.js"></script>
+</body>
+</html>

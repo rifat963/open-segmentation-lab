@@ -4,8 +4,15 @@
   <url><loc>https://example.com/semantic.html</loc></url>
   <url><loc>https://example.com/instance.html</loc></url>
   <url><loc>https://example.com/panoptic.html</loc></url>
+  <url><loc>https://example.com/object-detection.html</loc></url>
+  <url><loc>https://example.com/tracking.html</loc></url>
   <url><loc>https://example.com/ssl-segmentation.html</loc></url>
+  <url><loc>https://example.com/cse438-dip.html</loc></url>
+  <url><loc>https://example.com/cse445-cv.html</loc></url>
   <url><loc>https://example.com/metrics.html</loc></url>
+  <url><loc>https://example.com/datasets.html</loc></url>
   <url><loc>https://example.com/papers.html</loc></url>
+  <url><loc>https://example.com/playground.html</loc></url>
+  <url><loc>https://example.com/blog.html</loc></url>
   <url><loc>https://example.com/about.html</loc></url>
 </urlset>
