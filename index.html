@@ -12,17 +12,22 @@
   <meta property="og:site_name" content="Open Segmentation Lab">
   <link rel="canonical" href="https://example.com/">
   <link rel="stylesheet" href="css/style.css">
+  <!-- Tailwind CSS (preflight disabled to preserve existing styles) -->
+  <script>tailwind.config = { corePlugins: { preflight: false }, theme: { extend: { colors: { primary: '#123a63', 'primary-dark': '#0b2744', accent: '#2f8f8a' } } } }</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
+  <header class="site-header" x-data="{ mobileOpen: false }" :class="{ 'nav-open': mobileOpen }">
     <nav class="navbar container" aria-label="Main navigation">
       <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
-      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
-      <ul class="nav-links">
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" @click="mobileOpen = !mobileOpen" :aria-expanded="mobileOpen.toString()"><span></span></button>
+      <ul class="nav-links" @click="if($event.target.closest('a')) mobileOpen = false">
         <li><a href="index.html" class="active">Home</a></li>
-        <li class="nav-dropdown">
-          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Computer Vision Tasks <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+        <li class="nav-dropdown" x-data="{ open: false }" :class="{ 'open': open }" @click.outside="open = false">
+          <button class="dropdown-toggle" type="button" :aria-expanded="open.toString()" aria-haspopup="true" @click="open = !open">Computer Vision Tasks <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
           <ul class="dropdown-menu">
             <li><a href="semantic.html">Semantic Segmentation</a></li>
             <li><a href="instance.html">Instance Segmentation</a></li>
@@ -32,15 +37,15 @@
             <li><a href="ssl-segmentation.html">Self-Supervised Learning</a></li>
           </ul>
         </li>
-        <li class="nav-dropdown">
-          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Courses <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+        <li class="nav-dropdown" x-data="{ open: false }" :class="{ 'open': open }" @click.outside="open = false">
+          <button class="dropdown-toggle" type="button" :aria-expanded="open.toString()" aria-haspopup="true" @click="open = !open">Courses <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
           <ul class="dropdown-menu">
             <li><a href="cse438-dip.html">CSE438 DIP</a></li>
             <li><a href="cse445-cv.html">CSE445 CV</a></li>
           </ul>
         </li>
-        <li class="nav-dropdown">
-          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Resources <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+        <li class="nav-dropdown" x-data="{ open: false }" :class="{ 'open': open }" @click.outside="open = false">
+          <button class="dropdown-toggle" type="button" :aria-expanded="open.toString()" aria-haspopup="true" @click="open = !open">Resources <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
           <ul class="dropdown-menu">
             <li><a href="metrics.html">Evaluation Metrics</a></li>
             <li><a href="papers.html">Research Papers</a></li>
@@ -148,74 +153,99 @@
           <h2>Computer Vision Topics</h2>
           <p>Each topic page is a self-contained tutorial with definitions, intuition, evaluation metrics, model families, and links into the CSE438 and CSE445 course flow.</p>
         </div>
-        <div class="topic-grid">
-          <article class="topic-card topic-card-featured">
-            <span class="topic-kicker">Start here</span>
-            <h3>Semantic Segmentation</h3>
-            <p>Pixel-wise classification using encoder-decoder architectures, multiscale context, and semantic metrics. The foundation of all dense prediction tasks.</p>
-            <ul class="topic-list">
-              <li>Class label for every pixel (no instance identity)</li>
-              <li>FCN, U-Net, DeepLab, SegFormer, Mask2Former</li>
-              <li>mIoU, Dice score, pixel accuracy</li>
-              <li>PyTorch code templates included</li>
-            </ul>
-            <a class="topic-link" href="semantic.html">Open tutorial</a>
-          </article>
-          <article class="topic-card">
-            <span class="topic-kicker">Localization</span>
-            <h3>Object Detection</h3>
-            <p>Detect and localize multiple objects in a single image using bounding boxes, class labels, and confidence scores.</p>
-            <ul class="topic-list">
-              <li>Faster R-CNN, YOLO, RetinaNet, DETR</li>
-              <li>Anchor-based and anchor-free detection</li>
-              <li>mAP@0.5 and COCO mAP</li>
-            </ul>
-            <a class="topic-link" href="object-detection.html">Open tutorial</a>
-          </article>
-          <article class="topic-card">
-            <span class="topic-kicker">Video understanding</span>
-            <h3>Object Tracking</h3>
-            <p>Follow objects across video frames by combining detections, motion models, appearance features, and identity association.</p>
-            <ul class="topic-list">
-              <li>Single-object and multi-object tracking</li>
-              <li>KCF, SORT, DeepSORT, ByteTrack</li>
-              <li>MOTA, IDF1, HOTA, identity switches</li>
-            </ul>
-            <a class="topic-link" href="tracking.html">Open tutorial</a>
-          </article>
-          <article class="topic-card">
-            <span class="topic-kicker">Object masks</span>
-            <h3>Instance Segmentation</h3>
-            <p>Object proposals, mask heads, real-time pipelines, and instance-level evaluation using Mask AP.</p>
-            <ul class="topic-list">
-              <li>Separate binary mask per object</li>
-              <li>Mask R-CNN, YOLACT, YOLO Seg</li>
-              <li>Mask AP and IoU per instance</li>
-            </ul>
-            <a class="topic-link" href="instance.html">Open tutorial</a>
-          </article>
-          <article class="topic-card">
-            <span class="topic-kicker">Unified scene map</span>
-            <h3>Panoptic Segmentation</h3>
-            <p>Unified scene understanding that assigns every pixel a semantic label and, for countable objects, an instance identity.</p>
-            <ul class="topic-list">
-              <li>Things (countable) and stuff (uncountable) classes</li>
-              <li>Complete pixel assignment — no unlabeled pixels</li>
-              <li>Panoptic Quality (PQ) evaluation</li>
-            </ul>
-            <a class="topic-link" href="panoptic.html">Open tutorial</a>
-          </article>
-          <article class="topic-card">
-            <span class="topic-kicker">Low annotation setup</span>
-            <h3>Self-Supervised Segmentation</h3>
-            <p>Representation learning, pseudo-mask generation, and low-annotation segmentation workflows using pretrained encoders.</p>
-            <ul class="topic-list">
-              <li>Contrastive and masked pretraining</li>
-              <li>Pseudo-mask generation with DINO and SAM</li>
-              <li>Fine-tuning and semi-supervised strategies</li>
-            </ul>
-            <a class="topic-link" href="ssl-segmentation.html">Open tutorial</a>
-          </article>
+        <!-- Swiper carousel for topic cards -->
+        <div class="swiper topics-swiper pb-12">
+          <div class="swiper-wrapper items-stretch">
+
+              <div class="swiper-slide h-auto">
+                <article class="topic-card topic-card-featured h-full">
+                  <span class="topic-kicker">Start here</span>
+                  <h3>Semantic Segmentation</h3>
+                  <p>Pixel-wise classification using encoder-decoder architectures, multiscale context, and semantic metrics. The foundation of all dense prediction tasks.</p>
+                  <ul class="topic-list">
+                    <li>Class label for every pixel (no instance identity)</li>
+                    <li>FCN, U-Net, DeepLab, SegFormer, Mask2Former</li>
+                    <li>mIoU, Dice score, pixel accuracy</li>
+                    <li>PyTorch code templates included</li>
+                  </ul>
+                  <a class="topic-link" href="semantic.html">Open tutorial</a>
+                </article>
+              </div>
+
+              <div class="swiper-slide h-auto">
+                <article class="topic-card h-full">
+                  <span class="topic-kicker">Localization</span>
+                  <h3>Object Detection</h3>
+                  <p>Detect and localize multiple objects in a single image using bounding boxes, class labels, and confidence scores.</p>
+                  <ul class="topic-list">
+                    <li>Faster R-CNN, YOLO, RetinaNet, DETR</li>
+                    <li>Anchor-based and anchor-free detection</li>
+                    <li>mAP@0.5 and COCO mAP</li>
+                  </ul>
+                  <a class="topic-link" href="object-detection.html">Open tutorial</a>
+                </article>
+              </div>
+
+              <div class="swiper-slide h-auto">
+                <article class="topic-card h-full">
+                  <span class="topic-kicker">Video understanding</span>
+                  <h3>Object Tracking</h3>
+                  <p>Follow objects across video frames by combining detections, motion models, appearance features, and identity association.</p>
+                  <ul class="topic-list">
+                    <li>Single-object and multi-object tracking</li>
+                    <li>KCF, SORT, DeepSORT, ByteTrack</li>
+                    <li>MOTA, IDF1, HOTA, identity switches</li>
+                  </ul>
+                  <a class="topic-link" href="tracking.html">Open tutorial</a>
+                </article>
+              </div>
+
+              <div class="swiper-slide h-auto">
+                <article class="topic-card h-full">
+                  <span class="topic-kicker">Object masks</span>
+                  <h3>Instance Segmentation</h3>
+                  <p>Object proposals, mask heads, real-time pipelines, and instance-level evaluation using Mask AP.</p>
+                  <ul class="topic-list">
+                    <li>Separate binary mask per object</li>
+                    <li>Mask R-CNN, YOLACT, YOLO Seg</li>
+                    <li>Mask AP and IoU per instance</li>
+                  </ul>
+                  <a class="topic-link" href="instance.html">Open tutorial</a>
+                </article>
+              </div>
+
+              <div class="swiper-slide h-auto">
+                <article class="topic-card h-full">
+                  <span class="topic-kicker">Unified scene map</span>
+                  <h3>Panoptic Segmentation</h3>
+                  <p>Unified scene understanding that assigns every pixel a semantic label and, for countable objects, an instance identity.</p>
+                  <ul class="topic-list">
+                    <li>Things (countable) and stuff (uncountable) classes</li>
+                    <li>Complete pixel assignment — no unlabeled pixels</li>
+                    <li>Panoptic Quality (PQ) evaluation</li>
+                  </ul>
+                  <a class="topic-link" href="panoptic.html">Open tutorial</a>
+                </article>
+              </div>
+
+              <div class="swiper-slide h-auto">
+                <article class="topic-card h-full">
+                  <span class="topic-kicker">Low annotation setup</span>
+                  <h3>Self-Supervised Segmentation</h3>
+                  <p>Representation learning, pseudo-mask generation, and low-annotation segmentation workflows using pretrained encoders.</p>
+                  <ul class="topic-list">
+                    <li>Contrastive and masked pretraining</li>
+                    <li>Pseudo-mask generation with DINO and SAM</li>
+                    <li>Fine-tuning and semi-supervised strategies</li>
+                  </ul>
+                  <a class="topic-link" href="ssl-segmentation.html">Open tutorial</a>
+                </article>
+              </div>
+
+            </div>
+          <div class="swiper-pagination topics-pagination"></div>
+          <button class="swiper-button-prev topics-btn-prev" aria-label="Previous topic"></button>
+          <button class="swiper-button-next topics-btn-next" aria-label="Next topic"></button>
         </div>
       </div>
     </section>
@@ -290,5 +320,33 @@
   </footer>
 
   <script src="js/main.js"></script>
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      new Swiper('.topics-swiper', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        loop: false,
+        a11y: { enabled: true },
+        keyboard: { enabled: true },
+        pagination: {
+          el: '.topics-pagination',
+          clickable: true,
+          dynamicBullets: true
+        },
+        navigation: {
+          nextEl: '.topics-btn-next',
+          prevEl: '.topics-btn-prev'
+        },
+        breakpoints: {
+          640:  { slidesPerView: 2, spaceBetween: 20 },
+          1024: { slidesPerView: 3, spaceBetween: 24 }
+        }
+      });
+    });
+  </script>
 </body>
 </html>

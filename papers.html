@@ -12,17 +12,22 @@
   <meta property="og:site_name" content="Open Segmentation Lab">
   <link rel="canonical" href="https://example.com/papers.html">
   <link rel="stylesheet" href="css/style.css">
+  <!-- Tailwind CSS (preflight disabled to preserve existing styles) -->
+  <script>tailwind.config = { corePlugins: { preflight: false }, theme: { extend: { colors: { primary: '#123a63', 'primary-dark': '#0b2744', accent: '#2f8f8a' } } } }</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
+  <header class="site-header" x-data="{ mobileOpen: false }" :class="{ 'nav-open': mobileOpen }">
     <nav class="navbar container" aria-label="Main navigation">
       <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
-      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
-      <ul class="nav-links">
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" @click="mobileOpen = !mobileOpen" :aria-expanded="mobileOpen.toString()"><span></span></button>
+      <ul class="nav-links" @click="if($event.target.closest('a')) mobileOpen = false">
         <li><a href="index.html">Home</a></li>
-        <li class="nav-dropdown">
-          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Computer Vision Tasks <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+        <li class="nav-dropdown" x-data="{ open: false }" :class="{ 'open': open }" @click.outside="open = false">
+          <button class="dropdown-toggle" type="button" :aria-expanded="open.toString()" aria-haspopup="true" @click="open = !open">Computer Vision Tasks <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
           <ul class="dropdown-menu">
             <li><a href="semantic.html">Semantic Segmentation</a></li>
             <li><a href="instance.html">Instance Segmentation</a></li>
@@ -32,15 +37,15 @@
             <li><a href="ssl-segmentation.html">Self-Supervised Learning</a></li>
           </ul>
         </li>
-        <li class="nav-dropdown">
-          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Courses <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+        <li class="nav-dropdown" x-data="{ open: false }" :class="{ 'open': open }" @click.outside="open = false">
+          <button class="dropdown-toggle" type="button" :aria-expanded="open.toString()" aria-haspopup="true" @click="open = !open">Courses <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
           <ul class="dropdown-menu">
             <li><a href="cse438-dip.html">CSE438 DIP</a></li>
             <li><a href="cse445-cv.html">CSE445 CV</a></li>
           </ul>
         </li>
-        <li class="nav-dropdown">
-          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Resources <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
+        <li class="nav-dropdown" x-data="{ open: false }" :class="{ 'open': open }" @click.outside="open = false">
+          <button class="dropdown-toggle" type="button" :aria-expanded="open.toString()" aria-haspopup="true" @click="open = !open">Resources <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
           <ul class="dropdown-menu">
             <li><a href="metrics.html">Evaluation Metrics</a></li>
             <li><a href="papers.html">Research Papers</a></li>
@@ -328,5 +333,9 @@
     </div>
   </footer>
   <script src="js/main.js"></script>
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
 </html>

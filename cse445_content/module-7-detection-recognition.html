@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Module 7 Object Detection and Recognition | CSE445</title><meta name="description" content="CSE445 Module 7 covers sliding windows, HOG plus SVM, region proposal ideas, YOLO, Faster R-CNN, SSD, and self-supervised learning concepts."><link rel="stylesheet" href="../css/style.css"></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Module 7 Object Detection and Recognition | CSE445</title><meta name="description" content="CSE445 Module 7 covers sliding windows, HOG plus SVM, region proposal ideas, YOLO, Faster R-CNN, SSD, and self-supervised learning concepts."><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">  <!-- Tailwind CSS (preflight disabled to preserve existing styles) -->
+  <script>tailwind.config = { corePlugins: { preflight: false }, theme: { extend: { colors: { primary: '#123a63', 'primary-dark': '#0b2744', accent: '#2f8f8a' } } } }</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header"><nav class="navbar container" aria-label="Main navigation"><a class="brand" href="../index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a><button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button><ul class="nav-links"><li><a href="../index.html">Home</a></li><li><a href="../cse445-cv.html" class="active">CSE445 CV</a></li><li><a href="../object-detection.html">Detection</a></li><li><a href="../semantic.html">Segmentation</a></li><li><a href="../tracking.html">Tracking</a></li></ul></nav></header>
-  <nav class="site-trail" aria-label="CSE445 module navigation"><div class="site-trail-inner"><a class="site-trail-brand" href="../cse445-cv.html"><span class="site-trail-mark">445</span><span>CSE445</span></a><span class="site-trail-separator">&gt;</span><a class="site-trail-link" href="module-6-motion.html">Previous</a><span class="site-trail-separator">&gt;</span><span class="site-trail-link">Module 7</span><span class="site-trail-spacer"></span><a class="site-trail-badge" href="module-9-tracking.html">Next: Tracking</a></div></nav>
+  <header class="site-header" x-data="{ mobileOpen: false }" :class="{ 'nav-open': mobileOpen }"><nav class="navbar container" aria-label="Main navigation"><a class="brand" href="../index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a><button class="menu-toggle" type="button" aria-label="Toggle navigation menu" @click="mobileOpen = !mobileOpen" :aria-expanded="mobileOpen.toString()"><span></span></button><ul class="nav-links" @click="if($event.target.closest('a')) mobileOpen = false"><li><a href="../index.html">Home</a></li><li><a href="../cse445-cv.html" class="active">CSE445 CV</a></li><li><a href="../object-detection.html">Detection</a></li><li><a href="../semantic.html">Segmentation</a></li><li><a href="../tracking.html">Tracking</a></li></ul></nav></header>
+  <nav class="site-trail" aria-label="CSE445 module navigation"><div class="site-trail-inner"><a class="site-trail-brand" href="../cse445-cv.html"><span class="site-trail-mark">445</span><span>CSE445</span></a><span class="site-trail-separator">&gt;</span><a class="site-trail-link" href="module-6-motion.html">Previous</a><span class="site-trail-separator">&gt;</span><span class="site-trail-link">Module 7</span><span class="site-trail-spacer"></span><a class="site-trail-badge btn btn-sm" href="module-9-tracking.html">Next: Tracking</a></div></nav>
   <main id="main">
     <div class="page-hero"><div class="container"><p class="eyebrow" style="color: var(--color-accent);">Module 7</p><h1>Object Detection and Recognition</h1><p>Connect classical recognition pipelines with modern detection systems, from sliding windows and HOG+SVM to YOLO, Faster R-CNN, SSD, and representation learning.</p></div></div>
     <section class="section"><div class="container module-page-grid"><article>
@@ -15,5 +21,10 @@
     </article><aside class="module-sidebar"><div class="card"><h3>Key Terms</h3><ul class="topic-list"><li>HOG + SVM</li><li>NMS</li><li>RPN</li><li>YOLO, Faster R-CNN, SSD</li></ul></div></aside></div></section>
   </main>
   <script src="../js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
 </html>

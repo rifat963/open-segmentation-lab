@@ -1,51 +1,5 @@
 (function () {
-  const body = document.body;
-  const menuToggle = document.querySelector(".menu-toggle");
-  const navLinks = document.querySelector(".nav-links");
-
-  if (menuToggle && navLinks) {
-    menuToggle.addEventListener("click", function () {
-      const isOpen = body.classList.toggle("nav-open");
-      menuToggle.setAttribute("aria-expanded", String(isOpen));
-    });
-
-    navLinks.addEventListener("click", function (event) {
-      if (event.target.closest("a")) {
-        body.classList.remove("nav-open");
-        menuToggle.setAttribute("aria-expanded", "false");
-      }
-    });
-  }
-
-  // Dropdown menus
-  const dropdowns = document.querySelectorAll(".nav-dropdown");
-  dropdowns.forEach(function (dropdown) {
-    const toggle = dropdown.querySelector(".dropdown-toggle");
-    if (!toggle) { return; }
-
-    toggle.addEventListener("click", function (e) {
-      e.stopPropagation();
-      const isOpen = dropdown.classList.toggle("open");
-      toggle.setAttribute("aria-expanded", String(isOpen));
-      dropdowns.forEach(function (other) {
-        if (other !== dropdown && other.classList.contains("open")) {
-          other.classList.remove("open");
-          const otherToggle = other.querySelector(".dropdown-toggle");
-          if (otherToggle) { otherToggle.setAttribute("aria-expanded", "false"); }
-        }
-      });
-    });
-  });
-
-  document.addEventListener("click", function () {
-    dropdowns.forEach(function (dropdown) {
-      if (dropdown.classList.contains("open")) {
-        dropdown.classList.remove("open");
-        const toggle = dropdown.querySelector(".dropdown-toggle");
-        if (toggle) { toggle.setAttribute("aria-expanded", "false"); }
-      }
-    });
-  });
+  // Navigation toggle and dropdowns are now handled by Alpine.js.
 
   const currentPage = window.location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll(".nav-links a").forEach(function (link) {

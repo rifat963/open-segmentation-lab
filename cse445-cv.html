@@ -9,233 +9,231 @@
   <meta property="og:description" content="Course page for CSE445 Computer Vision at East West University based on the Summer 2026 course outline.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Open Segmentation Lab">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <!-- Tailwind CSS (preflight disabled to preserve existing styles) -->
+  <script>tailwind.config = { corePlugins: { preflight: false }, theme: { extend: { colors: { primary: '#123a63', 'primary-dark': '#0b2744', accent: '#2f8f8a' } } } }</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
+  <header class="site-header" x-data="{ mobileOpen: false }" :class="{ 'nav-open': mobileOpen }">
     <nav class="navbar container" aria-label="Main navigation">
       <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
-      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
-      <ul class="nav-links">
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" @click="mobileOpen = !mobileOpen" :aria-expanded="mobileOpen.toString()"><span></span></button>
+      <ul class="nav-links" @click="if($event.target.closest('a')) mobileOpen = false">
         <li><a href="index.html">Home</a></li>
-        <li class="nav-dropdown">
-          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Computer Vision Tasks <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
-          <ul class="dropdown-menu">
-            <li><a href="semantic.html">Semantic Segmentation</a></li>
-            <li><a href="instance.html">Instance Segmentation</a></li>
-            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
-            <li><a href="object-detection.html">Object Detection</a></li>
-            <li><a href="tracking.html">Object Tracking</a></li>
-            <li><a href="ssl-segmentation.html">Self-Supervised Learning</a></li>
-          </ul>
-        </li>
-        <li class="nav-dropdown">
-          <button class="dropdown-toggle active" type="button" aria-expanded="false" aria-haspopup="true">Courses <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
-          <ul class="dropdown-menu">
-            <li><a href="cse438-dip.html">CSE438 DIP</a></li>
-            <li><a href="cse445-cv.html" class="active">CSE445 CV</a></li>
-          </ul>
-        </li>
-        <li class="nav-dropdown">
-          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Resources <span class="dropdown-arrow" aria-hidden="true">▾</span></button>
-          <ul class="dropdown-menu">
-            <li><a href="metrics.html">Evaluation Metrics</a></li>
-            <li><a href="papers.html">Research Papers</a></li>
-            <li><a href="datasets.html">Datasets</a></li>
-            <li><a href="playground.html">Interactive Playground</a></li>
-          </ul>
-        </li>
-        <li><a href="blog.html">Blog</a></li>
         <li><a href="about.html">About</a></li>
       </ul>
     </nav>
   </header>
 
-  <main id="main">
-    <div class="page-hero">
-      <div class="container">
-        <p class="eyebrow" style="color: var(--color-accent);">Summer 2026 Course Outline</p>
-        <h1>CSE445 Computer Vision</h1>
-        <p>A 4-credit undergraduate course on how machines perceive, interpret, and reason about images and videos through features, geometry, motion, recognition, tracking, and real-world vision systems.</p>
+  <main id="main" class="course-dashboard-page">
+    <section class="dashboard-hero">
+      <div class="container dashboard-hero-grid">
+        <div class="dashboard-hero-copy">
+          <p class="eyebrow">Summer 2026 Course Dashboard</p>
+          <h1>CSE445 Computer Vision</h1>
+          <p>A 4-credit undergraduate course on how machines perceive, interpret, and reason about images and videos through features, geometry, motion, recognition, tracking, and real-world vision systems.</p>
+          <div class="dashboard-hero-actions">
+            <a class="btn btn-primary" href="#modules">Explore Modules</a>
+            <a class="btn btn-outline" href="#labs">View Lab Track</a>
+          </div>
+        </div>
+        <div class="dashboard-command-card" aria-label="Course highlights">
+          <div class="command-card-header">
+            <span>CSE445</span>
+            <strong>Vision System Pipeline</strong>
+          </div>
+          <div class="pipeline-stack">
+            <span>Input frames</span>
+            <span>Features</span>
+            <span>Geometry</span>
+            <span>Motion</span>
+            <span>Recognition</span>
+          </div>
+          <div class="dashboard-mini-metrics">
+            <div><strong>9</strong><span>Modules</span></div>
+            <div><strong>10</strong><span>Labs</span></div>
+            <div><strong>4</strong><span>COs</span></div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <section class="section">
-      <div class="container">
-        <div class="section-title">
-          <h2>Course Snapshot</h2>
-          <p>Based on the CSE445 Summer 2026 course outline from the Department of Computer Science and Engineering, East West University.</p>
-        </div>
-        <div class="course-snapshot">
-          <div class="snapshot-card"><span>Credits</span><strong>3 + 1</strong><p>Theory plus laboratory, 4 credits total.</p></div>
-          <div class="snapshot-card"><span>Contact</span><strong>5 hrs/week</strong><p>3 hours theory and 2 hours lab across the semester.</p></div>
-          <div class="snapshot-card"><span>Prerequisite</span><strong>CSE246</strong><p>Algorithms is listed as the official prerequisite.</p></div>
-          <div class="snapshot-card"><span>Instructor</span><strong>Dr. Rifat</strong><p>Dr. Mohammad Rifat Ahmmad Rashid, Room 646.</p></div>
-        </div>
-        <div class="course-outline-panel">
-          <h3>Course Objective</h3>
-          <p>This course introduces fundamental concepts, methods, and system-level perspectives of computer vision. It moves beyond pixel-level image processing into feature-level representation, geometric reasoning, motion analysis, and learning-based visual inference for end-to-end vision systems.</p>
-          <div class="grid two" style="margin-top:20px;">
-            <div>
-              <h3>Course Outcomes</h3>
-              <ul class="topic-list">
-                <li><strong>CO1:</strong> Explain fundamental concepts, visual structure, applications, and challenges.</li>
-                <li><strong>CO2:</strong> Apply feature-based and geometry-based methods for correspondences and spatial relationships.</li>
-                <li><strong>CO3:</strong> Interpret motion, 3D vision, recognition, and learning-based pipelines.</li>
+    <section class="dashboard-shell section">
+      <div class="container dashboard-layout">
+        <aside class="dashboard-sidebar" aria-label="Course dashboard navigation">
+          <div class="sidebar-block">
+            <span class="sidebar-label">Navigate</span>
+            <a href="#overview">Overview</a>
+            <a href="#modules">Modules</a>
+            <a href="#assessment">Assessment</a>
+            <a href="#labs">Laboratory</a>
+          </div>
+          <div class="sidebar-block">
+            <span class="sidebar-label">Course Links</span>
+            <a href="cse438-dip.html">CSE438 DIP</a>
+            <a class="active" href="cse445-cv.html">CSE445 CV</a>
+          </div>
+        </aside>
+
+        <div class="dashboard-content">
+          <section class="dashboard-panel" id="overview">
+            <div class="dashboard-section-heading">
+              <div>
+                <p class="eyebrow">Course Snapshot</p>
+                <h2>At a glance</h2>
+              </div>
+              <p>Based on the CSE445 Summer 2026 course outline from the Department of Computer Science and Engineering, East West University.</p>
+            </div>
+            <div class="dashboard-stat-grid">
+              <div class="dashboard-stat"><span>Credits</span><strong>3 + 1</strong><p>Theory plus laboratory.</p></div>
+              <div class="dashboard-stat"><span>Contact</span><strong>5 hrs/week</strong><p>3 hours theory and 2 hours lab.</p></div>
+              <div class="dashboard-stat"><span>Prerequisite</span><strong>CSE246</strong><p>Algorithms is the official prerequisite.</p></div>
+              <div class="dashboard-stat"><span>Instructor</span><strong>Dr. Rifat</strong><p>Room 646.</p></div>
+            </div>
+            <div class="dashboard-card wide">
+              <h3>Course Objective</h3>
+              <p>This course introduces fundamental concepts, methods, and system-level perspectives of computer vision. It moves beyond pixel-level image processing into feature-level representation, geometric reasoning, motion analysis, and learning-based visual inference for end-to-end vision systems.</p>
+            </div>
+          </section>
+
+          <section class="dashboard-panel" id="modules">
+            <div class="dashboard-section-heading">
+              <div>
+                <p class="eyebrow">Learning Path</p>
+                <h2>Course modules</h2>
+              </div>
+              <p>Open each dashboard tile for lecture focus, infographic learning, and scenario-driven exploration.</p>
+            </div>
+            <div class="dashboard-module-grid">
+              <article class="dashboard-module-card" id="module-1">
+                <span class="module-index">01</span>
+                <h3>Introduction to Computer Vision</h3>
+                <p>Classification, detection, segmentation, tracking, 3D vision, and the complete vision pipeline.</p>
+                <div class="module-meta"><span class="badge">CO1</span><span class="badge">Lectures 1-2</span></div>
+                <a class="module-link btn btn-primary" href="cse445_content/module-1-introduction.html">Open Module</a>
+              </article>
+              <article class="dashboard-module-card" id="module-2">
+                <span class="module-index">02</span>
+                <h3>Feature Detection and Description</h3>
+                <p>Harris, FAST, SIFT, SURF, ORB, descriptors, matching readiness, and robustness.</p>
+                <div class="module-meta"><span class="badge">CO1</span><span class="badge">Lectures 3-5</span></div>
+                <a class="module-link btn btn-primary" href="cse445_content/module-2-features.html">Open Module</a>
+              </article>
+              <article class="dashboard-module-card" id="module-3">
+                <span class="module-index">03</span>
+                <h3>Camera Models and Projection Geometry</h3>
+                <p>Pinhole cameras, intrinsic and extrinsic parameters, coordinate systems, and projective reasoning.</p>
+                <div class="module-meta"><span class="badge">CO2</span><span class="badge">Lectures 6-8</span></div>
+                <a class="module-link btn btn-primary" href="cse445_content/module-3-camera-geometry.html">Open Module</a>
+              </article>
+              <article class="dashboard-module-card" id="module-4">
+                <span class="module-index">04</span>
+                <h3>Feature Matching and Geometric Verification</h3>
+                <p>Descriptor matching, outlier rejection, RANSAC, homography, alignment, and calibration ideas.</p>
+                <div class="module-meta"><span class="badge">CO2</span><span class="badge">Lectures 9-11</span></div>
+                <a class="module-link btn btn-primary" href="cse445_content/module-4-matching.html">Open Module</a>
+              </article>
+              <article class="dashboard-module-card" id="module-5">
+                <span class="module-index">05</span>
+                <h3>Multiple View Geometry</h3>
+                <p>Epipolar geometry, fundamental matrix, essential matrix, stereo, triangulation, and depth.</p>
+                <div class="module-meta"><span class="badge">CO2</span><span class="badge">Lectures 12, 14-15</span></div>
+                <a class="module-link btn btn-primary" href="cse445_content/module-5-multiple-view.html">Open Module</a>
+              </article>
+              <article class="dashboard-module-card" id="module-6">
+                <span class="module-index">06</span>
+                <h3>Motion Analysis</h3>
+                <p>Optical flow, Lucas-Kanade, Horn-Schunck, Farneback, background subtraction, and video consistency.</p>
+                <div class="module-meta"><span class="badge">CO3</span><span class="badge">Lectures 16-17</span></div>
+                <a class="module-link btn btn-primary" href="cse445_content/module-6-motion.html">Open Module</a>
+              </article>
+              <article class="dashboard-module-card" id="module-7">
+                <span class="module-index">07</span>
+                <h3>Object Detection and Recognition</h3>
+                <p>HOG+SVM, region proposals, YOLO, Faster R-CNN, SSD, metrics, and self-supervised ideas.</p>
+                <div class="module-meta"><span class="badge">CO3</span><span class="badge">Lectures 18-19</span></div>
+                <a class="module-link btn btn-primary" href="cse445_content/module-7-detection-recognition.html">Open Module</a>
+              </article>
+              <article class="dashboard-module-card" id="module-9">
+                <span class="module-index">09</span>
+                <h3>Object Tracking</h3>
+                <p>Tracking-by-detection, Kalman filters, SORT, DeepSORT, ByteTrack, MOT metrics, and ID switches.</p>
+                <div class="module-meta"><span class="badge">CO3</span><span class="badge">Lectures 20-21</span></div>
+                <a class="module-link btn btn-primary" href="cse445_content/module-9-tracking.html">Open Module</a>
+              </article>
+              <article class="dashboard-module-card" id="module-10">
+                <span class="module-index">10</span>
+                <h3>Advances in Computer Vision</h3>
+                <p>Autonomous driving, medical vision, robotics, surveillance, agriculture, SLAM, and foundation models.</p>
+                <div class="module-meta"><span class="badge">CO3</span><span class="badge">Lectures 22-24</span></div>
+                <a class="module-link btn btn-primary" href="cse445_content/module-10-advances.html">Open Module</a>
+              </article>
+            </div>
+          </section>
+
+          <section class="dashboard-two-column" id="assessment">
+            <div class="dashboard-card">
+              <h2>Course Outcomes</h2>
+              <ul class="dashboard-check-list">
+                <li><strong>CO1:</strong> Explain visual structure, applications, and challenges.</li>
+                <li><strong>CO2:</strong> Apply feature-based and geometry-based methods.</li>
+                <li><strong>CO3:</strong> Interpret motion, 3D vision, recognition, and learning pipelines.</li>
                 <li><strong>CO4:</strong> Design, implement, and document complete vision systems.</li>
               </ul>
             </div>
-            <div>
-              <h3>Assessment Map</h3>
-              <ul class="topic-list">
-                <li>Class participation: 5 marks</li>
-                <li>Class test/quiz: 10 marks</li>
-                <li>Midterm assessment: 30 marks</li>
-                <li>Final exam: 35 marks</li>
-                <li>Laboratory performance: 10 marks</li>
-                <li>Mini project: 10 marks</li>
-              </ul>
+            <div class="dashboard-card">
+              <h2>Assessment Map</h2>
+              <div class="assessment-meter"><span style="width:5%"></span><strong>Participation 5</strong></div>
+              <div class="assessment-meter"><span style="width:10%"></span><strong>Quiz 10</strong></div>
+              <div class="assessment-meter"><span style="width:30%"></span><strong>Midterm 30</strong></div>
+              <div class="assessment-meter"><span style="width:35%"></span><strong>Final 35</strong></div>
+              <div class="assessment-meter"><span style="width:10%"></span><strong>Lab 10</strong></div>
+              <div class="assessment-meter"><span style="width:10%"></span><strong>Mini project 10</strong></div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
+          </section>
 
-    <section class="section compact section-teal" id="modules">
-      <div class="container">
-        <div class="section-title">
-          <h2>Course Modules</h2>
-          <p>Each module occupies its own zone and opens into a dedicated page with lecture focus, an infographic section, and scenario-driven exploration.</p>
-        </div>
-
-        <div class="module-zone-list">
-          <article class="module-zone" id="module-1">
-            <div class="module-number"><span>Module</span><strong>01</strong></div>
-            <div>
-              <h3>Introduction to Computer Vision</h3>
-              <p>What computer vision is, how it differs from image processing, and how tasks such as classification, detection, segmentation, tracking, and 3D vision fit inside a complete vision system pipeline.</p>
-              <div class="module-meta"><span class="badge">CO1</span><span class="badge">Lectures 1-2</span><span class="badge">Vision Pipeline</span></div>
+          <section class="dashboard-panel" id="labs">
+            <div class="dashboard-section-heading">
+              <div>
+                <p class="eyebrow">Practice Track</p>
+                <h2>Laboratory dashboard</h2>
+              </div>
+              <p>The lab sequence supports CO4 through implementation, result analysis, reporting, and a mini project.</p>
             </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse445_content/module-1-introduction.html">Open Module</a><a class="btn btn-outline" href="#module-2">Next Zone</a></div>
-          </article>
-
-          <article class="module-zone" id="module-2">
-            <div class="module-number"><span>Module</span><strong>02</strong></div>
-            <div>
-              <h3>Feature Detection and Description</h3>
-              <p>Corners, interest points, Harris detector, FAST, SIFT, SURF, ORB, local descriptors, binary descriptors, matching readiness, and robustness under scale, rotation, illumination, and viewpoint changes.</p>
-              <div class="module-meta"><span class="badge">CO1</span><span class="badge">Lectures 3-5</span><span class="badge">Quiz Focus</span></div>
+            <div class="dashboard-two-column">
+              <div class="dashboard-card">
+                <h3>Labs 1-5: Foundations and Geometry</h3>
+                <ul class="topic-list">
+                  <li>Image representation and basic operations</li>
+                  <li>Harris and FAST feature detection</li>
+                  <li>SIFT and ORB feature extraction and matching</li>
+                  <li>Camera calibration with Zhang's method</li>
+                  <li>Homography and panorama stitching</li>
+                </ul>
+              </div>
+              <div class="dashboard-card">
+                <h3>Labs 6-10: Depth, Motion, Detection, Tracking</h3>
+                <ul class="topic-list">
+                  <li>Stereo vision and depth estimation</li>
+                  <li>Optical flow estimation</li>
+                  <li>Object detection with HOG+SVM</li>
+                  <li>Object recognition with YOLOv8</li>
+                  <li>Multi-object tracking with SORT or DeepSORT</li>
+                </ul>
+              </div>
             </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse445_content/module-2-features.html">Open Module</a><a class="btn btn-outline" href="#module-3">Next Zone</a></div>
-          </article>
-
-          <article class="module-zone" id="module-3">
-            <div class="module-number"><span>Module</span><strong>03</strong></div>
-            <div>
-              <h3>Camera Models and Projection Geometry</h3>
-              <p>Pinhole camera model, projection geometry, intrinsic and extrinsic parameters, coordinate systems, 2D and 3D transformations, homogeneous coordinates, and projective reasoning.</p>
-              <div class="module-meta"><span class="badge">CO2</span><span class="badge">Lectures 6-8</span><span class="badge">Midterm Core</span></div>
+            <div class="dashboard-card wide">
+              <h3>Teaching Materials and Tools</h3>
+              <p><strong>Primary book:</strong> Richard Szeliski, <em>Computer Vision: Algorithms and Applications</em>, 2nd edition.</p>
+              <p><strong>References:</strong> Hartley and Zisserman, <em>Multiple View Geometry in Computer Vision</em>; Forsyth and Ponce, <em>Computer Vision: A Modern Approach</em>; Bishop, <em>Pattern Recognition and Machine Learning</em>.</p>
+              <p><strong>Software:</strong> Anaconda, Google Colab, OpenCV, Python data tools, and appropriate tools for data wrangling and experiment reporting.</p>
             </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse445_content/module-3-camera-geometry.html">Open Module</a><a class="btn btn-outline" href="#module-4">Next Zone</a></div>
-          </article>
-
-          <article class="module-zone" id="module-4">
-            <div class="module-number"><span>Module</span><strong>04</strong></div>
-            <div>
-              <h3>Feature Matching and Geometric Verification</h3>
-              <p>Descriptor matching, distance metrics, outlier detection, RANSAC, homography estimation, image alignment, panorama stitching ideas, and camera calibration concepts.</p>
-              <div class="module-meta"><span class="badge">CO2</span><span class="badge">Lectures 9-11</span><span class="badge">RANSAC</span></div>
-            </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse445_content/module-4-matching.html">Open Module</a><a class="btn btn-outline" href="#module-5">Next Zone</a></div>
-          </article>
-
-          <article class="module-zone" id="module-5">
-            <div class="module-number"><span>Module</span><strong>05</strong></div>
-            <div>
-              <h3>Multiple View Geometry</h3>
-              <p>Epipolar geometry, fundamental matrix, essential matrix, stereo correspondence, triangulation, depth estimation basics, stereo matching, monocular depth, and point cloud generation.</p>
-              <div class="module-meta"><span class="badge">CO2</span><span class="badge">Lectures 12, 14-15</span><span class="badge">Depth</span></div>
-            </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse445_content/module-5-multiple-view.html">Open Module</a><a class="btn btn-outline" href="#module-6">Next Zone</a></div>
-          </article>
-
-          <article class="module-zone" id="module-6">
-            <div class="module-number"><span>Module</span><strong>06</strong></div>
-            <div>
-              <h3>Motion Analysis</h3>
-              <p>Optical flow, sparse and dense motion estimation, motion field concepts, Lucas-Kanade, Horn-Schunck, Farneback, background subtraction, and temporal consistency in video.</p>
-              <div class="module-meta"><span class="badge">CO3</span><span class="badge">Lectures 16-17</span><span class="badge">Video Motion</span></div>
-            </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse445_content/module-6-motion.html">Open Module</a><a class="btn btn-outline" href="#module-7">Next Zone</a></div>
-          </article>
-
-          <article class="module-zone" id="module-7">
-            <div class="module-number"><span>Module</span><strong>07</strong></div>
-            <div>
-              <h3>Object Detection and Recognition</h3>
-              <p>Sliding window detection, classical object recognition pipelines, HOG+SVM, region proposals, YOLO, Faster R-CNN, SSD, performance metrics, and self-supervised learning concepts.</p>
-              <div class="module-meta"><span class="badge">CO3</span><span class="badge">Lectures 18-19</span><span class="badge">Detection</span></div>
-            </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse445_content/module-7-detection-recognition.html">Open Module</a><a class="btn btn-outline" href="#module-9">Next Zone</a></div>
-          </article>
-
-          <article class="module-zone" id="module-9">
-            <div class="module-number"><span>Module</span><strong>09</strong></div>
-            <div>
-              <h3>Object Tracking</h3>
-              <p>Tracking-by-detection, Kalman filter idea, IoU-based association, SORT, DeepSORT, ByteTrack, multi-object tracking metrics, identity switches, and video-level evaluation.</p>
-              <div class="module-meta"><span class="badge">CO3</span><span class="badge">Lectures 20-21</span><span class="badge">Official numbering skips Module 8</span></div>
-            </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse445_content/module-9-tracking.html">Open Module</a><a class="btn btn-outline" href="#module-10">Next Zone</a></div>
-          </article>
-
-          <article class="module-zone" id="module-10">
-            <div class="module-number"><span>Module</span><strong>10</strong></div>
-            <div>
-              <h3>Advances in Computer Vision</h3>
-              <p>Autonomous driving perception, medical vision, robotics vision, surveillance analytics, agricultural vision, sensor fusion, visual SLAM, foundation models, 3D generation, and emerging frontiers.</p>
-              <div class="module-meta"><span class="badge">CO3</span><span class="badge">Lectures 22-24</span><span class="badge">Applications</span></div>
-            </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse445_content/module-10-advances.html">Open Module</a><a class="btn btn-outline" href="#labs">Lab Plan</a></div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="labs">
-      <div class="container">
-        <div class="section-title">
-          <h2>Laboratory Track</h2>
-          <p>The lab sequence supports CO4 through implementation, result analysis, reporting, and a mini project.</p>
-        </div>
-        <div class="grid two">
-          <div class="card">
-            <h3>Labs 1-5: Foundations and Geometry</h3>
-            <ul class="topic-list">
-              <li>Image representation and basic operations</li>
-              <li>Harris and FAST feature detection</li>
-              <li>SIFT and ORB feature extraction and matching</li>
-              <li>Camera calibration with Zhang's method</li>
-              <li>Homography and panorama stitching</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>Labs 6-10: Depth, Motion, Detection, Tracking</h3>
-            <ul class="topic-list">
-              <li>Stereo vision and depth estimation</li>
-              <li>Optical flow estimation</li>
-              <li>Object detection with HOG+SVM</li>
-              <li>Object recognition with YOLOv8</li>
-              <li>Multi-object tracking with SORT or DeepSORT</li>
-            </ul>
-          </div>
-        </div>
-        <div class="course-outline-panel">
-          <h3>Teaching Materials and Tools</h3>
-          <p><strong>Primary book:</strong> Richard Szeliski, <em>Computer Vision: Algorithms and Applications</em>, 2nd edition.</p>
-          <p><strong>References:</strong> Hartley and Zisserman, <em>Multiple View Geometry in Computer Vision</em>; Forsyth and Ponce, <em>Computer Vision: A Modern Approach</em>; Bishop, <em>Pattern Recognition and Machine Learning</em>.</p>
-          <p><strong>Software:</strong> Anaconda, Google Colab, OpenCV, Python data tools, and appropriate tools for data wrangling and experiment reporting.</p>
+          </section>
         </div>
       </div>
     </section>
@@ -303,5 +301,10 @@
     </div>
   </footer>
   <script src="js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
 </html>

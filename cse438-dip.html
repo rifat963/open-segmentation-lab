@@ -9,227 +9,231 @@
   <meta property="og:description" content="Course page for CSE438 Digital Image Processing at East West University based on the Summer 2026 course outline.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Open Segmentation Lab">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <!-- Tailwind CSS (preflight disabled to preserve existing styles) -->
+  <script>tailwind.config = { corePlugins: { preflight: false }, theme: { extend: { colors: { primary: '#123a63', 'primary-dark': '#0b2744', accent: '#2f8f8a' } } } }</script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
+  <header class="site-header" x-data="{ mobileOpen: false }" :class="{ 'nav-open': mobileOpen }">
     <nav class="navbar container" aria-label="Main navigation">
       <a class="brand" href="index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
-      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
-      <ul class="nav-links">
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" @click="mobileOpen = !mobileOpen" :aria-expanded="mobileOpen.toString()"><span></span></button>
+      <ul class="nav-links" @click="if($event.target.closest('a')) mobileOpen = false">
         <li><a href="index.html">Home</a></li>
-        <li class="nav-dropdown">
-          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Computer Vision Tasks <span class="dropdown-arrow" aria-hidden="true">&#9662;</span></button>
-          <ul class="dropdown-menu">
-            <li><a href="semantic.html">Semantic Segmentation</a></li>
-            <li><a href="instance.html">Instance Segmentation</a></li>
-            <li><a href="panoptic.html">Panoptic Segmentation</a></li>
-            <li><a href="object-detection.html">Object Detection</a></li>
-            <li><a href="tracking.html">Object Tracking</a></li>
-            <li><a href="ssl-segmentation.html">Self-Supervised Learning</a></li>
-          </ul>
-        </li>
-        <li class="nav-dropdown">
-          <button class="dropdown-toggle active" type="button" aria-expanded="false" aria-haspopup="true">Courses <span class="dropdown-arrow" aria-hidden="true">&#9662;</span></button>
-          <ul class="dropdown-menu">
-            <li><a href="cse438-dip.html" class="active">CSE438 DIP</a></li>
-            <li><a href="cse445-cv.html">CSE445 CV</a></li>
-          </ul>
-        </li>
-        <li class="nav-dropdown">
-          <button class="dropdown-toggle" type="button" aria-expanded="false" aria-haspopup="true">Resources <span class="dropdown-arrow" aria-hidden="true">&#9662;</span></button>
-          <ul class="dropdown-menu">
-            <li><a href="metrics.html">Evaluation Metrics</a></li>
-            <li><a href="papers.html">Research Papers</a></li>
-            <li><a href="datasets.html">Datasets</a></li>
-            <li><a href="playground.html">Interactive Playground</a></li>
-          </ul>
-        </li>
-        <li><a href="blog.html">Blog</a></li>
         <li><a href="about.html">About</a></li>
       </ul>
     </nav>
   </header>
 
-  <main id="main">
-    <div class="page-hero">
-      <div class="container">
-        <p class="eyebrow" style="color: var(--color-accent);">Summer 2026 Course Outline</p>
-        <h1>CSE438 Digital Image Processing</h1>
-        <p>A 4-credit undergraduate course on how digital images are formed, represented, enhanced, filtered, restored, segmented, and analyzed for real-life engineering problems.</p>
+  <main id="main" class="course-dashboard-page">
+    <section class="dashboard-hero">
+      <div class="container dashboard-hero-grid">
+        <div class="dashboard-hero-copy">
+          <p class="eyebrow">Summer 2026 Course Dashboard</p>
+          <h1>CSE438 Digital Image Processing</h1>
+          <p>A 4-credit undergraduate course on how digital images are formed, represented, enhanced, filtered, restored, segmented, and analyzed for real-life engineering problems.</p>
+          <div class="dashboard-hero-actions">
+            <a class="btn btn-primary" href="#modules">Explore Modules</a>
+            <a class="btn btn-outline" href="#lab-notebooks">Open Notebooks</a>
+          </div>
+        </div>
+        <div class="dashboard-command-card" aria-label="Course highlights">
+          <div class="command-card-header">
+            <span>CSE438</span>
+            <strong>Image Processing Pipeline</strong>
+          </div>
+          <div class="pipeline-stack">
+            <span>Pixels</span>
+            <span>Enhancement</span>
+            <span>Filtering</span>
+            <span>Restoration</span>
+            <span>Segmentation</span>
+          </div>
+          <div class="dashboard-mini-metrics">
+            <div><strong>7</strong><span>Modules</span></div>
+            <div><strong>12</strong><span>Labs</span></div>
+            <div><strong>3</strong><span>Notebooks</span></div>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <section class="section">
-      <div class="container">
-        <div class="section-title">
-          <h2>Course Snapshot</h2>
-          <p>Based on the CSE438 Summer 2026 course outline from the Department of Computer Science and Engineering, East West University.</p>
-        </div>
-        <div class="course-snapshot">
-          <div class="snapshot-card"><span>Credits</span><strong>3 + 1</strong><p>Theory plus laboratory, 4 credits total.</p></div>
-          <div class="snapshot-card"><span>Contact</span><strong>5 hrs/week</strong><p>3 hours theory and 2 hours lab across 13 weeks.</p></div>
-          <div class="snapshot-card"><span>Instructor</span><strong>Dr. Rifat</strong><p>Dr. Mohammad Rifat Ahmmad Rashid, Room 646.</p></div>
-          <div class="snapshot-card"><span>Tools</span><strong>Python</strong><p>NumPy, OpenCV, SciPy, scikit-image, PyWavelets, Matplotlib.</p></div>
-        </div>
-        <div class="course-outline-panel">
-          <h3>Course Objective</h3>
-          <p>This course introduces fundamental concepts and techniques of digital image processing and their applications in real-life problems. It covers image formation, human visual perception, two-dimensional data representation, spatial and frequency domain processing, filtering, enhancement, Fourier transform techniques, color image processing, segmentation, and morphology.</p>
-          <div class="grid two" style="margin-top:20px;">
-            <div>
-              <h3>Course Outcomes</h3>
-              <ul class="topic-list">
-                <li><strong>CO1:</strong> Explain image processing basics, sampling, quantization, color representation, gray-level transformations, and histogram equalization.</li>
-                <li><strong>CO2:</strong> Apply filtering methods in spatial and frequency domains.</li>
-                <li><strong>CO3:</strong> Model restoration, extract regions of interest, use segmentation, apply morphology, and recognize shapes.</li>
-                <li><strong>CO4:</strong> Demonstrate hands-on labs, communicate concepts, solve real-world problems, and write application reports.</li>
+    <section class="dashboard-shell section">
+      <div class="container dashboard-layout">
+        <aside class="dashboard-sidebar" aria-label="Course dashboard navigation">
+          <div class="sidebar-block">
+            <span class="sidebar-label">Navigate</span>
+            <a href="#overview">Overview</a>
+            <a href="#modules">Modules</a>
+            <a href="#assessment">Assessment</a>
+            <a href="#labs">Laboratory</a>
+            <a href="#lab-notebooks">Notebooks</a>
+          </div>
+          <div class="sidebar-block">
+            <span class="sidebar-label">Course Links</span>
+            <a class="active" href="cse438-dip.html">CSE438 DIP</a>
+            <a href="cse445-cv.html">CSE445 CV</a>
+          </div>
+        </aside>
+
+        <div class="dashboard-content">
+          <section class="dashboard-panel" id="overview">
+            <div class="dashboard-section-heading">
+              <div>
+                <p class="eyebrow">Course Snapshot</p>
+                <h2>At a glance</h2>
+              </div>
+              <p>Based on the CSE438 Summer 2026 course outline from the Department of Computer Science and Engineering, East West University.</p>
+            </div>
+            <div class="dashboard-stat-grid">
+              <div class="dashboard-stat"><span>Credits</span><strong>3 + 1</strong><p>Theory plus laboratory.</p></div>
+              <div class="dashboard-stat"><span>Contact</span><strong>5 hrs/week</strong><p>3 hours theory and 2 hours lab.</p></div>
+              <div class="dashboard-stat"><span>Instructor</span><strong>Dr. Rifat</strong><p>Room 646.</p></div>
+              <div class="dashboard-stat"><span>Tools</span><strong>Python</strong><p>OpenCV, NumPy, SciPy, scikit-image.</p></div>
+            </div>
+            <div class="dashboard-card wide">
+              <h3>Course Objective</h3>
+              <p>This course introduces fundamental concepts and techniques of digital image processing and their applications in real-life problems. It covers image formation, human visual perception, two-dimensional data representation, spatial and frequency domain processing, filtering, enhancement, Fourier transform techniques, color image processing, segmentation, and morphology.</p>
+            </div>
+          </section>
+
+          <section class="dashboard-panel" id="modules">
+            <div class="dashboard-section-heading">
+              <div>
+                <p class="eyebrow">Learning Path</p>
+                <h2>Course modules</h2>
+              </div>
+              <p>Each module opens into a dedicated page with lecture focus, an infographic section, and scenario-driven exploration.</p>
+            </div>
+            <div class="dashboard-module-grid">
+              <article class="dashboard-module-card" id="module-1">
+                <span class="module-index">01</span>
+                <h3>DIP Foundations and Image Representation</h3>
+                <p>Image processing stages, sampling, quantization, pixel relationships, distance measures, and image operations.</p>
+                <div class="module-meta"><span class="badge">CO1</span><span class="badge">Lectures 1-6</span></div>
+                <a class="module-link btn btn-primary" href="cse438_content/module-1-foundations.html">Open Module</a>
+              </article>
+              <article class="dashboard-module-card" id="module-2">
+                <span class="module-index">02</span>
+                <h3>Gray-Level Transformations and Histograms</h3>
+                <p>Thresholding, bit-plane slicing, contrast stretching, log/power transforms, equalization, and matching.</p>
+                <div class="module-meta"><span class="badge">CO1</span><span class="badge">Lectures 7-11</span></div>
+                <a class="module-link btn btn-primary" href="cse438_content/module-2-gray-level.html">Open Module</a>
+              </article>
+              <article class="dashboard-module-card" id="module-3">
+                <span class="module-index">03</span>
+                <h3>Spatial Filtering and Derivative Operators</h3>
+                <p>Smoothing, sharpening, unsharp masking, high boost filtering, and derivative filters for edges.</p>
+                <div class="module-meta"><span class="badge">CO2</span><span class="badge">Lectures 12-16</span></div>
+                <a class="module-link btn btn-primary" href="cse438_content/module-3-spatial-filtering.html">Open Module</a>
+              </article>
+              <article class="dashboard-module-card" id="module-4">
+                <span class="module-index">04</span>
+                <h3>Transforms, Compression and Frequency Processing</h3>
+                <p>DFT, DCT, wavelets, Hough transform, image compression, and frequency-domain filters.</p>
+                <div class="module-meta"><span class="badge">CO2</span><span class="badge">Lectures 17-20</span></div>
+                <a class="module-link btn btn-primary" href="cse438_content/module-4-transforms-frequency.html">Open Module</a>
+              </article>
+              <article class="dashboard-module-card" id="module-5">
+                <span class="module-index">05</span>
+                <h3>Image Restoration and Noise Modeling</h3>
+                <p>Restoration models, Gaussian and impulse noise, inverse filtering, Wiener filtering, and quality comparison.</p>
+                <div class="module-meta"><span class="badge">CO3</span><span class="badge">Lectures 21-22</span></div>
+                <a class="module-link btn btn-primary" href="cse438_content/module-5-restoration.html">Open Module</a>
+              </article>
+              <article class="dashboard-module-card" id="module-6">
+                <span class="module-index">06</span>
+                <h3>Segmentation, Features and Color Processing</h3>
+                <p>Edges, thresholding, region segmentation, object recognition in medical imaging, and color processing.</p>
+                <div class="module-meta"><span class="badge">CO3</span><span class="badge">Lectures 23-25</span></div>
+                <a class="module-link btn btn-primary" href="cse438_content/module-6-segmentation-color.html">Open Module</a>
+              </article>
+              <article class="dashboard-module-card" id="module-7">
+                <span class="module-index">07</span>
+                <h3>Morphological Operations and Object Recognition</h3>
+                <p>Erosion, dilation, opening, closing, gradients, connected components, and shape descriptors.</p>
+                <div class="module-meta"><span class="badge">CO3 + CO4</span><span class="badge">Lecture 26</span></div>
+                <a class="module-link btn btn-primary" href="cse438_content/module-7-morphology-recognition.html">Open Module</a>
+              </article>
+            </div>
+          </section>
+
+          <section class="dashboard-two-column" id="assessment">
+            <div class="dashboard-card">
+              <h2>Course Outcomes</h2>
+              <ul class="dashboard-check-list">
+                <li><strong>CO1:</strong> Explain image basics, sampling, quantization, color, transformations, and histograms.</li>
+                <li><strong>CO2:</strong> Apply spatial and frequency-domain filtering methods.</li>
+                <li><strong>CO3:</strong> Model restoration, segmentation, morphology, and shape recognition.</li>
+                <li><strong>CO4:</strong> Demonstrate labs, communicate concepts, and write application reports.</li>
               </ul>
             </div>
-            <div>
-              <h3>Assessment Map</h3>
-              <ul class="topic-list">
-                <li>Class participation: 5 marks</li>
-                <li>Class test: 10 marks</li>
-                <li>Midterm exam: 30 marks</li>
-                <li>Final exam: 35 marks</li>
-                <li>Term project: 15 marks</li>
-                <li>Laboratory performance and lab exam: 5 marks</li>
-              </ul>
+            <div class="dashboard-card">
+              <h2>Assessment Map</h2>
+              <div class="assessment-meter"><span style="width:5%"></span><strong>Participation 5</strong></div>
+              <div class="assessment-meter"><span style="width:10%"></span><strong>Class test 10</strong></div>
+              <div class="assessment-meter"><span style="width:30%"></span><strong>Midterm 30</strong></div>
+              <div class="assessment-meter"><span style="width:35%"></span><strong>Final 35</strong></div>
+              <div class="assessment-meter"><span style="width:15%"></span><strong>Term project 15</strong></div>
+              <div class="assessment-meter"><span style="width:5%"></span><strong>Lab exam 5</strong></div>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
+          </section>
 
-    <section class="section compact section-teal" id="modules">
-      <div class="container">
-        <div class="section-title">
-          <h2>Course Modules</h2>
-          <p>Each module occupies a full zone and opens into a dedicated page with lecture focus, an infographic section, and scenario-driven exploration.</p>
-        </div>
-
-        <div class="module-zone-list">
-          <article class="module-zone" id="module-1">
-            <div class="module-number"><span>Module</span><strong>01</strong></div>
-            <div>
-              <h3>DIP Foundations and Image Representation</h3>
-              <p>Introduction to digital image processing, key stages, sampling, quantization, pixel relationships, adjacency, distance measures, and arithmetic or logical image operations.</p>
-              <div class="module-meta"><span class="badge">CO1</span><span class="badge">Lectures 1-6</span><span class="badge">Lab 1-2</span></div>
+          <section class="dashboard-panel" id="labs">
+            <div class="dashboard-section-heading">
+              <div>
+                <p class="eyebrow">Practice Track</p>
+                <h2>Laboratory dashboard</h2>
+              </div>
+              <p>The lab component runs in parallel with the lectures and asks students to implement, analyze, and report.</p>
             </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse438_content/module-1-foundations.html">Open Module</a><a class="btn btn-outline" href="#module-2">Next Zone</a></div>
-          </article>
-
-          <article class="module-zone" id="module-2">
-            <div class="module-number"><span>Module</span><strong>02</strong></div>
-            <div>
-              <h3>Gray-Level Transformations and Histogram Processing</h3>
-              <p>Point operations, thresholding, bit-plane slicing, contrast stretching, intensity slicing, logarithmic and power-law transformations, histogram equalization, and histogram matching.</p>
-              <div class="module-meta"><span class="badge">CO1</span><span class="badge">Lectures 7-11</span><span class="badge">Lab 3-4</span></div>
+            <div class="dashboard-two-column">
+              <div class="dashboard-card">
+                <h3>Labs 1-6: Representation, Enhancement and Filtering</h3>
+                <ul class="topic-list">
+                  <li>Python tools, image I/O, color channels, histograms</li>
+                  <li>Sampling, quantization, pixel relationships, operations</li>
+                  <li>Point operations and gray-level transformations</li>
+                  <li>Histogram equalization and matching</li>
+                  <li>Smoothing filters with convolution and order-statistics</li>
+                  <li>Sharpening, unsharp masking, and high boost filtering</li>
+                </ul>
+              </div>
+              <div class="dashboard-card">
+                <h3>Labs 7-12: Edges, Frequency, Restoration and Regions</h3>
+                <ul class="topic-list">
+                  <li>Derivative filters and edge detection</li>
+                  <li>DFT and frequency domain filters</li>
+                  <li>DCT, wavelets, compression artifacts, Hough transform</li>
+                  <li>Noise modeling and restoration filters</li>
+                  <li>Thresholding and region-based segmentation</li>
+                  <li>Morphological operations and shape descriptors</li>
+                </ul>
+              </div>
             </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse438_content/module-2-gray-level.html">Open Module</a><a class="btn btn-outline" href="#module-3">Next Zone</a></div>
-          </article>
-
-          <article class="module-zone" id="module-3">
-            <div class="module-number"><span>Module</span><strong>03</strong></div>
-            <div>
-              <h3>Spatial Filtering and Derivative Operators</h3>
-              <p>Spatial filtering fundamentals, smoothing filters, sharpening filters, unsharp masking, high boost filtering, and first-order or second-order derivative filters for edges.</p>
-              <div class="module-meta"><span class="badge">CO2</span><span class="badge">Lectures 12-16</span><span class="badge">Lab 5-7</span></div>
+            <div class="dashboard-card wide">
+              <h3>Term Project</h3>
+              <p>The course includes a proposal, report, presentation, and project demonstration mapped to CO4. Expected sections include abstract, background, problem statement, objectives, research questions, related work, materials and methods, results and discussion, conclusion, limitations, and future work.</p>
+              <h3>Teaching Materials and Software</h3>
+              <p><strong>Primary text:</strong> R. C. Gonzalez and R. E. Woods, <em>Digital Image Processing</em>, Prentice-Hall.</p>
+              <p><strong>References:</strong> A. K. Jain, <em>Fundamentals of Digital Image Processing</em>; T. Acharya and A. K. Ray, <em>Image Processing: Principles and Applications</em>.</p>
+              <p><strong>Software:</strong> Python with NumPy, OpenCV, SciPy, scikit-image, PyWavelets, and Matplotlib.</p>
             </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse438_content/module-3-spatial-filtering.html">Open Module</a><a class="btn btn-outline" href="#module-4">Next Zone</a></div>
-          </article>
+          </section>
 
-          <article class="module-zone" id="module-4">
-            <div class="module-number"><span>Module</span><strong>04</strong></div>
-            <div>
-              <h3>Transforms, Compression and Frequency Processing</h3>
-              <p>Discrete Fourier Transform, image compression, DCT, wavelet transform, Hough transform, and frequency domain low-pass and high-pass filters.</p>
-              <div class="module-meta"><span class="badge">CO2</span><span class="badge">Lectures 17-20</span><span class="badge">Lab 8-9</span></div>
+          <section class="dashboard-panel" id="lab-notebooks">
+            <div class="dashboard-section-heading">
+              <div>
+                <p class="eyebrow">Notebook Hub</p>
+                <h2>Lab notebooks</h2>
+              </div>
+              <p>Practical iPython notebooks for CSE438. Each notebook can be read as HTML and used as a starting point for lab practice.</p>
             </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse438_content/module-4-transforms-frequency.html">Open Module</a><a class="btn btn-outline" href="#module-5">Next Zone</a></div>
-          </article>
-
-          <article class="module-zone" id="module-5">
-            <div class="module-number"><span>Module</span><strong>05</strong></div>
-            <div>
-              <h3>Image Restoration and Noise Modeling</h3>
-              <p>Image restoration models, restoration in the presence of noise, Gaussian and impulse noise, inverse filtering, Wiener filtering, and restoration quality comparison.</p>
-              <div class="module-meta"><span class="badge">CO3</span><span class="badge">Lectures 21-22</span><span class="badge">Lab 10</span></div>
-            </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse438_content/module-5-restoration.html">Open Module</a><a class="btn btn-outline" href="#module-6">Next Zone</a></div>
-          </article>
-
-          <article class="module-zone" id="module-6">
-            <div class="module-number"><span>Module</span><strong>06</strong></div>
-            <div>
-              <h3>Segmentation, Feature Extraction and Color Processing</h3>
-              <p>Segmentation, feature extraction, edge detection, thresholding, region-based segmentation, object recognition in medical imaging, and color image processing.</p>
-              <div class="module-meta"><span class="badge">CO3</span><span class="badge">Lectures 23-25</span><span class="badge">Lab 11</span></div>
-            </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse438_content/module-6-segmentation-color.html">Open Module</a><a class="btn btn-outline" href="#module-7">Next Zone</a></div>
-          </article>
-
-          <article class="module-zone" id="module-7">
-            <div class="module-number"><span>Module</span><strong>07</strong></div>
-            <div>
-              <h3>Morphological Operations and Object Recognition</h3>
-              <p>Erosion, dilation, opening, closing, morphological gradient, top-hat, black-hat, connected components, and shape descriptors for object recognition.</p>
-              <div class="module-meta"><span class="badge">CO3 + CO4</span><span class="badge">Lecture 26</span><span class="badge">Lab 12</span></div>
-            </div>
-            <div class="module-actions"><a class="btn btn-primary" href="cse438_content/module-7-morphology-recognition.html">Open Module</a><a class="btn btn-outline" href="#labs">Lab Track</a></div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="labs">
-      <div class="container">
-        <div class="section-title">
-          <h2>Laboratory Track</h2>
-          <p>The lab component runs in parallel with the lectures. Each lab asks students to implement, analyze results, and submit a report with source code, outputs, and discussion.</p>
-        </div>
-        <div class="grid two">
-          <div class="card">
-            <h3>Labs 1-6: Representation, Enhancement and Filtering</h3>
-            <ul class="topic-list">
-              <li>Python tools, image I/O, color channels, histograms</li>
-              <li>Sampling, quantization, pixel relationships, operations</li>
-              <li>Point operations and gray-level transformations</li>
-              <li>Histogram equalization and matching</li>
-              <li>Smoothing filters with convolution and order-statistics</li>
-              <li>Sharpening, unsharp masking, and high boost filtering</li>
-            </ul>
-          </div>
-          <div class="card">
-            <h3>Labs 7-12: Edges, Frequency, Restoration and Regions</h3>
-            <ul class="topic-list">
-              <li>Derivative filters and edge detection</li>
-              <li>DFT and frequency domain filters</li>
-              <li>DCT, wavelets, compression artifacts, Hough transform</li>
-              <li>Noise modeling and restoration filters</li>
-              <li>Thresholding and region-based segmentation</li>
-              <li>Morphological operations and shape descriptors</li>
-            </ul>
-          </div>
-        </div>
-        <div class="course-outline-panel">
-          <h3>Term Project</h3>
-          <p>The course includes a proposal, report, presentation, and project demonstration mapped to CO4. Expected sections include abstract, background, problem statement, objectives, research questions, related work, materials and methods, results and discussion, conclusion, limitations, and future work.</p>
-          <h3>Teaching Materials and Software</h3>
-          <p><strong>Primary text:</strong> R. C. Gonzalez and R. E. Woods, <em>Digital Image Processing</em>, Prentice-Hall.</p>
-          <p><strong>References:</strong> A. K. Jain, <em>Fundamentals of Digital Image Processing</em>; T. Acharya and A. K. Ray, <em>Image Processing: Principles and Applications</em>.</p>
-          <p><strong>Software:</strong> Python with NumPy, OpenCV, SciPy, scikit-image, PyWavelets, and Matplotlib.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section compact section-teal" id="lab-notebooks">
-      <div class="container">
-        <div class="section-title">
-          <h2>Lab Notebooks</h2>
-          <p>Practical iPython notebooks for CSE438. Each notebook can be read as HTML and used as a starting point for lab practice.</p>
-        </div>
 
         <div class="grid auto">
           <div class="kaggle-card">
@@ -252,7 +256,7 @@
               <span class="badge">mIoU, Dice, F1</span>
             </div>
             <div class="button-row" style="margin-top:0;">
-              <a class="kaggle-btn" href="notebook_html/cse438-unet-crack-segmentation.html">Read Notebook</a>
+              <a class="kaggle-btn btn btn-primary" href="notebook_html/cse438-unet-crack-segmentation.html">Read Notebook</a>
               <a class="btn btn-outline" href="https://www.kaggle.com/" target="_blank" rel="noopener noreferrer">Run on Kaggle</a>
             </div>
           </div>
@@ -278,7 +282,7 @@
               <span class="badge">IoU, Dice, F1</span>
             </div>
             <div class="button-row" style="margin-top:0;">
-              <a class="kaggle-btn" href="notebook_html/cse438-deeplabv3-crack-segmentation.html">Read Notebook</a>
+              <a class="kaggle-btn btn btn-primary" href="notebook_html/cse438-deeplabv3-crack-segmentation.html">Read Notebook</a>
               <a class="btn btn-outline" href="https://www.kaggle.com/" target="_blank" rel="noopener noreferrer">Run on Kaggle</a>
             </div>
           </div>
@@ -304,10 +308,12 @@
               <span class="badge">IoU, Dice, F1</span>
             </div>
             <div class="button-row" style="margin-top:0;">
-              <a class="kaggle-btn" href="notebook_html/cse438-segformer-crack-segmentation-ipynb.html">Read Notebook</a>
+              <a class="kaggle-btn btn btn-primary" href="notebook_html/cse438-segformer-crack-segmentation-ipynb.html">Read Notebook</a>
               <a class="btn btn-outline" href="https://www.kaggle.com/" target="_blank" rel="noopener noreferrer">Run on Kaggle</a>
             </div>
           </div>
+            </div>
+          </section>
         </div>
       </div>
     </section>
@@ -375,5 +381,10 @@
     </div>
   </footer>
   <script src="js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
 </html>
