@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 1 Introduction to Computer Vision | CSE445</title>
+  <meta name="description" content="CSE445 Module 1 introduces computer vision, vision tasks, applications, and the end-to-end system pipeline.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="../index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../cse445-cv.html" class="active">CSE445 CV</a></li>
+        <li><a href="../object-detection.html">Detection</a></li>
+        <li><a href="../semantic.html">Segmentation</a></li>
+        <li><a href="../tracking.html">Tracking</a></li>
+      </ul>
+    </nav>
+  </header>
+  <nav class="site-trail" aria-label="CSE445 module navigation">
+    <div class="site-trail-inner">
+      <a class="site-trail-brand" href="../cse445-cv.html"><span class="site-trail-mark">445</span><span>CSE445</span></a>
+      <span class="site-trail-separator">&gt;</span>
+      <a class="site-trail-link" href="../cse445-cv.html#modules">Modules</a>
+      <span class="site-trail-separator">&gt;</span>
+      <span class="site-trail-link">Module 1</span>
+      <span class="site-trail-spacer"></span>
+      <a class="site-trail-badge" href="module-2-features.html">Next: Features</a>
+    </div>
+  </nav>
+  <main id="main">
+    <div class="page-hero">
+      <div class="container">
+        <p class="eyebrow" style="color: var(--color-accent);">Module 1</p>
+        <h1>Introduction to Computer Vision</h1>
+        <p>Understand what computer vision is, how it differs from image processing, and how complete systems transform visual data into decisions.</p>
+      </div>
+    </div>
+    <section class="section">
+      <div class="container module-page-grid">
+        <article>
+          <div class="section-title">
+            <h2>Lecture Focus</h2>
+            <p>Mapped to CO1 from the Summer 2026 course outline.</p>
+          </div>
+          <div class="lecture-list">
+            <div class="lecture-item">
+              <h3>Lecture 1: Introduction to Computer Vision</h3>
+              <p>Define computer vision, distinguish it from digital image processing, and connect the field to autonomous driving, medical imaging, robotics, agriculture, and surveillance.</p>
+            </div>
+            <div class="lecture-item">
+              <h3>Lecture 2: Vision Tasks and System Pipeline</h3>
+              <p>Compare classification, detection, segmentation, tracking, and 3D vision. Trace the pipeline from image input to preprocessing, feature extraction, inference, and output.</p>
+            </div>
+          </div>
+          <section class="section compact">
+            <div class="section-title">
+              <h2>Infographic</h2>
+              <p>A compact view of the end-to-end vision pipeline.</p>
+            </div>
+            <div class="module-infograph">
+              <div class="infograph-step"><span class="node">1</span><div><h3>Capture</h3><p>Camera or sensor records pixels under real lighting, viewpoint, and motion constraints.</p></div></div>
+              <div class="infograph-step"><span class="node">2</span><div><h3>Prepare</h3><p>Resize, normalize, denoise, crop, or enhance the image so later stages receive stable input.</p></div></div>
+              <div class="infograph-step"><span class="node">3</span><div><h3>Infer</h3><p>Classical features or learned models estimate categories, boxes, masks, tracks, or geometry.</p></div></div>
+              <div class="infograph-step"><span class="node">4</span><div><h3>Act</h3><p>The system reports a diagnosis, avoids an obstacle, counts objects, or sends a human-readable result.</p></div></div>
+            </div>
+          </section>
+          <section class="section compact section-teal">
+            <div class="section-title">
+              <h2>Scenario Driven Exploration</h2>
+            </div>
+            <div class="scenario-grid">
+              <div class="scenario-card">
+                <h3>Autonomous shuttle at night</h3>
+                <p>List which tasks are required to detect pedestrians, localize lane boundaries, track nearby vehicles, and estimate free space. Decide where preprocessing is most important.</p>
+              </div>
+              <div class="scenario-card">
+                <h3>Hospital triage assistant</h3>
+                <p>Separate the parts of the pipeline that enhance images from the parts that interpret disease patterns. Explain why this distinction matters for accountability.</p>
+              </div>
+            </div>
+          </section>
+        </article>
+        <aside class="module-sidebar">
+          <div class="card">
+            <h3>Key Terms</h3>
+            <ul class="topic-list">
+              <li>Vision pipeline</li>
+              <li>Classification, detection, segmentation</li>
+              <li>Tracking and 3D vision</li>
+              <li>System-level perception</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+  <script src="../js/main.js"></script>
+</body>
+</html>

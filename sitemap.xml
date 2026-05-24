@@ -8,7 +8,23 @@
   <url><loc>https://example.com/tracking.html</loc></url>
   <url><loc>https://example.com/ssl-segmentation.html</loc></url>
   <url><loc>https://example.com/cse438-dip.html</loc></url>
+  <url><loc>https://example.com/cse438_content/module-1-foundations.html</loc></url>
+  <url><loc>https://example.com/cse438_content/module-2-gray-level.html</loc></url>
+  <url><loc>https://example.com/cse438_content/module-3-spatial-filtering.html</loc></url>
+  <url><loc>https://example.com/cse438_content/module-4-transforms-frequency.html</loc></url>
+  <url><loc>https://example.com/cse438_content/module-5-restoration.html</loc></url>
+  <url><loc>https://example.com/cse438_content/module-6-segmentation-color.html</loc></url>
+  <url><loc>https://example.com/cse438_content/module-7-morphology-recognition.html</loc></url>
   <url><loc>https://example.com/cse445-cv.html</loc></url>
+  <url><loc>https://example.com/cse445_content/module-1-introduction.html</loc></url>
+  <url><loc>https://example.com/cse445_content/module-2-features.html</loc></url>
+  <url><loc>https://example.com/cse445_content/module-3-camera-geometry.html</loc></url>
+  <url><loc>https://example.com/cse445_content/module-4-matching.html</loc></url>
+  <url><loc>https://example.com/cse445_content/module-5-multiple-view.html</loc></url>
+  <url><loc>https://example.com/cse445_content/module-6-motion.html</loc></url>
+  <url><loc>https://example.com/cse445_content/module-7-detection-recognition.html</loc></url>
+  <url><loc>https://example.com/cse445_content/module-9-tracking.html</loc></url>
+  <url><loc>https://example.com/cse445_content/module-10-advances.html</loc></url>
   <url><loc>https://example.com/metrics.html</loc></url>
   <url><loc>https://example.com/datasets.html</loc></url>
   <url><loc>https://example.com/papers.html</loc></url>

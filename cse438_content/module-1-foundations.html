@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 1 DIP Foundations | CSE438</title>
+  <meta name="description" content="CSE438 Module 1 covers digital image processing foundations, image representation, sampling, quantization, pixel relationships, distance measures, and image operations.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navbar container" aria-label="Main navigation">
+      <a class="brand" href="../index.html"><span class="brand-mark">OSL</span><span>Open Segmentation Lab</span></a>
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false"><span></span></button>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../cse438-dip.html" class="active">CSE438 DIP</a></li>
+        <li><a href="../cse445-cv.html">CSE445 CV</a></li>
+        <li><a href="../semantic.html">Segmentation</a></li>
+        <li><a href="../playground.html">Playground</a></li>
+      </ul>
+    </nav>
+  </header>
+  <nav class="site-trail" aria-label="CSE438 module navigation">
+    <div class="site-trail-inner">
+      <a class="site-trail-brand" href="../cse438-dip.html"><span class="site-trail-mark">438</span><span>CSE438</span></a>
+      <span class="site-trail-separator">&gt;</span>
+      <a class="site-trail-link" href="../cse438-dip.html#modules">Modules</a>
+      <span class="site-trail-separator">&gt;</span>
+      <span class="site-trail-link">Module 1</span>
+      <span class="site-trail-spacer"></span>
+      <a class="site-trail-badge" href="module-2-gray-level.html">Next: Gray-Level</a>
+    </div>
+  </nav>
+  <main id="main">
+    <div class="page-hero">
+      <div class="container">
+        <p class="eyebrow" style="color: var(--color-accent);">Module 1</p>
+        <h1>DIP Foundations and Image Representation</h1>
+        <p>Build the base vocabulary of digital images: pixels, sampling, quantization, neighborhoods, distances, and arithmetic or logical image operations.</p>
+      </div>
+    </div>
+    <section class="section">
+      <div class="container module-page-grid">
+        <article>
+          <div class="section-title">
+            <h2>Lecture Focus</h2>
+            <p>Mapped to CO1 from the Summer 2026 course outline.</p>
+          </div>
+          <div class="lecture-list">
+            <div class="lecture-item"><h3>Lectures 1-2: Introduction and Key Stages</h3><p>Define digital image processing, identify real-life applications, and trace the core stages from acquisition to output.</p></div>
+            <div class="lecture-item"><h3>Lectures 3-5: Sampling, Quantization, Pixels and Distance</h3><p>Analyze sampling rate, quantization levels, pixel adjacency, 4-connected and 8-connected neighborhoods, and common distance measures.</p></div>
+            <div class="lecture-item"><h3>Lecture 6: Arithmetic and Logical Operations</h3><p>Apply image addition, subtraction, multiplication, division, masking, blending, and Boolean operations for basic image manipulation.</p></div>
+          </div>
+          <section class="section compact">
+            <div class="section-title"><h2>Infographic</h2><p>How a real scene becomes an editable digital image.</p></div>
+            <div class="module-infograph">
+              <div class="infograph-step"><span class="node">1</span><div><h3>Acquire</h3><p>A camera samples a continuous visual scene through a sensor grid.</p></div></div>
+              <div class="infograph-step"><span class="node">2</span><div><h3>Quantize</h3><p>Continuous intensities become finite gray or color values.</p></div></div>
+              <div class="infograph-step"><span class="node">3</span><div><h3>Relate pixels</h3><p>Neighborhoods and distances define connectivity, regions, and paths.</p></div></div>
+              <div class="infograph-step"><span class="node">4</span><div><h3>Operate</h3><p>Arithmetic and logical tools combine, mask, and transform images.</p></div></div>
+            </div>
+          </section>
+          <section class="section compact section-teal">
+            <div class="section-title"><h2>Scenario Driven Exploration</h2></div>
+            <div class="scenario-grid">
+              <div class="scenario-card"><h3>Low-bandwidth medical upload</h3><p>A clinic must upload X-ray previews over a slow network. Decide how much downsampling and quantization can be tolerated before diagnostic structures become unreliable.</p></div>
+              <div class="scenario-card"><h3>Industrial mask alignment</h3><p>A factory camera compares a part image with a reference mask. Explain which pixel operations and distance measures help identify missing regions.</p></div>
+            </div>
+          </section>
+        </article>
+        <aside class="module-sidebar"><div class="card"><h3>Key Terms</h3><ul class="topic-list"><li>Sampling and quantization</li><li>Pixel adjacency</li><li>Euclidean, city-block, chessboard distance</li><li>Arithmetic and logical operations</li></ul></div></aside>
+      </div>
+    </section>
+  </main>
+  <script src="../js/main.js"></script>
+</body>
+</html>

@@ -3359,3 +3359,232 @@ body {
     padding-left: 0;
   }
 }
+
+/* CSE445 course outline pages */
+.course-snapshot {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 26px;
+}
+
+.snapshot-card {
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-soft);
+}
+
+.snapshot-card span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--color-accent);
+  font-size: 0.75rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.snapshot-card strong {
+  display: block;
+  color: var(--color-primary-dark);
+  font-size: 1.38rem;
+  line-height: 1.2;
+}
+
+.module-zone-list {
+  display: grid;
+  gap: 24px;
+}
+
+.module-zone {
+  display: grid;
+  grid-template-columns: minmax(140px, 0.35fr) minmax(0, 1fr) minmax(180px, 0.45fr);
+  gap: 24px;
+  min-height: 260px;
+  padding: 30px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-left: 7px solid var(--color-accent);
+  border-radius: 8px;
+  box-shadow: var(--shadow-soft);
+}
+
+.module-zone:nth-child(even) {
+  background: linear-gradient(135deg, #ffffff 0%, #eef5fb 100%);
+  border-left-color: var(--color-primary);
+}
+
+.module-number {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.module-number span {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.module-number strong {
+  color: var(--color-primary-dark);
+  font-size: clamp(2.6rem, 6vw, 5rem);
+  line-height: 0.95;
+}
+
+.module-zone h3 {
+  margin-top: 0;
+  color: var(--color-primary-dark);
+  font-size: clamp(1.4rem, 3vw, 2.15rem);
+}
+
+.module-zone p {
+  margin-bottom: 16px;
+}
+
+.module-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.module-actions {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.module-actions .btn {
+  justify-content: center;
+  width: 100%;
+}
+
+.course-outline-panel {
+  margin-top: 26px;
+  padding: 26px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-soft);
+}
+
+.module-page-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  gap: 28px;
+  align-items: start;
+}
+
+.module-sidebar {
+  position: sticky;
+  top: 132px;
+}
+
+.module-infograph {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.infograph-step {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-soft);
+}
+
+.infograph-step .node {
+  display: inline-grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  border-radius: 8px;
+  font-weight: 850;
+}
+
+.infograph-step h3 {
+  margin: 0 0 5px;
+}
+
+.infograph-step p {
+  margin: 0;
+}
+
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.scenario-card {
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-soft);
+}
+
+.scenario-card h3 {
+  margin-top: 0;
+}
+
+.lecture-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.lecture-item {
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.lecture-item h3 {
+  margin-top: 0;
+}
+
+@media (max-width: 980px) {
+  .course-snapshot {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .module-zone,
+  .module-page-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .module-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .module-sidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .course-snapshot,
+  .scenario-grid,
+  .module-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .module-zone {
+    padding: 22px;
+  }
+}
